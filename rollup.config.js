@@ -5,7 +5,7 @@ export default {
     input: 'src/index.ts',
     output: [
         {
-            name: 'drawTools',
+            name: 'canvasMoteur',
             file: pkg.browser,
             format: 'umd'
         },

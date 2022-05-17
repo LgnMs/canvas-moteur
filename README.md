@@ -11,7 +11,7 @@ $ npm install draw-tools
 ## 使用
 
 ```javascript
-import { Draw } from 'draw-tools'
+import { Draw } from 'canvas-moteur'
 
 const draw = new Draw('canvas')
 

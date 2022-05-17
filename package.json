@@ -1,10 +1,13 @@
 {
-  "name": "draw-tools",
+  "name": "canvas-moteur",
   "version": "0.0.1",
   "description": "draw-tools canvas",
   "main": "dist/main.cjs.js",
   "module": "dist/main.esm.js",
   "browser": "dist/main.umd.js",
+  "repository": {
+    "url": "https://github.com/LgnMs/draw-tools"
+  },
   "scripts": {
     "build": "rollup --config rollup.config.js"
   },
