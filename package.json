@@ -1,0 +1,20 @@
+{
+  "name": "draw-tools",
+  "version": "0.0.1",
+  "description": "draw-tools canvas",
+  "main": "dist/main.cjs.js",
+  "module": "dist/main.esm.js",
+  "browser": "dist/main.umd.js",
+  "scripts": {
+    "build": "rollup --config rollup.config.js"
+  },
+  "author": "lgn",
+  "license": "MIT",
+  "dependencies": {
+    "@rollup/plugin-typescript": "^8.3.2"
+  },
+  "devDependencies": {
+    "rollup": "^2.73.0",
+    "typescript": "^4.6.4"
+  }
+}
