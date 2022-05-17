@@ -1,11 +1,11 @@
-# draw-tools
+# canvas-moteur
 
 更简单的进行图形绘制，以及一些利于构建流程图、关系图或其它应用的功能（例如对图形交互事件监听，拖拽图形，添加锚点，连接锚点等）
 
 ## 安装
 
 ```
-$ npm install draw-tools 
+$ npm install canvas-moteur
 ```
 
 ## 使用
