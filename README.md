@@ -45,7 +45,7 @@ draw.render();
 - [x] 绘制线条
 - [x] 绘制图片
 - [x] 绘制折线
-- [ ] 通过路径（Path）绘制自定义图形
+- [x] 通过路径（Path）绘制自定义图形
 
 - [x] 可以自由移动图形
 - [x] 有图形的事件监听 （mouserover、mousedown、mouseleave等）
