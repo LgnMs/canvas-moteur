@@ -1,4 +1,4 @@
-import BasicShape from "./basicShap"
+import { BasicShape } from './basicShap'
 import { ShapBasicOptions } from "./types"
 
 export interface RectOptions extends ShapBasicOptions {
@@ -6,7 +6,7 @@ export interface RectOptions extends ShapBasicOptions {
     height: number
 }
 
-export default class Rect extends BasicShape {
+export class Rect extends BasicShape {
     width = 0
     height = 0
 

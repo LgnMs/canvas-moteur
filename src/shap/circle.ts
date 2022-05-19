@@ -1,11 +1,11 @@
-import BasicShape from "./basicShap"
+import { BasicShape } from './basicShap'
 import { ShapBasicOptions } from "./types"
 
 export interface CircleOptions extends ShapBasicOptions {
     r: number
 }
 
-export default class Circle extends BasicShape {
+export class Circle extends BasicShape {
     width = 0
     height = 0
     r = 0

@@ -2,6 +2,7 @@ export type ShapType =
     'rect'
     | 'circle'
     | 'line'
+    | 'polyline'
     | string
 
 

@@ -1,8 +1,4 @@
-import Line, { LineOptions } from "./shap/line/line";
-import Circle, { CircleOptions } from "./shap/circle";
-import Rect, { RectOptions } from "./shap/rect";
-import Img, { ImgOptions } from "./shap/img";
-import Anchor from "./shap/anchor";
+import { Line, LineOptions, Circle, CircleOptions, Rect, RectOptions, Img, ImgOptions, Anchor } from './shap'
 
 export type DrawOption = CircleOptions | RectOptions
 

@@ -9,7 +9,7 @@ export interface AnchorOptions {
 /**
  * 锚点
  */
-export default class Anchor {
+export class Anchor {
     type = 'anchor'
 
     ctx: CanvasRenderingContext2D

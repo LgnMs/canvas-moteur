@@ -1,4 +1,4 @@
-import Anchor from "./anchor"
+import { Anchor } from "./anchor"
 import { anchorPosition, ShapBasicOptions, ShapStyle, ShapType } from "./types"
 
 let createShapNumber = 1
@@ -10,7 +10,7 @@ const getId = () => {
     return id
 }
 
-export default abstract class BasicShape {
+export abstract class BasicShape {
     id: string
 
     ctx: CanvasRenderingContext2D

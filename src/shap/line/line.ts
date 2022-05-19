@@ -4,7 +4,7 @@ export interface LineOptions {
     points: {x: number, y: number}[]
 }
 
-export default class Line {
+export class Line {
     type: ShapType
     ctx: CanvasRenderingContext2D
     points: {x: number, y: number}[] = []

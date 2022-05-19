@@ -1,4 +1,4 @@
-import BasicShape from "./basicShap"
+import { BasicShape } from './basicShap'
 import { ShapBasicOptions } from "./types"
 
 export interface ImgOptions extends ShapBasicOptions {
@@ -7,7 +7,7 @@ export interface ImgOptions extends ShapBasicOptions {
     url: string
 }
 
-export default class Img extends BasicShape {
+export class Img extends BasicShape {
     width: number
     height: number
     url = ''

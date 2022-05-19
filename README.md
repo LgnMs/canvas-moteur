@@ -8,7 +8,7 @@
 $ npm install canvas-moteur
 ```
 
-## 使用
+## 使用 
 
 ```javascript
 import { Draw } from 'canvas-moteur'
@@ -22,9 +22,9 @@ draw.addRect({
     height: 100,
     anchors: ['left', 'right'],
     style: {
-        backgroundColor: 'green',
+        backgroundColor: 'green'
     }
-})
+})  
 
 draw.addCircle({
     x: 300,
@@ -44,7 +44,7 @@ draw.render();
 - [x] 绘制矩形、圆形
 - [x] 绘制线条
 - [x] 绘制图片
-- [ ] 绘制折线
+- [x] 绘制折线
 - [ ] 通过路径（Path）绘制自定义图形
 
 - [x] 可以自由移动图形
