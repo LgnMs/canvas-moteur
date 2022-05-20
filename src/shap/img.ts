@@ -63,7 +63,6 @@ export class Img extends BasicShape {
             ctx.drawImage(this.img!, this.x, this.y, this.width, this.height)
         }
         
-        console.log(this.active)
         if (this.active) {
             const borderPath = new Path2D()
             borderPath.rect(x - 1, y - 1, width + 2, height + 2)

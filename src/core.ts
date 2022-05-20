@@ -1,23 +1,25 @@
+import { DataCenter } from './dataCenter'
 import { Line, LineOptions, Circle, CircleOptions, Rect, RectOptions, Img, ImgOptions, Anchor } from './shap'
 
 export type DrawOption = CircleOptions | RectOptions
 
-type ShapTypeMap = Rect | Circle
+export type ShapTypeMap = Rect | Circle
 
 /**
  * 线的点
  */
-interface EdgePoint {
+export interface EdgePoint {
     shap: ShapTypeMap
     anchorIndex: number
 }
 
-interface Edge {
+export interface Edge {
     source: EdgePoint
     target: EdgePoint
 }
 
 type onShapDragFn = (e: any, shap: ShapTypeMap | Anchor) => void
+
 export class Draw {
     canvas: HTMLCanvasElement
     ctx!: CanvasRenderingContext2D
@@ -26,6 +28,7 @@ export class Draw {
     tempEdge: Line | null = null
     tempEdgeSource: EdgePoint | null = null
     edges: Edge[] = []
+    dataCenter: DataCenter
 
     onShapDragStart: onShapDragFn | undefined;
     onShapDragMove: onShapDragFn | undefined;
@@ -44,6 +47,7 @@ export class Draw {
         if (canvas.getContext){
             this.ctx = canvas.getContext('2d')!;
             this.initEventListener()
+            this.dataCenter = new DataCenter(this)
         } else {
             throw new Error('浏览器不支持canvas');
         }
@@ -81,7 +85,7 @@ export class Draw {
         return shap
     }
 
-    render() {
+    render(shouldRecodeData = true) {
         const { ctx } = this
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -108,6 +112,10 @@ export class Draw {
         if (this.tempEdge) {
             this.tempEdge.setPath()
             this.tempEdge.draw()
+        }
+
+        if (shouldRecodeData) {
+            this.dataCenter.recordData()
         }
     }
 
@@ -163,7 +171,7 @@ export class Draw {
             }
 
             if (shouldRender) {
-                this.render()
+                this.render(false)
             }
         })
     }
@@ -256,16 +264,18 @@ export class Draw {
             }
 
             if (shouldRender) {
-                this.render()
+                this.render(false)
             }
         })
     }
 
     ondargend() {
+
         this.canvas.addEventListener('mouseup', (e) => {
             const { offsetX, offsetY } = e
             const { ctx, shaps } = this
             let shouldRender = false
+            let shouldRecodeData = false
 
             for (let i = 0; i < shaps.length; i++) {
                 const shap = shaps[i];
@@ -273,6 +283,7 @@ export class Draw {
                 if (shap.mousedown) {
                     shap.dargend()
                     shouldRender = true
+                    shouldRecodeData = true
 
                     if (this.onShapDragEnd) {
                         this.onShapDragEnd(e, shap)
@@ -303,6 +314,7 @@ export class Draw {
 
                             this.tempEdge = null
                             shouldRender = true
+                            shouldRecodeData = true
                             
                             if (this.onShapDragEnd) {
                                 this.onShapDragEnd(e, anchor)
@@ -322,7 +334,7 @@ export class Draw {
             }
 
             if (shouldRender) {
-                this.render()
+                this.render(shouldRecodeData)
             }
             
         })
