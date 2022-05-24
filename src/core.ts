@@ -20,9 +20,15 @@ export interface Edge {
 
 type onShapDragFn = (e: any, shap: ShapTypeMap | Anchor) => void
 
-
 interface CanvasStatus {
     mousedown: boolean
+    translate: {
+        x: number
+        y: number
+    }
+    scale: number
+    isTranslate: boolean
+    isScale: boolean
 }
 export class Draw {
     canvas: HTMLCanvasElement
@@ -39,8 +45,9 @@ export class Draw {
     onShapDragMove: onShapDragFn | undefined;
     onShapDragEnd: onShapDragFn | undefined;
 
-    constructor(el: string | HTMLCanvasElement) {
+    constructor({el, isTranslate, isScale}: { el: string | HTMLCanvasElement, isTranslate: boolean, isScale: boolean }) {
         let canvas = null
+        
         
         if (typeof el === 'string') {
             canvas = document.getElementById(el) as HTMLCanvasElement
@@ -54,7 +61,11 @@ export class Draw {
             this.initEventListener()
             this.dataCenter = new DataCenter(this)
             this.canvasStatus = {
-                mousedown: false
+                mousedown: false,
+                translate: { x: 0, y: 0},
+                scale: 0,
+                isTranslate,
+                isScale,
             }
         } else {
             throw new Error('浏览器不支持canvas');
@@ -94,8 +105,8 @@ export class Draw {
     }
 
     render(shouldRecodeData = true) {
-        const { ctx } = this
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const { ctx, canvasStatus } = this
+        ctx.clearRect(-canvasStatus.translate.x, -canvasStatus.translate.y, this.canvas.width, this.canvas.height);
 
         this.shaps.forEach(shap => {
             shap.draw()
@@ -135,7 +146,9 @@ export class Draw {
     }
     
     translateCanvas(x: number, y: number) {
+        this.canvasStatus.translate = { x, y }
         this.ctx.translate(x, y);
+        this.render();
     }
 
     onmouseover() {
@@ -243,7 +256,8 @@ export class Draw {
             const { shaps } = this
             let shouldRender = false
 
-            if (this.canvasStatus.mousedown) {
+            // 平移画布
+            if (this.canvasStatus.mousedown && this.canvasStatus.isTranslate) {
                 this.translateCanvas(e.movementX, e.movementY);
             }
 
