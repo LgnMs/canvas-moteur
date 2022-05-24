@@ -13,7 +13,7 @@ $ npm install canvas-moteur
 ```javascript
 import { Draw } from 'canvas-moteur'
 
-const draw = new Draw('canvas')
+const draw = new Draw({ el: 'canvas', isTranslate: true, isScale: true })
 
 draw.addRect({
     x: 20,
@@ -37,6 +37,22 @@ draw.addCircle({
 })
 
 draw.render();
+
+// 重置画布变换
+function resetCanvasTransform() {
+    draw.resetTransform()
+}
+
+// 撤销
+function undo() {
+    draw.dataCenter.undo()
+}
+
+// 重做
+function redo() {
+    draw.dataCenter.redo()
+}
+
 ```
 
 ## 功能

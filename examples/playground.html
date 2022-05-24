@@ -9,10 +9,13 @@
     </style>
 </head>
 <body>
+    <button className="ml-4 border" onclick="resetCanvasTransform()">重置画布位置和大小</button>
+    <button className="ml-4 border" onClick="undo()">撤销</button>
+    <button className="ml-4 border" onClick="redo()">重做</button>
     <canvas id="canvas" width="500px" height="500px"></canvas>
     <script src="../dist/main.umd.js"></script>
     <script>
-        const draw = new canvasMoteur.Draw('canvas')
+        const draw = new canvasMoteur.Draw({ el: 'canvas', isTranslate: true, isScale: true })
         
         draw.addRect({
             x: 20,
@@ -47,6 +50,18 @@
         })
 
         draw.render();
+
+        function resetCanvasTransform() {
+            draw.resetTransform()
+        }
+
+        function undo() {
+            draw.dataCenter.undo()
+        }
+
+        function redo() {
+            draw.dataCenter.redo()
+        }
     </script>
 </body>
 </html>

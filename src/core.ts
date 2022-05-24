@@ -153,7 +153,7 @@ export class Draw {
             this.dataCenter.recordData()
         }
 
-        this.debug()
+        // this.debug()
 
     }
 
@@ -242,7 +242,7 @@ export class Draw {
                         shouldRender = true
                     }
                     break
-                }
+                } 
 
                 // 判断鼠标是否在锚点中
                 if (shap.hasAnchor) {
@@ -264,11 +264,12 @@ export class Draw {
                     }
                 }
 
+                // 如果鼠标shap中但是它是激活状态，那么就表明鼠标已经移出了该shap
                 if (shap.active === true) {
                     shouldRender = true
                     shap.onmouseleave()
                 }
-            }
+            } 
 
             if (shouldRender) {
                 this.render(false)
@@ -447,7 +448,6 @@ export class Draw {
             }
 
             if (shouldRender) {
-                console.log(shouldRecodeData)
                 this.render(shouldRecodeData)
             }
             

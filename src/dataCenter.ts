@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import { Draw, Edge, ShapTypeMap } from "./core";
 
 type Data = {

@@ -1,6 +1,6 @@
 {
   "name": "canvas-moteur",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "draw-tools canvas",
   "main": "dist/main.cjs.js",
   "module": "dist/main.esm.js",
@@ -17,6 +17,8 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.2",
     "rollup": "^2.73.0",
     "typescript": "^4.6.4"
