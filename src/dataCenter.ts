@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { Draw, Edge, ShapTypeMap } from "./core";
 
 type Data = {
@@ -40,8 +41,8 @@ export class DataCenter {
         }
 
         const data = {
-            shaps: [...draw.shaps],
-            edges: [...draw.edges]
+            shaps: cloneDeep(draw.shaps),
+            edges: cloneDeep(draw.edges)
         }
         this.data = data
 
@@ -58,9 +59,9 @@ export class DataCenter {
         } else {
             return
         }
-        this.data = {...this.stack[this.activeKey]}
-        this.draw.shaps = [...this.data.shaps]
-        this.draw.edges = [...this.data.edges]
+        this.data = cloneDeep(this.stack[this.activeKey])
+        this.draw.shaps = cloneDeep(this.data.shaps)
+        this.draw.edges = cloneDeep(this.data.edges)
         this.draw.render(false)
 
         console.log(this.activeKey, this)
@@ -75,9 +76,9 @@ export class DataCenter {
         } else {
             return
         }
-        this.data = {...this.stack[this.activeKey]}
-        this.draw.shaps = [...this.data.shaps]
-        this.draw.edges = [...this.data.edges]
+        this.data = cloneDeep(this.stack[this.activeKey])
+        this.draw.shaps = cloneDeep(this.data.shaps)
+        this.draw.edges = cloneDeep(this.data.edges)
         this.draw.render(false)
     }
 }

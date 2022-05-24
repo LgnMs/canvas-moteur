@@ -127,10 +127,9 @@ export abstract class BasicShape {
         this.mousedown = true
     }
 
-    dargmove(e: MouseEvent) {
-        const { movementX, movementY } = e
-        this.x += movementX
-        this.y += movementY
+    dargmove({moveX, moveY}: {moveX: number, moveY: number}) {
+        this.x += moveX
+        this.y += moveY
     }
 
     dargend() {

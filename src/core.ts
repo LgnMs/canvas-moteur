@@ -1,7 +1,7 @@
 import { DataCenter } from './dataCenter'
 import { Line, LineOptions, Circle, CircleOptions, Rect, RectOptions, Img, ImgOptions, Anchor } from './shap'
 
-export type DrawOption = CircleOptions | RectOptions
+export type DrawShapOption = CircleOptions | RectOptions
 
 export type ShapTypeMap = Rect | Circle
 
@@ -45,7 +45,7 @@ export class Draw {
     onShapDragMove: onShapDragFn | undefined;
     onShapDragEnd: onShapDragFn | undefined;
 
-    constructor({el, isTranslate, isScale}: { el: string | HTMLCanvasElement, isTranslate: boolean, isScale: boolean }) {
+    constructor({el, isTranslate = false, isScale = false}: { el: string | HTMLCanvasElement, isTranslate?: boolean, isScale?: boolean }) {
         let canvas = null
         
         
@@ -62,8 +62,8 @@ export class Draw {
             this.dataCenter = new DataCenter(this)
             this.canvasStatus = {
                 mousedown: false,
-                translate: { x: 0, y: 0},
-                scale: 0,
+                translate: { x: 0, y: 0 },
+                scale: 1,
                 isTranslate,
                 isScale,
             }
@@ -106,7 +106,22 @@ export class Draw {
 
     render(shouldRecodeData = true) {
         const { ctx, canvasStatus } = this
-        ctx.clearRect(-canvasStatus.translate.x, -canvasStatus.translate.y, this.canvas.width, this.canvas.height);
+
+        if (canvasStatus.scale < 1) {
+            ctx.clearRect(
+                -canvasStatus.translate.x,
+                -canvasStatus.translate.y,
+                this.canvas.width / canvasStatus.scale,
+                this.canvas.height / canvasStatus.scale
+            )
+        } else {
+            ctx.clearRect(
+                -canvasStatus.translate.x / canvasStatus.scale,
+                -canvasStatus.translate.y / canvasStatus.scale,
+                this.canvas.width,
+                this.canvas.height
+            )
+        }
 
         this.shaps.forEach(shap => {
             shap.draw()
@@ -133,9 +148,13 @@ export class Draw {
             this.tempEdge.draw()
         }
 
+        console.log(shouldRecodeData)
         if (shouldRecodeData) {
             this.dataCenter.recordData()
         }
+
+        this.debug()
+
     }
 
     initEventListener() {
@@ -143,12 +162,68 @@ export class Draw {
         this.ondargstart()
         this.ondargmove()
         this.ondargend()
+        this.onMouseWheel()
+        this.onMouseLeave()
     }
     
     translateCanvas(x: number, y: number) {
-        this.canvasStatus.translate = { x, y }
-        this.ctx.translate(x, y);
-        this.render();
+        // 平移画布
+        const { translate, scale, mousedown, isTranslate } = this.canvasStatus
+        if (mousedown && isTranslate) {
+            translate.x += x;
+            translate.y += y;
+
+            this.ctx.setTransform(scale, 0, 0, scale, translate.x, translate.y)
+            this.render(false);
+        }
+    }
+
+    zoomInCanvas() {
+        const { canvasStatus } = this
+        let { translate, isScale } = this.canvasStatus
+
+        if (isScale) {
+            canvasStatus.scale += 0.1
+
+            this.ctx.setTransform(canvasStatus.scale, 0, 0, canvasStatus.scale, translate.x, translate.y)
+            this.render(false);
+        }
+    }
+    
+    zoomOutCanvas() {
+        const { canvasStatus } = this
+        let { translate, isScale } = this.canvasStatus
+
+        if (isScale) {
+            canvasStatus.scale -= 0.1
+
+            this.ctx.setTransform(canvasStatus.scale, 0, 0, canvasStatus.scale, translate.x, translate.y)
+            this.render(false);
+        }
+    }
+
+    resetTransform() {
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.canvasStatus.translate.x = 0
+        this.canvasStatus.translate.y = 0
+        this.canvasStatus.scale = 1
+        this.render(false)
+    }
+
+    debug() {
+        // 绘制坐标系
+        this.ctx.save()
+        this.ctx.beginPath();
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.moveTo(this.canvas.width / 2, 0);
+        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
+        // this.ctx.stroke()
+
+        this.ctx.moveTo(0, this.canvas.height / 2);
+        this.ctx.lineTo(this.canvas.width, this.canvas.height / 2);
+
+        this.ctx.stroke()
+        this.ctx.restore()
     }
 
     onmouseover() {
@@ -213,6 +288,7 @@ export class Draw {
 
                 if (ctx.isPointInPath(shap.path, offsetX, offsetY)) {
                     shap.dargstart()
+                    this.canvasStatus.mousedown = false
 
                     if (this.onShapDragStart) {
                         this.onShapDragStart(e, shap)
@@ -228,6 +304,7 @@ export class Draw {
                         if (ctx.isPointInPath(anchor.path, offsetX, offsetY)) {
                             if (anchor.mousedown !== true) {
                                 anchor.mousedown = true
+                                this.canvasStatus.mousedown = false
                                 
                                 this.addTempEdge({
                                     points: [{x: anchor.x, y: anchor.y}]
@@ -254,18 +331,19 @@ export class Draw {
         this.canvas.addEventListener('mousemove', (e) => {
             const { offsetX, offsetY } = e
             const { shaps } = this
+            const { translate, scale } = this.canvasStatus
             let shouldRender = false
 
-            // 平移画布
-            if (this.canvasStatus.mousedown && this.canvasStatus.isTranslate) {
-                this.translateCanvas(e.movementX, e.movementY);
-            }
+            this.translateCanvas(e.movementX , e.movementY );
 
             for (let i = 0; i < shaps.length; i++) {
                 const shap = shaps[i];
 
                 if (shap.mousedown) {
-                    shap.dargmove(e)
+                    shap.dargmove({
+                        moveX: e.movementX / scale,
+                        moveY: e.movementY / scale
+                    })
                     shouldRender = true
 
                     if (this.onShapDragMove) {
@@ -280,8 +358,10 @@ export class Draw {
                         const anchor = shap.anchorList[j]
                         
                         if (anchor.mousedown && this.tempEdge) {
-                            // 鼠标在锚点中点下，应该开始绘制折线
-                            this.tempEdge.points[1] = {x: offsetX, y: offsetY}
+                            this.tempEdge.points[1] = {
+                                x: (offsetX - translate.x) / scale,
+                                y: (offsetY - translate.y) / scale
+                            }
                             shouldRender = true
 
                             if (this.onShapDragMove) {
@@ -367,9 +447,30 @@ export class Draw {
             }
 
             if (shouldRender) {
+                console.log(shouldRecodeData)
                 this.render(shouldRecodeData)
             }
             
+        })
+    }
+
+    onMouseWheel() {
+        // TODO scale值重新计算
+        this.canvas.addEventListener('wheel', (e) => {
+            if (e.deltaY < 0) {
+                // 放大
+                this.zoomInCanvas()
+            } else {
+                // 缩小
+                this.zoomOutCanvas()
+            }
+
+        })
+    }
+
+    onMouseLeave() {
+        this.canvas.addEventListener('mouseleave', (e) => {
+            this.canvasStatus.mousedown = false
         })
     }
 }
