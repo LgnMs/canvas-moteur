@@ -20,6 +20,10 @@ export interface Edge {
 
 type onShapDragFn = (e: any, shap: ShapTypeMap | Anchor) => void
 
+
+interface CanvasStatus {
+    mousedown: boolean
+}
 export class Draw {
     canvas: HTMLCanvasElement
     ctx!: CanvasRenderingContext2D
@@ -29,6 +33,7 @@ export class Draw {
     tempEdgeSource: EdgePoint | null = null
     edges: Edge[] = []
     dataCenter: DataCenter
+    canvasStatus: CanvasStatus
 
     onShapDragStart: onShapDragFn | undefined;
     onShapDragMove: onShapDragFn | undefined;
@@ -48,6 +53,9 @@ export class Draw {
             this.ctx = canvas.getContext('2d')!;
             this.initEventListener()
             this.dataCenter = new DataCenter(this)
+            this.canvasStatus = {
+                mousedown: false
+            }
         } else {
             throw new Error('浏览器不支持canvas');
         }
@@ -125,6 +133,10 @@ export class Draw {
         this.ondargmove()
         this.ondargend()
     }
+    
+    translateCanvas(x: number, y: number) {
+        this.ctx.translate(x, y);
+    }
 
     onmouseover() {
         this.canvas.addEventListener('mousemove', (e) => {
@@ -181,6 +193,8 @@ export class Draw {
             const { offsetX, offsetY } = e
             const { ctx, shaps } = this
 
+            this.canvasStatus.mousedown = true
+
             for (let i = 0; i < shaps.length; i++) {
                 const shap = shaps[i];
 
@@ -229,6 +243,10 @@ export class Draw {
             const { shaps } = this
             let shouldRender = false
 
+            if (this.canvasStatus.mousedown) {
+                this.translateCanvas(e.movementX, e.movementY);
+            }
+
             for (let i = 0; i < shaps.length; i++) {
                 const shap = shaps[i];
 
@@ -276,6 +294,7 @@ export class Draw {
             const { ctx, shaps } = this
             let shouldRender = false
             let shouldRecodeData = false
+            this.canvasStatus.mousedown = false
 
             for (let i = 0; i < shaps.length; i++) {
                 const shap = shaps[i];
