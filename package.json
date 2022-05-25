@@ -6,7 +6,7 @@
   "module": "dist/main.esm.js",
   "browser": "dist/main.umd.js",
   "repository": {
-    "url": "https://github.com/LgnMs/draw-tools"
+    "url": "https://github.com/LgnMs/canvas-moteur"
   },
   "scripts": {
     "build": "rollup --config rollup.config.js"
