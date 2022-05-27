@@ -15,19 +15,29 @@ export class DataCenter {
     draw: Draw
 
     constructor(draw: Draw) {
-        this.draw = draw
+        this.draw = draw;
         this.activeKey = 0
         this.data = {
             shaps: [...draw.shaps],
             edges: [...draw.edges]
         }
         this.stack = [this.data]
+
+        this.draw.onRendered((shouldRecodeData: boolean) => {
+            if (shouldRecodeData) {
+                this.recordData()
+            }
+        })
+    }
+
+    static install(draw: Draw) {
+        return new DataCenter(draw)
     }
 
     /**
      * 添加、删除、移动完毕执行此操作
      */
-     recordData() {
+    recordData() {
         const { draw } = this
 
         if (this.activeKey < this.stack.length - 1) {

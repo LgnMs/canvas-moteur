@@ -1,4 +1,5 @@
-import { DataCenter } from './dataCenter'
+import { PubSub } from './PubSub'
+import { DataCenter } from './DataCenter'
 import { Line, LineOptions, Circle, CircleOptions, Rect, RectOptions, Img, ImgOptions, Anchor } from './shap'
 
 export type DrawShapOption = CircleOptions | RectOptions
@@ -30,7 +31,29 @@ interface CanvasStatus {
     isTranslate: boolean
     isScale: boolean
 }
+
+
+const components : {
+    name: string
+    cb: (self: Draw) => void
+}[] = []
+
+export function registerComponent(name: string, cb: (self: Draw) => void) {
+   components.push({ name, cb });
+}
+
+function injectComponents(self: Draw) {
+    components.forEach(({name, cb}) => {
+        self[name] = cb(self);
+    })
+}
+
+const pubsub = new PubSub()
+
 export class Draw {
+    [key: string]: any;
+    DataCenter!: DataCenter;
+
     canvas: HTMLCanvasElement
     ctx!: CanvasRenderingContext2D
     shaps: ShapTypeMap[] = []
@@ -38,7 +61,6 @@ export class Draw {
     tempEdge: Line | null = null
     tempEdgeSource: EdgePoint | null = null
     edges: Edge[] = []
-    dataCenter: DataCenter
     canvasStatus: CanvasStatus
 
     onShapDragStart: onShapDragFn | undefined;
@@ -47,7 +69,7 @@ export class Draw {
 
     constructor({el, isTranslate = false, isScale = false}: { el: string | HTMLCanvasElement, isTranslate?: boolean, isScale?: boolean }) {
         let canvas = null
-        
+        this.components = []
         
         if (typeof el === 'string') {
             canvas = document.getElementById(el) as HTMLCanvasElement
@@ -58,8 +80,10 @@ export class Draw {
 
         if (canvas.getContext){
             this.ctx = canvas.getContext('2d')!;
+
+            injectComponents(this)
+
             this.initEventListener()
-            this.dataCenter = new DataCenter(this)
             this.canvasStatus = {
                 mousedown: false,
                 translate: { x: 0, y: 0 },
@@ -148,13 +172,22 @@ export class Draw {
             this.tempEdge.draw()
         }
 
-        console.log(shouldRecodeData)
-        if (shouldRecodeData) {
-            this.dataCenter.recordData()
-        }
+        this.dispatchRendered(shouldRecodeData);
 
-        // this.debug()
+    }
 
+    /**
+     * 渲染完成后执行
+     */
+    onRendered(cb: Function) {
+        pubsub.subscribe('onRendered', cb)
+    }
+    /**
+     * 执行订阅的onRendered事件
+     * @param shouldRecodeData 
+     */
+    dispatchRendered(shouldRecodeData: boolean) {
+        pubsub.publish('onRendered', shouldRecodeData)
     }
 
     initEventListener() {
@@ -474,3 +507,5 @@ export class Draw {
         })
     }
 }
+
+registerComponent('DataCenter', DataCenter.install)
