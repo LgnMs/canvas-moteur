@@ -23,11 +23,7 @@ export class DataCenter {
         }
         this.stack = [this.data]
 
-        this.draw.onRendered((shouldRecodeData: boolean) => {
-            if (shouldRecodeData) {
-                this.recordData()
-            }
-        })
+
     }
 
     static install(draw: Draw) {
@@ -57,7 +53,6 @@ export class DataCenter {
         this.data = data
 
         this.stack.push(data)
-        console.log(this.activeKey, this)
     }
 
     /**

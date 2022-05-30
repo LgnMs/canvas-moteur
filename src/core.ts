@@ -243,22 +243,6 @@ export class Draw {
         this.render(false)
     }
 
-    debug() {
-        // 绘制坐标系
-        this.ctx.save()
-        this.ctx.beginPath();
-        this.ctx.setLineDash([5, 5]);
-        this.ctx.moveTo(this.canvas.width / 2, 0);
-        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
-        // this.ctx.stroke()
-
-        this.ctx.moveTo(0, this.canvas.height / 2);
-        this.ctx.lineTo(this.canvas.width, this.canvas.height / 2);
-
-        this.ctx.stroke()
-        this.ctx.restore()
-    }
-
     onmouseover() {
         this.canvas.addEventListener('mousemove', (e) => {
             const { offsetX, offsetY } = e
