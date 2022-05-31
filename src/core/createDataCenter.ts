@@ -1,14 +1,11 @@
-/**
- * 存储画布数据，提供撤销，重做等工鞥
- */
-
 import cloneDeep from "lodash/cloneDeep"
 import { Canvas } from "./crateCanvasApi"
+import { Edge } from "./crateTempshap"
 
  type Data = {
     // 画布中已有的图形和线
     shaps: any[]
-    edges: any[]
+    edges: Edge[]
 }
 
 export interface DataCenter {
