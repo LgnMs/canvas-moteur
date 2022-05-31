@@ -11,22 +11,33 @@ $ npm install canvas-moteur
 ## 使用 
 
 ```javascript
-import { Draw } from 'canvas-moteur'
+import { createCanvas } from 'canvas-moteur'
 
-const draw = new Draw({ el: 'canvas', isTranslate: true, isScale: true })
+const canvas = createCanvas({el: '#canvas', canScale: true, canTranslate: true, width: 500, height: 500});
 
-draw.addRect({
+canvas.shapeApi.rect({
     x: 20,
     y: 10,
     width: 150,
     height: 100,
     anchors: ['left', 'right'],
     style: {
-        backgroundColor: 'green'
+        backgroundColor: 'green',
     }
-})  
+})
 
-draw.addCircle({
+canvas.shapeApi.rect({
+    x: 200,
+    y: 100,
+    width: 150,
+    height: 100,
+    anchors: ['top', 'bottom'],
+    style: {
+        backgroundColor: 'red',
+    }
+})
+
+canvas.shapeApi.circle({
     x: 300,
     y: 400,
     r: 50,
@@ -36,21 +47,18 @@ draw.addCircle({
     }
 })
 
-draw.render();
+canvas.render();
 
-// 重置画布变换
 function resetCanvasTransform() {
-    draw.resetTransform()
+    canvas.transform.resetTransform()
 }
 
-// 撤销
 function undo() {
-    draw.dataCenter.undo()
+    canvas.dataCenter.undo()
 }
 
-// 重做
 function redo() {
-    draw.dataCenter.redo()
+    canvas.dataCenter.redo()
 }
 
 ```
