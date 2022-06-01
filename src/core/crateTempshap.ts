@@ -1,22 +1,10 @@
+import { Edge, PartialNull } from "../type"
+
 export interface LineOptions {x: number, y: number}
-
-/**
- * 线的点
- */
- export interface EdgePoint {
-    // TODO
-    shap: any
-    anchorIndex: number
-}
-
-export interface Edge {
-    source: EdgePoint | null
-    target: EdgePoint | null
-}
 
 export interface TempShap {
     hasEdge: boolean
-    edge: Edge
+    edge: Edge | null
     line: LineOptions[]
     setLine(line: LineOptions[]): void
     removeLine(): void
@@ -24,13 +12,10 @@ export interface TempShap {
     removeEdge(): void
 }
 
-export function crateTempshap() {
+export function crateTempshapApi() {
     const tempShap: TempShap = {
         hasEdge: false,
-        edge: {
-            source: null,
-            target: null
-        },
+        edge: null,
         line: [],
         setLine(line) {
             tempShap.line = line
@@ -41,22 +26,26 @@ export function crateTempshap() {
         },
         
         setEdge(edge) {
-            tempShap.hasEdge = true
+            let edgeObj: any = {}
+            if (!tempShap.hasEdge) {
+                tempShap.hasEdge = true
+            } else {
+                edgeObj = tempShap.edge!
+            }
 
             if (edge.source) {
-                tempShap.edge.source = edge.source
+                edgeObj.source = edge.source
             }
             if (edge.target) {
-                tempShap.edge.target = edge.target
+                edgeObj.target = edge.target
             }
+
+            tempShap.edge = { ...tempShap.edge, ...edgeObj }
         },
         
         removeEdge() {
             tempShap.hasEdge = false
-            tempShap.edge = {
-                source: null,
-                target: null
-            }
+            tempShap.edge = null
         }
     }
 

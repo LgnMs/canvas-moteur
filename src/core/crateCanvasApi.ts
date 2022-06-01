@@ -7,17 +7,6 @@ export type Plugin = {
     install: PluginInstallFunction
 } | PluginInstallFunction
 
-interface CanvasStatus {
-    mousedown: boolean
-    translate: {
-        x: number
-        y: number
-    }
-    scale: number
-    canTranslate: boolean
-    canScale: boolean
-}
-
 export interface Canvas {
     mount(el: string | HTMLElement): void
     unmount(): void
@@ -29,10 +18,11 @@ export interface Canvas {
      */
     getCtx(): CanvasRenderingContext2D
 
-    status: CanvasStatus
     shapTypes: { name: string, shap: any }[]
 
     el: HTMLCanvasElement
+    width: number
+    height: number
     _container: HTMLElement | null
     _context: CanvasContext
     _ctx: CanvasRenderingContext2D
@@ -90,17 +80,12 @@ export function createCanvasApi(opts: CanvasOptions): Canvas {
 
     const canvas: Canvas = (context.canvas = {
         el,
+        width: opts.width || 500,
+        height: opts.height || 500,
         _ctx: getCanvasContext(el),
         _container: null,
         _context: context,
 
-        status: {
-            mousedown: false,
-            translate: { x: 0, y: 0 },
-            scale: 1,
-            canTranslate: false,
-            canScale: false,
-        },
         shapTypes: [],
 
         getCtx() {

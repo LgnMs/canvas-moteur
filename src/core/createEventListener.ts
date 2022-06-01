@@ -49,7 +49,7 @@ function onMouseOver(canvasMoteur: CanvasMoteur) {
         } 
 
         if (shouldRender) {
-            // render(false)
+            canvasMoteur.render()
         }
     })
 }
@@ -61,14 +61,14 @@ function onDargStart(canvasMoteur: CanvasMoteur) {
         const ctx = canvasMoteur.getCtx()
         const shaps = dataCenter.data.shaps
 
-        canvasMoteur.status.mousedown = true
+        canvasMoteur.transform.mousedown = true
 
         for (let i = 0; i < shaps.length; i++) {
             const shap = shaps[i];
 
             if (ctx.isPointInPath(shap.path, offsetX, offsetY)) {
                 shap.dargstart()
-                canvasMoteur.status.mousedown = false
+                canvasMoteur.transform.mousedown = false
 
                 if (canvasMoteur.onShapDragStart) {
                     canvasMoteur.onShapDragStart(e, shap)
@@ -85,7 +85,7 @@ function onDargStart(canvasMoteur: CanvasMoteur) {
                         if (anchor.mousedown !== true) {
                             anchor.mousedown = true
 
-                            canvasMoteur.status.mousedown = false
+                            canvasMoteur.transform.mousedown = false
                             canvasMoteur.tempShap.setEdge({
                                 source: {
                                     shap,
@@ -112,7 +112,7 @@ function onDargMove(canvasMoteur: CanvasMoteur) {
         const dataCenter = canvasMoteur.dataCenter
         const { offsetX, offsetY } = e
         const { shaps } = dataCenter.data
-        const { translate, scale } = canvasMoteur.status
+        const { translate, scale } = canvasMoteur.transform
         let shouldRender = false
 
         canvasMoteur.transform!.translateCanvas(e.movementX , e.movementY );
@@ -138,7 +138,6 @@ function onDargMove(canvasMoteur: CanvasMoteur) {
                 for (let j = 0; j < shap.anchorList.length; j++) {
                     const anchor = shap.anchorList[j]
                     
-                    // TODO
                     if (anchor.mousedown && canvasMoteur.tempShap.hasEdge) {
                         canvasMoteur.tempShap.setLine([
                             ...canvasMoteur.tempShap.line,
@@ -161,8 +160,7 @@ function onDargMove(canvasMoteur: CanvasMoteur) {
         }
 
         if (shouldRender) {
-            // TODO
-            // this.render(false)
+            canvasMoteur.render()
         }
     })
 }
@@ -175,7 +173,7 @@ function ondargend(canvasMoteur: CanvasMoteur) {
         const shaps = dataCenter.data.shaps
         let shouldRender = false
         let shouldRecodeData = false
-        canvasMoteur.status.mousedown = false
+        canvasMoteur.transform.mousedown = false
 
         for (let i = 0; i < shaps.length; i++) {
             const shap = shaps[i];
@@ -206,7 +204,7 @@ function ondargend(canvasMoteur: CanvasMoteur) {
                             canvasMoteur.tempShap.setEdge({ target: { shap, anchorIndex: j} })
                             canvasMoteur.tempShap.removeLine()
 
-                            canvasMoteur.dataCenter.data.edges.push(canvasMoteur.tempShap.edge)
+                            canvasMoteur.dataCenter.data.edges.push(canvasMoteur.tempShap.edge!)
                             canvasMoteur.tempShap.removeEdge()
                         }
 
@@ -233,22 +231,27 @@ function ondargend(canvasMoteur: CanvasMoteur) {
         }
 
         if (shouldRender) {
-            // canvas.render(shouldRecodeData)
+            if (shouldRecodeData) {
+                canvasMoteur.dataCenter.shouldRecode()
+            }
+            canvasMoteur.render()
         }
         
     })
 }
+
+export type ListenerCb = (e: CanvasMoteur) => void
 export interface EventListener {
-    addEventListener(fn: Function): void
-    removeEventListener(fn: Function): void
+    addEventListener(fn: ListenerCb): void
+    removeEventListener(fn: ListenerCb): void
     initEventListener(): void
 }
 
 
 export function createEventListener(canvasMoteur: CanvasMoteur) {
-    let events = new Set<Function>()
+    let events = new Set<ListenerCb>()
 
-    const closure = (event: Function) => {
+    const closure = (event: ListenerCb) => {
         return event(canvasMoteur)
     }
 
@@ -261,7 +264,7 @@ export function createEventListener(canvasMoteur: CanvasMoteur) {
             }
         },
         
-        removeEventListener(fn: Function) {
+        removeEventListener(fn: ListenerCb) {
             if (events.has(fn)) {
                 events.delete(fn)
             } else {

@@ -1,6 +1,6 @@
 import cloneDeep from "lodash/cloneDeep"
+import { Edge } from "../type"
 import { Canvas } from "./crateCanvasApi"
-import { Edge } from "./crateTempshap"
 
  type Data = {
     // 画布中已有的图形和线
@@ -16,7 +16,9 @@ export interface DataCenter {
     stack: Data[]
     data: Data
     canvas: Canvas
+    needRecode: boolean
 
+    shouldRecode(): void
     /**
      * 添加、删除、移动完毕执行此操作
      */
@@ -40,8 +42,16 @@ export function createDataCenter(canvas: Canvas) {
             edges: []
         },
         canvas,
+        needRecode: false,
+
+        shouldRecode() {
+            dataCenter.needRecode = true
+        },
 
         recordData() {
+            if (!dataCenter.shouldRecode) {
+                return
+            }
             if (dataCenter.activeKey < dataCenter.stack.length - 1) {
                 dataCenter.stack.splice(dataCenter.activeKey + 1)
                 dataCenter.activeKey += 1
@@ -53,6 +63,8 @@ export function createDataCenter(canvas: Canvas) {
             }
     
             dataCenter.stack.push(cloneDeep(dataCenter.data))
+
+            dataCenter.needRecode = false
         },
 
         undo() {

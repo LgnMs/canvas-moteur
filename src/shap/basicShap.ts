@@ -136,5 +136,6 @@ export abstract class BasicShape {
         this.mousedown = false
     }
     
+    abstract draw(): void;
 
 }
