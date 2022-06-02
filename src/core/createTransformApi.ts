@@ -9,14 +9,20 @@ export interface TransformApi {
     scale: number
     canTranslate: boolean
     canScale: boolean
+    disabledTranslate: boolean
 
     translateCanvas(x: number, y: number) : void
     zoomInCanvas(): void
     zoomOutCanvas(): void
     resetTransform(): void
+    setDisabledTranslate(bl: boolean): void
 
     onMouseWheel(): void
     onMouseLeave(): void
+
+    onDragCanvasStart(): void
+    onDragCanvasMove(): void
+    onDragCanvasEnd(): void
 }
 
 export function createTransformApi(canvasMoteur: CanvasMoteur, {canTranslate = false, canScale = false}: {canTranslate?: boolean, canScale?: boolean}) {
@@ -26,6 +32,7 @@ export function createTransformApi(canvasMoteur: CanvasMoteur, {canTranslate = f
         scale: 1,
         canTranslate,
         canScale,
+        disabledTranslate: false,
 
         translateCanvas(x: number, y: number) {
             const { translate, scale, mousedown, canTranslate } = transform
@@ -82,12 +89,45 @@ export function createTransformApi(canvasMoteur: CanvasMoteur, {canTranslate = f
     
             })
         },
+
+        setDisabledTranslate(bl) {
+            transform.disabledTranslate = bl
+        },
+
         onMouseLeave() {
             canvasMoteur.el.addEventListener('mouseleave', (e) => {
                 transform.mousedown = false
             })
+        },
+
+        onDragCanvasStart() {
+            canvasMoteur.el.addEventListener('mousedown', (e) => {
+                if (!transform.disabledTranslate) {
+                    transform.mousedown = true
+                }
+            })
+        },
+
+        onDragCanvasMove() {
+            canvasMoteur.el.addEventListener("mousemove", (e) => {
+                if (transform.mousedown) {
+                    transform.translateCanvas(e.movementX, e.movementY)
+                }
+            })
+        },
+
+        onDragCanvasEnd() {
+            canvasMoteur.el.addEventListener("mouseup", (e) => {
+                transform.mousedown = false
+            })
         }
     }
+
+    transform.onMouseWheel()
+    transform.onMouseLeave()
+    transform.onDragCanvasStart()
+    transform.onDragCanvasMove()
+    transform.onDragCanvasEnd()
 
     return transform
 }

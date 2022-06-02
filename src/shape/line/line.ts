@@ -1,11 +1,11 @@
-import { ShapType } from "../types"
+import { shapeType } from "../types"
 
 export interface LineOptions {
     points: {x: number, y: number}[]
 }
 
 export class Line {
-    type: ShapType
+    type: shapeType
     ctx: CanvasRenderingContext2D
     points: {x: number, y: number}[] = []
     path!: Path2D

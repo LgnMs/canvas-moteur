@@ -31,6 +31,10 @@ export class Anchor {
         this.setPath()
     }
 
+    onmouseover() {
+        this.active = true
+    }
+
     setPath() {
         const path = new Path2D();
         path.arc(this.x, this.y, this.r, 0, 2 * Math.PI)

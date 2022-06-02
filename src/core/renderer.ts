@@ -1,5 +1,5 @@
-import { Line } from "../shap";
-import { Edge, Shap } from "../type";
+import { Line } from "../shape";
+import { Edge, Shape } from "../type";
 import { CanvasMoteur } from "./index";
 
 function clearRect(canvasMoteur: CanvasMoteur) {
@@ -23,9 +23,9 @@ function clearRect(canvasMoteur: CanvasMoteur) {
     }
 }
 
-function renderShaps(shaps: Shap[]) {
-    shaps.forEach(shap => {
-        shap.draw()
+function renderShapes(shapes: Shape[]) {
+    shapes.forEach(shape => {
+        shape.draw()
     })
 }
 
@@ -36,12 +36,12 @@ function renderEdges(edges: Edge[], ctx: any) {
             // 锚点连接线的点位计算
             points: [
                 { 
-                    x: edge.source.shap.anchorList[edge.source.anchorIndex].x, 
-                    y: edge.source.shap.anchorList[edge.source.anchorIndex].y
+                    x: edge.source.shape.anchorList[edge.source.anchorIndex].x,
+                    y: edge.source.shape.anchorList[edge.source.anchorIndex].y
                 }, 
                 {
-                    x: edge.target.shap.anchorList[edge.target.anchorIndex].x,
-                    y: edge.target.shap.anchorList[edge.target.anchorIndex].y 
+                    x: edge.target.shape.anchorList[edge.target.anchorIndex].x,
+                    y: edge.target.shape.anchorList[edge.target.anchorIndex].y
                 }
             ]
         })
@@ -53,11 +53,11 @@ export function render(canvasMoteur: CanvasMoteur) {
     const ctx = canvasMoteur.getCtx()
 
     clearRect(canvasMoteur)
-    renderShaps(canvasMoteur.dataCenter.data.shaps)
+    renderShapes(canvasMoteur.dataCenter.data.shapes)
     renderEdges(canvasMoteur.dataCenter.data.edges, ctx)
 
-    if (canvasMoteur.tempShap.hasEdge) {
-        const line = new Line(ctx, {points: canvasMoteur.tempShap.line})
+    if (canvasMoteur.tempshape.hasEdge) {
+        const line = new Line(ctx, {points: canvasMoteur.tempshape.line})
         line.draw()
     }
 

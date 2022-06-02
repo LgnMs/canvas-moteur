@@ -3,7 +3,8 @@ import { Canvas, CanvasOptions, createCanvasApi } from "./crateCanvasApi";
 import { createDataCenter, DataCenter } from "./createDataCenter";
 import { createTransformApi, TransformApi } from "./createTransformApi";
 import { render } from "./renderer";
-import { crateTempshapApi, TempShap } from "./crateTempshap";
+import { crateTempshapeApi, Tempshape } from "./crateTempshape";
+import { createshapeApi, shapeApi } from "../shape";
 
 /**
  * 处理canvas的额外功能
@@ -12,19 +13,20 @@ export interface Canvashandler {
     dataCenter: DataCenter
     transform: TransformApi
     eventListener: EventListener
-    tempShap: TempShap
+    shapeApi: shapeApi
+    tempshape: Tempshape
     render(): void
 }
 
 
-export type onShapDragFn = (e: any, shap: any) => void
+export type onshapeDragFn = (e: any, shape: any) => void
 /**
  * 在合适的时机调用这些事件
  */
  export interface FunctionProps {
-    onShapDragStart: onShapDragFn | undefined
-    onShapDragMove: onShapDragFn | undefined
-    onShapDragEnd: onShapDragFn | undefined
+    onshapeDragStart: onshapeDragFn | undefined
+    onshapeDragMove: onshapeDragFn | undefined
+    onshapeDragEnd: onshapeDragFn | undefined
 }
 
 export type CanvasMoteur = Canvas & Canvashandler & FunctionProps
@@ -39,15 +41,13 @@ export function createCanvas(opts: CanvasOptions & CanvasMoteurOptions) {
 
     const canvasMoteur: Canvas & Partial<Canvashandler> = Object.assign(canvasApi, {})
 
-    canvasMoteur.dataCenter = createDataCenter(canvasApi)
-    canvasMoteur.tempShap = crateTempshapApi()
-
+    canvasMoteur.dataCenter = createDataCenter(canvasMoteur as CanvasMoteur)
+    canvasMoteur.tempshape = crateTempshapeApi()
     canvasMoteur.render = () => { render(canvasMoteur as CanvasMoteur) }
+    canvasMoteur.eventListener = createEventListener(canvasMoteur as CanvasMoteur)
 
     canvasMoteur.transform = createTransformApi(canvasMoteur as CanvasMoteur, {canTranslate: opts.canTranslate, canScale: opts.canScale})
-    canvasMoteur.eventListener = createEventListener(canvasMoteur as CanvasMoteur)
-    canvasMoteur.eventListener.addEventListener(canvasMoteur.transform.onMouseWheel)
-    canvasMoteur.eventListener.addEventListener(canvasMoteur.transform.onMouseLeave)
-
+    canvasMoteur.shapeApi = createshapeApi(canvasMoteur as CanvasMoteur)
+    
     return canvasMoteur as CanvasMoteur
 }

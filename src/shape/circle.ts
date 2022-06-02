@@ -1,7 +1,7 @@
-import { BasicShape } from './basicShap'
-import { ShapBasicOptions } from "./types"
+import { BasicShape } from './basicShape'
+import { shapeBasicOptions } from "./types"
 
-export interface CircleOptions extends ShapBasicOptions {
+export interface CircleOptions extends shapeBasicOptions {
     r: number
 }
 

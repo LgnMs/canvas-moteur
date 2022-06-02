@@ -1,10 +1,10 @@
-import { BasicShape } from "./shap/basicShap"
+import { BasicShape } from "./shape/basicShape"
 
 /**
  * 线的点
  */
 interface EdgePoint {
-    shap: Shap
+    shape: Shape
     anchorIndex: number
 }
 
@@ -13,7 +13,7 @@ interface Edge {
     target: EdgePoint
 }
 
-interface Shap extends BasicShape {
+interface Shape extends BasicShape {
 }
 
 

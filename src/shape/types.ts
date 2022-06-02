@@ -1,4 +1,4 @@
-export type ShapType =
+export type shapeType =
     'rect'
     | 'circle'
     | 'line'
@@ -6,17 +6,17 @@ export type ShapType =
     | string
 
 
-export interface ShapStyle {
+export interface shapeStyle {
     backgroundColor: string
 }
 
 export type anchorPosition = 'left' | 'right' | 'top' | 'bottom' 
 
-export interface ShapBasicOptions {
-    type?: ShapType
+export interface shapeBasicOptions {
+    type?: shapeType
     x: number
     y: number
-    style?: ShapStyle
+    style?: shapeStyle
     active?: boolean
     mousedown?: boolean
     anchors?: anchorPosition[]

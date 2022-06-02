@@ -21,9 +21,7 @@ export class Path {
     }
 
     setPath() {
-        const path = new Path2D(this.pathString)
-        
-        this.path = path
+        this.path = new Path2D(this.pathString)
     }
 
     draw() {

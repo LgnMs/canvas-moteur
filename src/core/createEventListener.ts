@@ -1,288 +1,278 @@
-import { warn } from "../warning"
+import { warn } from "../shared/warning"
 import { CanvasMoteur } from "./index"
+import { Shape } from "../type"
+import {Anchor} from "../shape";
 
-function onMouseOver(canvasMoteur: CanvasMoteur) {
-    canvasMoteur.el.addEventListener('mousemove', (e) => {
-        const dataCenter = canvasMoteur.dataCenter
-        const { offsetX, offsetY } = e
-        const ctx = canvasMoteur.getCtx()
-        const shaps = dataCenter.data.shaps
-
-        let shouldRender = false
-
-        for (let i = 0; i < shaps.length; i++) {
-            const shap = shaps[i];
-            // 当鼠标处于路径中的时候激活所属路径，并展示明显的提示
-            if (ctx.isPointInPath(shap.path!, offsetX, offsetY)) {
-                if (shap.active !== true) {
-                    shap.onmouseover()
-                    shouldRender = true
-                }
-                break
-            } 
-
-            // 判断鼠标是否在锚点中
-            if (shap.hasAnchor) {
-                for (let j = 0; j < shap.anchorList.length; j++) {
-                    const anchor = shap.anchorList[j]
-                    
-                    if (ctx.isPointInPath(anchor.path, offsetX, offsetY)) {
-                        if (anchor.active !== true) {
-                            anchor.active = true
-                            shouldRender = true
-                        }
-                        break
-                    }
-
-                    if (anchor.active === true) {
-                        shouldRender = true
-                        anchor.active = false
-                    }
-                }
-            }
-
-            // 如果鼠标shap中但是它是激活状态，那么就表明鼠标已经移出了该shap
-            if (shap.active === true) {
-                shouldRender = true
-                shap.onmouseleave()
-            }
-        } 
-
-        if (shouldRender) {
-            canvasMoteur.render()
-        }
-    })
+interface PointInShapeObj {
+    shape: Shape | null
+    shapeIndex: number
+    anchor: Anchor | null
+    anchorIndex: number
 }
 
-function onDargStart(canvasMoteur: CanvasMoteur) {
-    canvasMoteur.el.addEventListener('mousedown', (e) => {
-        const dataCenter = canvasMoteur.dataCenter
-        const { offsetX, offsetY } = e
-        const ctx = canvasMoteur.getCtx()
-        const shaps = dataCenter.data.shaps
-
-        canvasMoteur.transform.mousedown = true
-
-        for (let i = 0; i < shaps.length; i++) {
-            const shap = shaps[i];
-
-            if (ctx.isPointInPath(shap.path, offsetX, offsetY)) {
-                shap.dargstart()
-                canvasMoteur.transform.mousedown = false
-
-                if (canvasMoteur.onShapDragStart) {
-                    canvasMoteur.onShapDragStart(e, shap)
-                }
-                break
-            }
-
-            // 判断鼠标是否在锚点中
-            if (shap.hasAnchor) {
-                for (let j = 0; j < shap.anchorList.length; j++) {
-                    const anchor = shap.anchorList[j]
-                    
-                    if (ctx.isPointInPath(anchor.path, offsetX, offsetY)) {
-                        if (anchor.mousedown !== true) {
-                            anchor.mousedown = true
-
-                            canvasMoteur.transform.mousedown = false
-                            canvasMoteur.tempShap.setEdge({
-                                source: {
-                                    shap,
-                                    anchorIndex: j
-                                }
-                            })
-                            canvasMoteur.tempShap.setLine([{x: anchor.x, y: anchor.y}])
-
-                            if (canvasMoteur.onShapDragStart) {
-                                canvasMoteur.onShapDragStart(e, anchor)
-                            }
-                        }
-                        break
-                    }
-                }
-            }
-        }
-        
-    })
+export function pointInfShapeIsNull(pointInShapeObj: PointInShapeObj) {
+    return !pointInShapeObj.shape && !pointInShapeObj.anchor
 }
 
-function onDargMove(canvasMoteur: CanvasMoteur) {
-    canvasMoteur.el.addEventListener('mousemove', (e) => {
-        const dataCenter = canvasMoteur.dataCenter
-        const { offsetX, offsetY } = e
-        const { shaps } = dataCenter.data
-        const { translate, scale } = canvasMoteur.transform
-        let shouldRender = false
+function pointInShape(canvasMoteur: CanvasMoteur, point: {x: number, y: number}) {
+    const dataCenter = canvasMoteur.dataCenter
+    const { x, y } = point
+    const ctx = canvasMoteur.getCtx()
+    const shapes = dataCenter.data.shapes
+    let obj: PointInShapeObj = {
+        shape: null,
+        shapeIndex: -1,
+        anchor: null,
+        anchorIndex: -1
+    }
 
-        canvasMoteur.transform!.translateCanvas(e.movementX , e.movementY );
+    for (let i = 0; i < shapes.length; i++) {
+        const shape = shapes[i];
 
-        for (let i = 0; i < shaps.length; i++) {
-            const shap = shaps[i];
-
-            if (shap.mousedown) {
-                shap.dargmove({
-                    moveX: e.movementX / scale,
-                    moveY: e.movementY / scale
-                })
-                shouldRender = true
-
-                if (canvasMoteur.onShapDragMove) {
-                    canvasMoteur.onShapDragMove(e, shap)
-                }
-                break
-            }
-
-            // 锚点逻辑
-            if (shap.hasAnchor) {
-                for (let j = 0; j < shap.anchorList.length; j++) {
-                    const anchor = shap.anchorList[j]
-                    
-                    if (anchor.mousedown && canvasMoteur.tempShap.hasEdge) {
-                        canvasMoteur.tempShap.setLine([
-                            ...canvasMoteur.tempShap.line,
-                            {
-                                x: (offsetX - translate.x) / scale,
-                                y: (offsetY - translate.y) / scale
-                            }
-                        ])
-                        shouldRender = true
-
-                        if (canvasMoteur.onShapDragMove) {
-                            canvasMoteur.onShapDragMove(e, anchor)
-                        }
-                        break
-                    }
-
-                }
-            }
-
+        if (ctx.isPointInPath(shape.path, x, y)) {
+            obj.shape = shape
+            obj.shapeIndex = i
+            break
         }
 
-        if (shouldRender) {
-            canvasMoteur.render()
+        // 判断鼠标是否在锚点中
+        if (shape.hasAnchor) {
+            for (let j = 0; j < shape.anchorList.length; j++) {
+                const anchor = shape.anchorList[j]
+
+                if (ctx.isPointInPath(anchor.path, x, y)) {
+                    obj.shape = shape
+                    obj.shapeIndex = i
+                    obj.anchor = anchor
+                    obj.anchorIndex = j
+                    break
+                }
+            }
         }
-    })
+    }
+    return obj
 }
 
-function ondargend(canvasMoteur: CanvasMoteur) {
-    canvasMoteur.el.addEventListener('mouseup', (e) => {
-        const dataCenter = canvasMoteur.dataCenter
-        const { offsetX, offsetY } = e
-        const ctx = canvasMoteur.getCtx()
-        const shaps = dataCenter.data.shaps
-        let shouldRender = false
-        let shouldRecodeData = false
-        canvasMoteur.transform.mousedown = false
-
-        for (let i = 0; i < shaps.length; i++) {
-            const shap = shaps[i];
-
-            if (shap.mousedown) {
-                shap.dargend()
-                shouldRender = true
-                shouldRecodeData = true
-
-                if (canvasMoteur.onShapDragEnd) {
-                    canvasMoteur.onShapDragEnd(e, shap)
-                }
-                break
-            }
-
-            // 锚点逻辑
-            if (shap.hasAnchor) {
-                for (let j = 0; j < shap.anchorList.length; j++) {
-                    const anchor = shap.anchorList[j]
-
-                    // 松开鼠标重置属性
-                    anchor.mousedown = false
-
-                    if (ctx.isPointInPath(anchor.path, offsetX, offsetY)) {
-                        // 鼠标松开时在锚点中 TODO: 考虑在同一锚点的情况
-
-                        if (canvasMoteur.tempShap.hasEdge) {
-                            canvasMoteur.tempShap.setEdge({ target: { shap, anchorIndex: j} })
-                            canvasMoteur.tempShap.removeLine()
-
-                            canvasMoteur.dataCenter.data.edges.push(canvasMoteur.tempShap.edge!)
-                            canvasMoteur.tempShap.removeEdge()
-                        }
-
-                        shouldRender = true
-                        shouldRecodeData = true
-                        
-                        if (canvasMoteur.onShapDragEnd) {
-                            canvasMoteur.onShapDragEnd(e, anchor)
-                        }
-
-                        // 鼠标在锚点中松开，终止循环
-                        break
-                    }
-
-                }
-
-            }
-        }
-
-        if (canvasMoteur.tempShap.hasEdge) {
-            canvasMoteur.tempShap.removeLine()
-            canvasMoteur.tempShap.removeEdge()
-            shouldRender = true
-        }
-
-        if (shouldRender) {
-            if (shouldRecodeData) {
-                canvasMoteur.dataCenter.shouldRecode()
-            }
-            canvasMoteur.render()
-        }
-        
-    })
+function mouseOverDefault(e: MouseEvent, target: PointInShapeObj) {
+    if (target.anchor) {
+        target.anchor.onmouseover()
+    } else if (target.shape) {
+        target.shape.onmouseover()
+    }
 }
 
-export type ListenerCb = (e: CanvasMoteur) => void
+function dragStartDefault(e: MouseEvent, target: PointInShapeObj, canvasMoteur: CanvasMoteur) {
+    // 开始移动元素的时候禁止画布移动
+    canvasMoteur.transform.setDisabledTranslate(true)
+
+
+    if (target.anchor) {
+        target.anchor.mousedown = true
+        canvasMoteur.tempshape.setEdge({
+            source: {
+                shape: target.shape!,
+                anchorIndex: target.anchorIndex
+            }
+        })
+        canvasMoteur.tempshape.setLine([{x: target.anchor!.x, y: target.anchor!.y}])
+        if (canvasMoteur.onshapeDragStart) {
+            canvasMoteur.onshapeDragStart(e, target.anchor)
+        }
+    } else if (target.shape) {
+        target.shape.dragstart()
+        if (canvasMoteur.onshapeDragStart) {
+            canvasMoteur.onshapeDragStart(e, target.shape)
+        }
+    }
+}
+
+function dragMoveDefault(e: MouseEvent, target: PointInShapeObj, canvasMoteur: CanvasMoteur) {
+    const { translate, scale } = canvasMoteur.transform
+    const { offsetX, offsetY } = e
+    if (target.anchor) {
+        if (canvasMoteur.tempshape.hasEdge) {
+            canvasMoteur.tempshape.setLine([
+                canvasMoteur.tempshape.line[0],
+                {
+                    x: (offsetX - translate.x) / scale,
+                    y: (offsetY - translate.y) / scale
+                }
+            ])
+        }
+        if (canvasMoteur.onshapeDragMove) {
+            canvasMoteur.onshapeDragMove(e, target.anchor)
+        }
+    } else if (target.shape) {
+        target.shape.dragmove({
+            moveX: e.movementX / scale,
+            moveY: e.movementY / scale
+        })
+        if (canvasMoteur.onshapeDragMove) {
+            canvasMoteur.onshapeDragMove(e, target.shape)
+        }
+    }
+
+
+
+}
+
+function dragEndDefault(e: MouseEvent, target: PointInShapeObj, canvasMoteur: CanvasMoteur) {
+    if (pointInfShapeIsNull(target)) {
+        if (canvasMoteur.tempshape.hasEdge) {
+            canvasMoteur.tempshape.removeLine()
+            canvasMoteur.tempshape.removeEdge()
+        }
+    }
+
+    if (target.anchor) {
+        if (canvasMoteur.tempshape.hasEdge) {
+            canvasMoteur.tempshape.setEdge({ target: { shape: target.shape!, anchorIndex: target.anchorIndex } })
+            canvasMoteur.tempshape.removeLine()
+
+            canvasMoteur.dataCenter.data.edges.push(canvasMoteur.tempshape.edge!)
+            canvasMoteur.tempshape.removeEdge()
+        }
+        if (canvasMoteur.onshapeDragEnd) {
+            canvasMoteur.onshapeDragEnd(e, target.anchor)
+        }
+    } else if (target.shape) {
+        target.shape.dragend()
+        if (canvasMoteur.onshapeDragEnd) {
+            canvasMoteur.onshapeDragEnd(e, target.shape)
+        }
+    }
+    canvasMoteur.dataCenter.shouldRecode()
+}
+
+export type ListenerCb = (e: MouseEvent, target: PointInShapeObj, c: CanvasMoteur) => void
+/**
+ * 自定义事件
+ */
+export interface Listeners {
+    /**
+     * 鼠标移入元素时
+     */
+    mouseover: Set<ListenerCb>
+    /**
+     * 鼠标拖拽元素时
+     */
+    dragstart: Set<ListenerCb>
+    /**
+     * 鼠标移动元素时
+     */
+    dragmove: Set<ListenerCb>
+    /**
+     * 鼠标拖拽元素结束
+     */
+    dragend: Set<ListenerCb>
+}
+type ListenerType = keyof Listeners
+
 export interface EventListener {
-    addEventListener(fn: ListenerCb): void
-    removeEventListener(fn: ListenerCb): void
+    addEventListener(type: ListenerType, fn: ListenerCb): void
+    removeEventListener(type: ListenerType , fn: ListenerCb): void
     initEventListener(): void
 }
 
-
 export function createEventListener(canvasMoteur: CanvasMoteur) {
-    let events = new Set<ListenerCb>()
-
-    const closure = (event: ListenerCb) => {
-        return event(canvasMoteur)
+    let events: Listeners = {
+        mouseover: new Set(),
+        dragstart: new Set(),
+        dragmove: new Set(),
+        dragend: new Set(),
     }
 
     const eventListener: EventListener = {
-        addEventListener(fn) {
-            if (events.has(fn)) {
+        addEventListener(type, fn) {
+            if (events[type].has(fn)) {
                 warn('这个事件已经监听过了')
             } else {
-                events.add(fn)
+                events[type].add(fn)
             }
         },
         
-        removeEventListener(fn: ListenerCb) {
-            if (events.has(fn)) {
-                events.delete(fn)
+        removeEventListener(type, fn) {
+            if ( events[type].has(fn)) {
+                events[type].delete(fn)
+
             } else {
                 warn('没有监听这个事件')
             }
         },
 
         initEventListener() {
-            events.forEach(fn => {
-                closure(fn)
+            let mouseoverTarget: PointInShapeObj | null = null
+            let dragTarget: PointInShapeObj | null = null
+
+            canvasMoteur.el.addEventListener('mousemove', (e) => {
+
+                for (let event of events['mouseover'].values()) {
+                    const { offsetX, offsetY } = e
+                    const oldTarget = mouseoverTarget
+
+                    mouseoverTarget = pointInShape(canvasMoteur, {x: offsetX, y: offsetY})
+
+                    if (pointInfShapeIsNull(mouseoverTarget) && oldTarget && !pointInfShapeIsNull(oldTarget)) {
+                        if (oldTarget.anchor) {
+                            oldTarget.anchor.active = false
+                        } else if (oldTarget.shape) {
+                            oldTarget.shape.active = false
+                        }
+                        canvasMoteur.render()
+                    } else {
+                        event(e, mouseoverTarget, canvasMoteur)
+                        canvasMoteur.render()
+                    }
+
+
+                }
+
+                for (let event of events['dragmove'].values()) {
+                    if (dragTarget) {
+                        event(e, dragTarget, canvasMoteur)
+                        canvasMoteur.render()
+                    }
+                }
+            })
+
+            canvasMoteur.el.addEventListener('mousedown', (e) => {
+                for (let event of events['dragstart'].values()) {
+                    const {offsetX, offsetY} = e
+                    const target = pointInShape(canvasMoteur, {x: offsetX, y: offsetY})
+
+                    if (!pointInfShapeIsNull(target)) {
+                        dragTarget = target
+                        event(e, target, canvasMoteur)
+                    }
+                }
+            })
+
+
+            canvasMoteur.el.addEventListener('mouseup', (e) => {
+                for (let event of events['dragend'].values()) {
+                    const {offsetX, offsetY} = e
+
+                    // 有拖动的元素才去触发dragend事件
+                    if (dragTarget) {
+                        const target = pointInShape(canvasMoteur, {x: offsetX, y: offsetY})
+                        event(e, target, canvasMoteur)
+                        canvasMoteur.render()
+
+                        dragTarget = null
+                    }
+
+                    // 在移动完元素后允许画布能够被拖动
+                    canvasMoteur.transform.setDisabledTranslate(false)
+                }
             })
         },
     }
+    eventListener.initEventListener()
 
-    eventListener.addEventListener(onMouseOver)
-    eventListener.addEventListener(onDargStart)
-    eventListener.addEventListener(onDargMove)
-    eventListener.addEventListener(ondargend)
+    eventListener.addEventListener('mouseover', mouseOverDefault)
+    eventListener.addEventListener('dragstart', dragStartDefault)
+    eventListener.addEventListener('dragmove', dragMoveDefault)
+    eventListener.addEventListener('dragend', dragEndDefault)
 
     return eventListener
 }

@@ -1,11 +1,11 @@
 import { Anchor } from "./anchor"
-import { anchorPosition, ShapBasicOptions, ShapStyle, ShapType } from "./types"
+import { anchorPosition, shapeBasicOptions, shapeStyle, shapeType } from "./types"
 
-let createShapNumber = 1
+let createshapeNumber = 1
 
 const getId = () => {
-    const id = new Date().getTime() + '_i_' + createShapNumber
-    createShapNumber += 1
+    const id = new Date().getTime() + '_i_' + createshapeNumber
+    createshapeNumber += 1
 
     return id
 }
@@ -15,8 +15,8 @@ export abstract class BasicShape {
 
     ctx: CanvasRenderingContext2D
     
-    type: ShapType = ''
-    style: ShapStyle | undefined
+    type: shapeType = ''
+    style: shapeStyle | undefined
     path!: Path2D
 
     active = false
@@ -29,7 +29,7 @@ export abstract class BasicShape {
     private _x = 0
     private _y = 0
 
-    constructor(ctx: CanvasRenderingContext2D, opts: ShapBasicOptions) {
+    constructor(ctx: CanvasRenderingContext2D, opts: shapeBasicOptions) {
         this.id = getId()
 
         this.ctx = ctx
@@ -123,16 +123,16 @@ export abstract class BasicShape {
         this.active = false
     }
 
-    dargstart() {
+    dragstart() {
         this.mousedown = true
     }
 
-    dargmove({moveX, moveY}: {moveX: number, moveY: number}) {
+    dragmove({moveX, moveY}: {moveX: number, moveY: number}) {
         this.x += moveX
         this.y += moveY
     }
 
-    dargend() {
+    dragend() {
         this.mousedown = false
     }
     

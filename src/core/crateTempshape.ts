@@ -1,8 +1,8 @@
-import { Edge, PartialNull } from "../type"
+import { Edge } from "../type"
 
 export interface LineOptions {x: number, y: number}
 
-export interface TempShap {
+export interface Tempshape {
     hasEdge: boolean
     edge: Edge | null
     line: LineOptions[]
@@ -12,25 +12,25 @@ export interface TempShap {
     removeEdge(): void
 }
 
-export function crateTempshapApi() {
-    const tempShap: TempShap = {
+export function crateTempshapeApi() {
+    const tempshape: Tempshape = {
         hasEdge: false,
         edge: null,
         line: [],
         setLine(line) {
-            tempShap.line = line
+            tempshape.line = line
         },
 
         removeLine() {
-            tempShap.line = []
+            tempshape.line = []
         },
         
         setEdge(edge) {
             let edgeObj: any = {}
-            if (!tempShap.hasEdge) {
-                tempShap.hasEdge = true
+            if (!tempshape.hasEdge) {
+                tempshape.hasEdge = true
             } else {
-                edgeObj = tempShap.edge!
+                edgeObj = tempshape.edge!
             }
 
             if (edge.source) {
@@ -40,14 +40,14 @@ export function crateTempshapApi() {
                 edgeObj.target = edge.target
             }
 
-            tempShap.edge = { ...tempShap.edge, ...edgeObj }
+            tempshape.edge = { ...tempshape.edge, ...edgeObj }
         },
         
         removeEdge() {
-            tempShap.hasEdge = false
-            tempShap.edge = null
+            tempshape.hasEdge = false
+            tempshape.edge = null
         }
     }
 
-    return tempShap
+    return tempshape
 }

@@ -1,5 +1,5 @@
 import { isFunction } from "../shared"
-import { warn } from "../warning"
+import { warn } from "../shared/warning"
 
 type PluginInstallFunction = (canvas: Canvas, ...options: any[]) => any
 
@@ -11,14 +11,14 @@ export interface Canvas {
     mount(el: string | HTMLElement): void
     unmount(): void
     use(plugin: Plugin, ...options: any[]): this
-    addShapType(name: string, shap: any): this
+    addshapeType(name: string, shape: any): this
 
     /**
      * 获取canvas context
      */
     getCtx(): CanvasRenderingContext2D
 
-    shapTypes: { name: string, shap: any }[]
+    shapeTypes: { name: string, shape: any }[]
 
     el: HTMLCanvasElement
     width: number
@@ -41,7 +41,7 @@ interface InitCanvasOptions {
 export interface CanvasOptions extends InitCanvasOptions {}
 
 function initCanvas(opts: InitCanvasOptions) {
-    let canvas = null
+    let canvas: null | HTMLCanvasElement
 
     if (typeof opts.el === 'string') {
         canvas = document.querySelector(opts.el) as HTMLCanvasElement
@@ -86,7 +86,7 @@ export function createCanvasApi(opts: CanvasOptions): Canvas {
         _container: null,
         _context: context,
 
-        shapTypes: [],
+        shapeTypes: [],
 
         getCtx() {
             return canvas._ctx
@@ -129,8 +129,8 @@ export function createCanvasApi(opts: CanvasOptions): Canvas {
             canvas._container.removeChild(canvas.el)
         },
 
-        addShapType(name, shap) {
-            canvas.shapTypes.push({ name, shap })
+        addshapeType(name, shape) {
+            canvas.shapeTypes.push({ name, shape })
 
             return canvas
         },
