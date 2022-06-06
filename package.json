@@ -1,6 +1,6 @@
 {
   "name": "canvas-moteur",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "draw-tools canvas",
   "main": "dist/main.cjs.js",
   "module": "dist/main.esm.js",

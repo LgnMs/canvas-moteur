@@ -17,6 +17,7 @@ export interface DataCenter {
     data: Data
     needRecode: boolean
 
+    init(): void
     shouldRecode(): void
     /**
      * 添加、删除、移动完毕执行此操作
@@ -42,12 +43,17 @@ export function createDataCenter(canvasMoteur: CanvasMoteur) {
         },
         needRecode: false,
 
+        init() {
+            dataCenter.shouldRecode()
+            dataCenter.recordData()
+        },
+
         shouldRecode() {
             dataCenter.needRecode = true
         },
 
         recordData() {
-            if (!dataCenter.shouldRecode) {
+            if (!dataCenter.needRecode) {
                 return
             }
             if (dataCenter.activeKey < dataCenter.stack.length - 1) {
@@ -61,17 +67,16 @@ export function createDataCenter(canvasMoteur: CanvasMoteur) {
             }
     
             dataCenter.stack.push(cloneDeep(dataCenter.data))
-
             dataCenter.needRecode = false
         },
 
-        // TODO: found bud Fix it
         undo() {
             if (dataCenter.activeKey > 0) {
                 dataCenter.activeKey -= 1
             } else {
                 return
             }
+            console.log('dataCenter.activeKey', dataCenter.activeKey)
             dataCenter.data = cloneDeep(dataCenter.stack[dataCenter.activeKey])
             
             canvasMoteur.render()
@@ -87,6 +92,8 @@ export function createDataCenter(canvasMoteur: CanvasMoteur) {
             canvasMoteur.render()
         }
     }
+
+    dataCenter.init()
 
     return dataCenter
 }

@@ -15,17 +15,18 @@ export interface shapeApi {
     circle(opts: any): void
 }
 
-export function createshapeApi(canvasMoteur: CanvasMoteur) {
+export function createShapeApi(canvasMoteur: CanvasMoteur) {
 
-    const addshape = (shapeFunc: any, opts: any) => {
+    const addShapeFunc = (shapeFunc: any, opts: any) => {
         const shape = new shapeFunc(canvasMoteur._ctx, opts)
         canvasMoteur.dataCenter.data.shapes.push(shape)
-        
+        canvasMoteur.dataCenter.shouldRecode()
+        canvasMoteur.dataCenter.recordData()
         return shape
     }
     const shapes: shapeApi = {
-        rect: (opts: any) => addshape(Rect, opts),
-        circle: (opts: any) => addshape(Circle, opts)
+        rect: (opts: any) => addShapeFunc(Rect, opts),
+        circle: (opts: any) => addShapeFunc(Circle, opts)
     }
 
     return shapes

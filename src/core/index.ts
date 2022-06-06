@@ -4,7 +4,7 @@ import { createDataCenter, DataCenter } from "./createDataCenter";
 import { createTransformApi, TransformApi } from "./createTransformApi";
 import { render } from "./renderer";
 import { crateTempshapeApi, Tempshape } from "./crateTempshape";
-import { createshapeApi, shapeApi } from "../shape";
+import { createShapeApi, shapeApi } from "../shape";
 
 /**
  * 处理canvas的额外功能
@@ -47,7 +47,7 @@ export function createCanvas(opts: CanvasOptions & CanvasMoteurOptions) {
     canvasMoteur.eventListener = createEventListener(canvasMoteur as CanvasMoteur)
 
     canvasMoteur.transform = createTransformApi(canvasMoteur as CanvasMoteur, {canTranslate: opts.canTranslate, canScale: opts.canScale})
-    canvasMoteur.shapeApi = createshapeApi(canvasMoteur as CanvasMoteur)
+    canvasMoteur.shapeApi = createShapeApi(canvasMoteur as CanvasMoteur)
     
     return canvasMoteur as CanvasMoteur
 }
