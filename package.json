@@ -1,28 +1,21 @@
 {
   "name": "canvas-moteur",
-  "version": "0.4.5",
-  "description": "draw-tools canvas",
-  "main": "dist/main.cjs.js",
-  "module": "dist/main.esm.js",
-  "browser": "dist/main.umd.js",
-  "repository": {
-    "url": "https://github.com/LgnMs/canvas-moteur"
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "example": "examples"
   },
   "scripts": {
-    "build": "rollup --config rollup.config.js",
-    "dev": "rollup --watch --config rollup.config.js"
+    "build": "tsc --project src/tsconfig.json"
   },
-  "author": "lgn",
-  "license": "MIT",
-  "dependencies": {
-    "lodash": "^4.17.21"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LgnMs/canvas-moteur.git"
   },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.2",
-    "@types/lodash": "^4.14.182",
-    "rollup": "^2.73.0",
-    "typescript": "^4.6.4"
-  }
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LgnMs/canvas-moteur/issues"
+  },
+  "homepage": "https://github.com/LgnMs/canvas-moteur#readme"
 }
