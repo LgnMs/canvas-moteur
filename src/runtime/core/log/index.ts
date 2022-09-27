@@ -41,3 +41,7 @@ export function showAllLogs() {
         showLog(level, message);
     })
 }
+
+export function getLogs() {
+    return logStack;
+}

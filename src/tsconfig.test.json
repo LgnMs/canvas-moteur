@@ -6,6 +6,5 @@
             "DOM",
         ],
         "esModuleInterop": true,
-    },
-    "include": ["./runtime"]
+    }
 }

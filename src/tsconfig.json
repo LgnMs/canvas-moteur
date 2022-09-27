@@ -6,6 +6,5 @@
             "DOM",
         ],
         "outDir": "../out/runtime"
-    },
-    "include": ["./runtime"]
+    }
 }

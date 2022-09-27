@@ -1,4 +1,4 @@
-import { log, warn, error, showAllLogs } from '../log'
+import { log, warn, error, showAllLogs } from '../index'
 
 test('log function', () => {
     log('log');
