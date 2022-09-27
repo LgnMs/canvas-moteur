@@ -9,9 +9,7 @@ export const logStack: {
     message: string;
 }[] = [];
 
-function setLog(level: logLevel, message: string) {
-    logStack.push({level, message});
-
+function showLog(level: logLevel, message: string) {
     if (level === logLevel.LOG) {
         console.log(message);
     } else if (level === logLevel.WARN) {
@@ -19,6 +17,11 @@ function setLog(level: logLevel, message: string) {
     } else if (level === logLevel.ERROR) {
         console.error(message);
     }
+}
+
+function setLog(level: logLevel, message: string) {
+    logStack.push({level, message});
+    showLog(level, message);
 }
 
 export function log(message: string) {
@@ -31,4 +34,10 @@ export function error(message: string) {
 
 export function warn(message: string) {
     setLog(logLevel.WARN, message);
+}
+
+export function showAllLogs() {
+    logStack.forEach(({level, message}) => {
+        showLog(level, message);
+    })
 }

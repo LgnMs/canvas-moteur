@@ -12,6 +12,5 @@
         "paths": {
             "runtime/*": ["./runtime/*"]
         }
-    },
-    "exclude": ["node_modules"]
+    }
 }
