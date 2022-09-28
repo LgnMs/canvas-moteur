@@ -10,6 +10,8 @@ export const logStack: {
 }[] = [];
 
 function showLog(level: logLevel, message: string) {
+    if (process.env.NODE_ENV === 'test') return;
+
     if (level === logLevel.LOG) {
         console.log(message);
     } else if (level === logLevel.WARN) {
@@ -30,6 +32,10 @@ export function log(message: string) {
 
 export function error(message: string) {
     setLog(logLevel.ERROR, message);
+    
+    if (process.env.NODE_ENV === 'test') return;
+    throw new Error(message);
+    
 }
 
 export function warn(message: string) {

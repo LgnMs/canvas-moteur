@@ -11,5 +11,8 @@ module.exports = {
         tsconfig: 'src/tsconfig.test.json',
       },
     ],
+  },
+  moduleNameMapper: {
+    '^runtime/(.*)$': '<rootDir>/src/runtime/$1',
   }
 };
