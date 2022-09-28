@@ -1,5 +1,6 @@
 import { generateId } from "runtime/core/common/utils";
-import { Component } from "runtime/functional/component";
+import { Component } from "../component/common";
+import { componentClass, componentClassType} from "../component/index";
 
 export class Page {
     private id: string;
@@ -16,8 +17,8 @@ export class Page {
     }
     // TODO 页面管理相关功能
 
-    public addComponent(name: string) {
-        const component = Component.new(name);
+    public addComponent(name: string, type: componentClassType) {
+        const component = componentClass[type].new(name);
         this.components.push(component);
         return component;
     }
