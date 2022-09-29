@@ -1,8 +1,11 @@
-import { Component, componentType, IComponent } from "../common"
+import { Component, componentTag, IComponent } from "../common"
 
 export class Input extends Component implements IComponent {
     constructor(name: string) {
-        super(name);
-        this.type = componentType.HTML;
+        super(name, 'Input', componentTag.HTML);
+    }
+
+    public static new(name: string) {
+        return new Input(name);
     }
 }

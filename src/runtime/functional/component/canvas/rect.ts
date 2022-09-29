@@ -1,8 +1,11 @@
-import { Component, componentType, IComponent } from "../common"
+import { Component, componentTag, IComponent } from "../common"
 
 export class Rect extends Component implements IComponent {
     constructor(name: string) {
-        super(name);
-        this.type = componentType.CANVAS;
+        super(name, 'Rect', componentTag.CANVAS);
+    }
+
+    public static new(name: string) {
+        return new Rect(name);
     }
 }

@@ -1,13 +1,30 @@
+import { Component, componentTag} from "runtime/functional/component/common";
+import { componentClass } from 'runtime/functional/component'
+import { Page } from "runtime/functional/page";
 import { Project } from "..";
 
-test("新增项目", () => {
+describe("项目新增过程", () => {
     const project = Project.new("测试项目1");
-    const page = project.addPage("测试页面1");
-    const component = page.addComponent("测试组件", 'Rect');
-    const component2 = component.addComponent("测试组件2", 'Rect');
-    
-    const pages = project.getAllPages();
-    expect(pages[0]).toEqual(page);
-    expect(pages[0].getAllComponents()[0]).toEqual(component);
-    expect(pages[0].getAllComponents()[0].getAllComponents()[0]).toEqual(component2);
+    let pages: Page[] = [];
+    let components: Component[] = [];
+    let componentChilds: Component[] = [];
+
+    test("添加页面", () => {
+        const page = project.addPage("测试页面1");
+        pages = project.getAllPages();
+        expect(pages[0]).toEqual(page);
+    })
+
+    test("向页面添加组件", () => {
+        const component = pages[0].addComponent(componentClass.Rect.new("测试组件"));
+        components = pages[0].getAllComponents();  
+        expect(components[0]).toEqual(component);
+    })
+
+    test("向组件添加组件", () => {
+        const componentChild = components[0].addComponent(componentClass.Rect.new("测试组件的子组件"));
+        componentChilds = components[0].getAllComponents();  
+        expect(componentChilds[0]).toEqual(componentChild);
+    })
+
 })

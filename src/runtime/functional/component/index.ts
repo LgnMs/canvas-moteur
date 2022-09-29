@@ -1,5 +1,4 @@
 import { Rect } from './canvas/rect';
-
 import { Input } from './html/input';
 
 export const componentClass = {
@@ -7,4 +6,10 @@ export const componentClass = {
     Input
 }
 
-export type componentClassType = keyof(typeof componentClass);
+export type componentKeys = keyof(typeof componentClass);
+
+export function getComponentClass(type: componentKeys) {
+    return componentClass[type];
+}
+
+export type componentClassType = ReturnType<typeof getComponentClass>

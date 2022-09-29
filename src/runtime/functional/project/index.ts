@@ -15,7 +15,7 @@ export interface ProjectInfo {
  * 项目管理
  */
 export class Project {
-    private id: string;
+    readonly id: string;
     private name: string;
     private version: string;
     /**
@@ -88,6 +88,6 @@ export class Project {
     }
 
     public getAllPages() {
-        return this.pages;
+        return this.pages
     }
 }

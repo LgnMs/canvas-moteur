@@ -10,7 +10,8 @@
         "moduleResolution": "Node",
         "baseUrl": ".",
         "paths": {
-            "runtime/*": ["./runtime/*"]
+            "runtime/*": ["./runtime/*"],
+            "editor/*": ["./editor/*"]
         }
     },
     "include": ["./runtime", "./editor"]

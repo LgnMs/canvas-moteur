@@ -1,7 +1,6 @@
 import { generateId } from "runtime/core/common/utils";
-import { componentClass, componentClassType } from ".";
 
-export enum componentType {
+export enum componentTag {
     /**
      * 包含HTML、canvas的混合组件
      */
@@ -23,34 +22,33 @@ export enum componentType {
 export interface IComponent {
     id: string;
     name: string;
-    type: componentType;
+    type: string;
+    tag: componentTag;
     components: Component[];
 
-    addComponent(name: string, type: componentClassType): Component;
+    addComponent(components: Component): Component;
     getAllComponents(): Component[];
 }
 
-export class Component implements IComponent {
+export abstract class Component implements IComponent {
     id: string;
     name: string;
-    type: componentType;
+    type: string;
+    tag: componentTag;
     components: Component[] = [];
     
-    constructor(name: string) {
+    constructor(name: string, type: string, tag: componentTag) {
         this.id = generateId({ suffix: '_component' });
-        this.name = '';
-        this.type = componentType.HTML;
+        this.name = name;
+        this.type = type;
+        this.tag = tag;
     }
 
-    static new(name: string) {
-        return new Component(name);
-    }
-
-    public addComponent(name: string, type: componentClassType) {
-        const component = componentClass[type].new(name);
+    public addComponent(component: Component) {
         this.components.push(component);
         return component;
     }
+    
 
     public getAllComponents() {
         return this.components;
