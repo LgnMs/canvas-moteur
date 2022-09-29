@@ -14,6 +14,9 @@ export class PageRenderer {
     constructor(page: Page) {
         this.page = page;
         this.container = document.createElement('div');
+        this.container.style.position = 'relative';
+        this.container.style.width = page.getSize().width + 'px';
+        this.container.style.height = page.getSize().height + 'px'
 
         const { canvasLayer, htmlLayer } = this.parse();
         this.canvasLayer = canvasLayer;
@@ -24,8 +27,8 @@ export class PageRenderer {
     }
 
     private parse() {
-        const canvasLayer = new CanvasLayer();
-        const htmlLayer = new HTMLLayer();
+        const canvasLayer = new CanvasLayer(this.page.getSize());
+        const htmlLayer = new HTMLLayer(this.page.getSize());
 
         const components = this.page.getAllComponents();
 

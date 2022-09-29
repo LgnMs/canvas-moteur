@@ -1,4 +1,5 @@
 import { generateId } from "runtime/core/common/utils";
+import { ComponentStyle } from "./style";
 
 export enum componentTag {
     /**
@@ -25,19 +26,30 @@ export interface IComponent {
     type: string;
     tag: componentTag;
     components: Component[];
+    style: Partial<ComponentStyle>
 
     addComponent(components: Component): Component;
     getAllComponents(): Component[];
 }
 
+export interface IComponentOptions {
+    name: string;
+    style?: ComponentStyle;
+}
+
+interface COptions extends IComponentOptions{
+    type: string;
+    tag: componentTag;
+} 
 export abstract class Component implements IComponent {
     id: string;
     name: string;
     type: string;
     tag: componentTag;
     components: Component[] = [];
+    style: Partial<ComponentStyle> = {};
     
-    constructor(name: string, type: string, tag: componentTag) {
+    constructor({ name, type, tag }: COptions) {
         this.id = generateId({ suffix: '_component' });
         this.name = name;
         this.type = type;

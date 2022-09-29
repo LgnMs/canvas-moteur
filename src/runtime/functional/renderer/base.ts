@@ -1,30 +1,16 @@
+import * as THREE from 'three';
 import { Component } from "runtime/functional/component/common";
+import { Rect } from '../component/canvas/rect';
+import { RectRender } from './canvas/rect';
 
-// export interface Renderer {
-//     render(): Renderer;
-//     update(): void;
-// }
+type toWebAxis = (number: number) => number;
 
-// export class CanvasRenderer implements Renderer {
-//     render(): Renderer {
-//         return this;
-//     };
-//     update(): void {
-        
-//     };
-// }
 
-// export class HTMLRenderer implements Renderer {
-//     render(): Renderer {
-//         return this;
-//     };
-//     update(): void {
-        
-//     };
-// }
-
-export function parseCanvas(component: Component) {
-
+export function renderCanvas(component: Component, scene: THREE.Scene, toWebxAxis: toWebAxis, toWebyAxis: toWebAxis) {
+    if (component.type === 'rect') {
+        const rectRender = new RectRender(toWebxAxis, toWebyAxis);
+        scene.add(rectRender.parse(component as Rect));
+    }
 }
 
 export function parseHTML(component: Component) {

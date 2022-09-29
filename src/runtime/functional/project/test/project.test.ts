@@ -16,13 +16,13 @@ describe("项目新增过程", () => {
     })
 
     test("向页面添加组件", () => {
-        const component = pages[0].addComponent(componentClass.Rect.new("测试组件"));
+        const component = pages[0].addComponent(componentClass.Rect.new({name: "测试组件"}));
         components = pages[0].getAllComponents();  
         expect(components[0]).toEqual(component);
     })
 
     test("向组件添加组件", () => {
-        const componentChild = components[0].addComponent(componentClass.Rect.new("测试组件的子组件"));
+        const componentChild = components[0].addComponent(componentClass.Rect.new({name: "测试组件的子组件"}));
         componentChilds = components[0].getAllComponents();  
         expect(componentChilds[0]).toEqual(componentChild);
     })
