@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Component } from "runtime/functional/component/common";
-import { parseHTML } from "./base";
 import { CanvasRenderer } from './canvas';
+import { parseHTML } from './html';
 
 export enum LayerType {
     Canvas,
