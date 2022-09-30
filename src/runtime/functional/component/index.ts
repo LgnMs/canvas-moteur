@@ -12,4 +12,4 @@ export function getComponentClass(type: componentKeys) {
     return componentClass[type];
 }
 
-export type componentClassType = ReturnType<typeof getComponentClass>
+export type componentClassType = Rect | Input;

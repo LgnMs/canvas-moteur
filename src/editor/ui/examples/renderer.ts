@@ -13,8 +13,6 @@ export function renderHtml(container: HTMLDivElement) {
     page.addComponent(componentClass.Rect.new({
         name: "测试组件4",
         style: {
-            x: 20,
-            y: 80,
             height: 150,
             width: 250,
             backgroundColor: 'yellowGreen',

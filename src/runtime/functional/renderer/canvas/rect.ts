@@ -1,26 +1,34 @@
 import * as THREE from "three";
-import { BufferGeometry, Color, Material, Mesh } from "three";
 import { Rect } from "runtime/functional/component/canvas/rect";
-import { CanvasRender } from "./common";
+import { ComponentRender } from "./common";
 
-type toWebAxis = (number: number) => number;
+export class RectRender extends ComponentRender<Rect> {
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
 
-export class RectRender implements CanvasRender {
-    toWebxAxis: toWebAxis;
-    toWebyAxis: toWebAxis;
-
-    constructor(toWebxAxis: toWebAxis, toWebyAxis: toWebAxis) {
-        this.toWebxAxis = toWebxAxis;
-        this.toWebyAxis = toWebyAxis;
+    constructor(component: Rect) {
+        super(component);
+        this.startX = this.component.position.x;
+        this.startY = this.component.position.y;
+        this.endX = this.component.position.x + this.component.style.width!;
+        this.endY = this.component.position.y + this.component.style.height!;
     }
 
-    getGeometry(rect: Rect): BufferGeometry {
-        const Shape = new THREE.Shape();
+    toWebAxis(layerWidth: number, layerHeight: number) {
+        const toX = (val: number) => val - layerWidth / 2;
+        const toY = (val: number) => -(val - layerHeight / 2);
+        this.startX = toX(this.component.position.x);
+        this.startY = toY(this.component.position.y);
+        this.endX = toX(this.component.position.x + this.component.style.height!);
+        this.endY = toY(this.component.position.y + this.component.style.height!);
+        return this;
+    }
 
-        const startX = this.toWebxAxis(rect.style.x);
-        const startY = this.toWebyAxis(rect.style.y);
-        const endX = this.toWebxAxis(rect.style.x + rect.style.width);
-        const endY = this.toWebyAxis(rect.style.y + rect.style.height);
+    getGeometry(): THREE.BufferGeometry {
+        const { startX, startY, endX, endY } = this;
+        const Shape = new THREE.Shape();
 
         Shape.moveTo(startX, startY);
         Shape.lineTo(endX, startY);
@@ -29,14 +37,15 @@ export class RectRender implements CanvasRender {
 
         return new THREE.ShapeGeometry(Shape);
     }
-    getMaterial(rect: Rect): Material {
-        const color = new THREE.Color(rect.style.backgroundColor);
-        return  new THREE.MeshBasicMaterial( { color } )
+
+    getMaterial(): THREE.Material {
+        const color = new THREE.Color(this.component.style.backgroundColor);
+        return  new THREE.MeshBasicMaterial({ color })
     }
 
-    parse(rect: Rect) {
-        const geometry = this.getGeometry(rect);
-        const material = this.getMaterial(rect);
+    parse() {
+        const geometry = this.getGeometry();
+        const material = this.getMaterial();
         return new THREE.Mesh(geometry, material)
     }
 

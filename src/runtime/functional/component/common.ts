@@ -20,34 +20,53 @@ export enum componentTag {
     GROUP_COMPONENT,
 }
 
+export enum componentType {
+    Rect = 'Rect',
+    Input = 'Input'
+}
+
 export interface IComponent {
     id: string;
     name: string;
-    type: string;
+    type: componentType;
     tag: componentTag;
     components: Component[];
-    style: Partial<ComponentStyle>
+    style: ComponentStyle;
+    position: {
+        x: number;
+        y: number;
+    };
 
     addComponent(components: Component): Component;
     getAllComponents(): Component[];
 }
 
 export interface IComponentOptions {
+    position?: {
+        x: number;
+        y: number;
+    },
     name: string;
     style?: ComponentStyle;
 }
 
-interface COptions extends IComponentOptions{
-    type: string;
+interface COptions {
+    name: string;
+    type: componentType;
     tag: componentTag;
 } 
+
 export abstract class Component implements IComponent {
     id: string;
     name: string;
-    type: string;
+    type: componentType;
     tag: componentTag;
     components: Component[] = [];
-    style: Partial<ComponentStyle> = {};
+    style!: ComponentStyle;
+    position!: {
+        x: number;
+        y: number;
+    };
     
     constructor({ name, type, tag }: COptions) {
         this.id = generateId({ suffix: '_component' });

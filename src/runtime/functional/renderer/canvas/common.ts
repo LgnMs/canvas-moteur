@@ -1,7 +1,13 @@
-import { Component } from "runtime/functional/component/common";
+import * as THREE from 'three';
 
-export interface CanvasRender {
-    getGeometry(rect: Component): THREE.BufferGeometry;
-    getMaterial(rect: Component): THREE.Material;
-    parse(rect: Component): THREE.Mesh;
+export abstract class ComponentRender<T> {
+    component: T;
+
+    constructor(component: T) {
+        this.component = component;
+    }
+    abstract toWebAxis(layerWidth: number, layerHeight: number): this;
+    abstract getGeometry(): THREE.BufferGeometry;
+    abstract getMaterial(): THREE.Material;
+    abstract parse(): THREE.Mesh;
 }

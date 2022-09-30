@@ -1,26 +1,15 @@
-import { Component, componentTag, IComponent, IComponentOptions } from "../common"
-import { ComponentStyle } from "../style";
+import { Component, componentTag, componentType, IComponent, IComponentOptions } from "../common"
+
 
 export class Rect extends Component implements IComponent {
-    style: ComponentStyle;
-
-    constructor({name, style}: IComponentOptions) {
+    constructor({ name, style = {width: 0,  height: 0}, position = { x:0, y:0 } }: IComponentOptions) {
         super({
             name,
-            type: "rect",
+            type: componentType.Rect,
             tag: componentTag.CANVAS,
-            style
         });
-        if (style) {
-            this.style = style
-        } else {
-            this.style = {
-                x: 0,
-                y: 0,
-                width: 0,
-                height: 0
-            }
-        }
+        this.position = position;
+        this.style = style
     }
 
     public static new(options: IComponentOptions) {
