@@ -28,6 +28,9 @@ export class CanvasRenderer {
     constructor(layer: CanvasLayer) {
         this.layer = layer;
         const renderer = new THREE.WebGLRenderer();
+        
+        renderer.setClearColor(new THREE.Color('#FFFFFF'), 1);
+
         const container = renderer.domElement;
         container.style.position = 'absolute';
         container.style.zIndex = layer.zIndex;
@@ -57,7 +60,9 @@ export class CanvasRenderer {
     public parse() {
         this.layer.components.forEach(component => {
             const componentRenderer = this.getComponentRenderer(component.type);
-            const value = new componentRenderer(component).parse();
+            const value = new componentRenderer(component)
+                .toWebAxis(this.layer.width, this.layer.height)
+                .parse();
             this.scene.add(value);
         })
         return this;

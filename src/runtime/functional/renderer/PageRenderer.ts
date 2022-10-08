@@ -11,12 +11,15 @@ export class PageRenderer {
     private htmlLayer: HTMLLayer;
     private container: HTMLDivElement;
 
-    constructor(page: Page) {
+    private parentContainer: HTMLElement;
+
+    constructor(page: Page, parentContainer: HTMLElement) {
+        this.parentContainer = parentContainer;
         this.page = page;
         this.container = document.createElement('div');
         this.container.style.position = 'relative';
-        this.container.style.width = page.getSize().width + 'px';
-        this.container.style.height = page.getSize().height + 'px'
+        this.container.style.width = parentContainer.clientWidth + 'px';
+        this.container.style.height = parentContainer.clientHeight + 'px'
 
         const { canvasLayer, htmlLayer } = this.parse();
         this.canvasLayer = canvasLayer;
@@ -27,8 +30,12 @@ export class PageRenderer {
     }
 
     private parse() {
-        const canvasLayer = new CanvasLayer(this.page.getSize());
-        const htmlLayer = new HTMLLayer(this.page.getSize());
+        const size = {
+            width: this.parentContainer.clientWidth,
+            height: this.parentContainer.clientHeight
+        }
+        const canvasLayer = new CanvasLayer(size);
+        const htmlLayer = new HTMLLayer(size);
 
         const components = this.page.getAllComponents();
 

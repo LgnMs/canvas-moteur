@@ -13,6 +13,15 @@ export class Rect extends Component implements IComponent {
     }
 
     public static new(options: IComponentOptions) {
-        return new Rect(options);
+        const target = new Rect(options);
+
+        return new Proxy(target, {
+            get(target, prop, receiver) {
+                return Reflect.get(target, prop, receiver);
+            },
+            set(target, prop, value, receiver) {
+                return Reflect.set(target, prop, value, receiver)
+            }
+        });
     }
 }

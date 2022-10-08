@@ -1,23 +1,31 @@
 import { generateId } from "runtime/core/common/utils";
 import { Component } from "../component/common";
 
+export interface pageOptions {
+    name: string;
+}
+
 export class Page {
     private id: string;
     private name: string;
     private components: Component[] = [];
-    private size: {width: number, height: number};
     
-    constructor(name: string) {
+    constructor(options: pageOptions) {
         this.id = generateId({ suffix: '_page' });
-        this.name = '';
-        this.size = {
-            width: 500,
-            height: 500
-        }
+        this.name = options.name;
     }
 
-    static new(name: string) {
-        return new Page(name);
+    static new(options: pageOptions) {
+        const target = new Page(options);
+
+        return new Proxy(target, {
+            get(target, prop, receiver) {
+                return Reflect.get(target, prop, receiver);
+            },
+            set(target, prop, value, receiver) {
+                return Reflect.set(target, prop, value, receiver)
+            }
+        });
     }
     // TODO 页面管理相关功能
 
@@ -28,13 +36,5 @@ export class Page {
 
     public getAllComponents() {
         return this.components;
-    }
-
-    public getSize() {
-        return this.size;
-    }
-
-    public setSize(width: number, height: number) {
-        this.size = { width, height };
     }
 }

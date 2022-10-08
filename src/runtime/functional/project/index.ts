@@ -1,14 +1,14 @@
-/**
- * 项目管理
- */
-
 import { generateId } from "runtime/core/common/utils";
 import { error } from "runtime/core/log";
 import { Page } from "runtime/functional/page";
 
-export interface ProjectInfo {
+/**
+ * TODO
+ */
+
+export interface ProjectOptions {
     name: string;
-    version: string;
+    version?: string;
 }
 
 /**
@@ -35,7 +35,16 @@ export class Project {
     }
 
     static new(name: string) {
-        return new Project(name);
+        const target = new Project(name);
+
+        return new Proxy(target, {
+            get(target, prop, receiver) {
+                return Reflect.get(target, prop, receiver);
+            },
+            set(target, prop, value, receiver) {
+                return Reflect.set(target, prop, value, receiver)
+            }
+        });
     }
 
     static openProjectFile(filePath: string): Project {
@@ -72,17 +81,15 @@ export class Project {
         this.version = version;
     }
 
-    public updateProjectInfo(info: Partial<ProjectInfo>)  {
-        if (info.name) {
-            this.setName(info.name);
-        }
-        if (info.version) {
-            this.setVersion(info.version);
-        }
+    public updateProjectInfo(info: Partial<ProjectOptions>)  {
+        Object.keys(info).forEach(key => {
+            if (Reflect.has(info, key)) {
+                Reflect.set(this, key, Reflect.get(info, key));
+            }
+        })
     }
 
-    public addPage(name: string) {
-        const page = Page.new(name);
+    public addPage(page: Page) {
         this.pages.push(page);
         return page;
     }

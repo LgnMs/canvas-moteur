@@ -10,7 +10,8 @@ describe("项目新增过程", () => {
     let componentChilds: Component[] = [];
 
     test("添加页面", () => {
-        const page = project.addPage("测试页面1");
+        const page = Page.new({name: "测试页面1"});
+        project.addPage(page);
         pages = project.getAllPages();
         expect(pages[0]).toEqual(page);
     })

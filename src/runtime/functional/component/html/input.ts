@@ -12,6 +12,15 @@ export class Input extends Component implements IComponent {
     }
 
     public static new(options: IComponentOptions) {
-        return new Input(options);
+        const target = new Input(options);
+
+        return new Proxy(target, {
+            get(target, prop, receiver) {
+                return Reflect.get(target, prop, receiver);
+            },
+            set(target, prop, value, receiver) {
+                return Reflect.set(target, prop, value, receiver)
+            }
+        });
     }
 }

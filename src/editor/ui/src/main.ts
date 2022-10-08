@@ -6,7 +6,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
     <div>
       临时测试
-      <div id="example1"></div>
+      <div id="example1" style="border: 1px solid red; width: 500px; height: 500px"></div>
     </div>
   </div>
 `
