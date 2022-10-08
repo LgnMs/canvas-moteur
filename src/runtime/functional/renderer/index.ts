@@ -1,4 +1,4 @@
-import { Page } from 'runtime/functional/page';
+import { Page } from 'runtime/functional/project/page';
 import { PageRenderer } from "./pageRenderer";
 
 export function render(page: Page, parentContainer: HTMLElement){

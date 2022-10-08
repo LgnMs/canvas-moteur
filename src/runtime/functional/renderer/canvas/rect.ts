@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Rect } from "runtime/functional/component/canvas/rect";
+import { Rect } from "runtime/functional/project/component/canvas/rect";
 import { ComponentRender } from "./common";
 
 export class RectRender extends ComponentRender<Rect> {

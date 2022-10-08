@@ -1,6 +1,6 @@
 import { generateId } from "runtime/core/common/utils";
 import { error } from "runtime/core/log";
-import { Page } from "runtime/functional/page";
+import { Page } from "runtime/functional/project/page";
 
 /**
  * TODO

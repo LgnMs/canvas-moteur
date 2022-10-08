@@ -1,4 +1,4 @@
-import { Component } from "runtime/functional/component/common";
+import { Component } from "runtime/functional/project/component/common";
 
 export function parseHTML(component: Component) {
     const node = document.createElement(component.type);

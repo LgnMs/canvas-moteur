@@ -1,6 +1,6 @@
-import { Component, componentTag} from "runtime/functional/component/common";
-import { componentClass } from 'runtime/functional/component'
-import { Page } from "runtime/functional/page";
+import { Component, componentTag} from "runtime/functional/project/component/common";
+import { componentClass } from 'runtime/functional/project/component'
+import { Page } from "runtime/functional/project/page";
 import { Project } from "..";
 
 describe("项目新增过程", () => {

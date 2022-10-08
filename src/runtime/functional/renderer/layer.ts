@@ -1,5 +1,4 @@
-import * as THREE from 'three';
-import { Component } from "runtime/functional/component/common";
+import { Component } from "runtime/functional/project/component/common";
 import { CanvasRenderer } from './canvas';
 import { parseHTML } from './html';
 

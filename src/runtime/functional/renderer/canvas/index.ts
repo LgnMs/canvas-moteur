@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CanvasLayer } from "runtime/functional/renderer/layer";
 import { RectRender } from './rect'
-import { componentType } from "runtime/functional/component/common";
+import { componentType } from "runtime/functional/project/component/common";
 import { error } from 'runtime/core/log';
 import { ComponentRender } from './common';
 
@@ -17,6 +17,9 @@ export function loadComponentRender() {
     }
 }
 
+/**
+ * 二维图形渲染器
+ */
 export class CanvasRenderer {
     private layer: CanvasLayer;
     private renderer: THREE.WebGLRenderer;

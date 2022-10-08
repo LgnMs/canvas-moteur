@@ -1,5 +1,5 @@
-import { Page } from 'runtime/functional/page'
-import { componentTag } from '../component/common';
+import { Page } from 'runtime/functional/project/page'
+import { componentTag } from '../project/component/common';
 import { CanvasLayer, HTMLLayer } from './layer';
 
 export class PageRenderer {

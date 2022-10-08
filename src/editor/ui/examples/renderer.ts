@@ -1,5 +1,5 @@
-import { componentClass } from 'runtime/functional/component';
-import { Page } from 'runtime/functional/page';
+import { componentClass } from 'runtime/functional/project/component';
+import { Page } from 'runtime/functional/project/page';
 import { Project } from 'runtime/functional/project';
 import { render } from 'runtime/functional/renderer';
 
