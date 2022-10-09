@@ -22,10 +22,11 @@ export function loadComponentRender() {
  */
 export class CanvasRenderer {
     private layer: CanvasLayer;
-    private renderer: THREE.WebGLRenderer;
-    private scene: THREE.Scene;
-    private camera: THREE.OrthographicCamera;
-    private container: HTMLCanvasElement;
+    renderer: THREE.WebGLRenderer;
+    scene: THREE.Scene;
+    camera: THREE.OrthographicCamera;
+    container: HTMLCanvasElement;
+    objects: THREE.Mesh[] = [];
     private getComponentRenderer: ReturnType<typeof loadComponentRender>;
 
     constructor(layer: CanvasLayer) {
@@ -66,6 +67,8 @@ export class CanvasRenderer {
             const value = new componentRenderer(component)
                 .toWebAxis(this.layer.width, this.layer.height)
                 .parse();
+
+            this.objects.push(value);
             this.scene.add(value);
         })
         return this;

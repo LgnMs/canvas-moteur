@@ -1,7 +1,8 @@
-import { Component, componentTag, componentType, IComponent, IComponentOptions } from "../common"
+import { componentTag, componentType, IComponentOptions } from "../common"
+import { CanvasComponent, ICanvasComponentOptions } from "./canvasComponent";
 
-export class Rect extends Component implements IComponent {
-    constructor({ name, style = {width: 0,  height: 0}, position = { x:0, y:0 } }: IComponentOptions) {
+export class Rect extends CanvasComponent {
+    constructor({ name, style = { width: 0,  height: 0 }, position = { x: 0, y: 0 } }: ICanvasComponentOptions) {
         super({
             name,
             type: componentType.Rect,
@@ -11,7 +12,7 @@ export class Rect extends Component implements IComponent {
         this.style = style
     }
 
-    public static new(options: IComponentOptions) {
+    public static new(options: ICanvasComponentOptions) {
         const target = new Rect(options);
 
         return new Proxy(target, {

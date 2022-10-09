@@ -1,17 +1,19 @@
 import { Component, componentTag, componentType, IComponent, IComponentOptions } from "../common"
-import { ComponentStyle } from "../style";
+import { HTMLComponent, IHTMLComponentOptions } from "./htmlComponent";
 
-export class Input extends Component implements IComponent {
-    constructor({name, style = {}}: IComponentOptions) {
+export class Input extends HTMLComponent {
+    constructor({name, style}: IHTMLComponentOptions) {
         super({
             name,
             type: componentType.Input,
             tag: componentTag.HTML
         });
-        this.style = style;
+
+        
+        this.style = { position: 'relative', ...style};
     }
 
-    public static new(options: IComponentOptions) {
+    public static new(options: IHTMLComponentOptions) {
         const target = new Input(options);
 
         return new Proxy(target, {

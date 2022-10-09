@@ -1,5 +1,7 @@
 import { Page } from 'runtime/functional/project/page'
-import { componentTag } from '../project/component/common';
+import { CanvasComponent } from 'runtime/functional/project/component/canvas/canvasComponent';
+import { componentTag } from 'runtime/functional/project/component/common';
+import { HTMLComponent } from 'runtime/functional/project//component/html/htmlComponent';
 import { CanvasLayer, HTMLLayer } from './layer';
 
 export class PageRenderer {
@@ -21,15 +23,15 @@ export class PageRenderer {
         this.container.style.width = parentContainer.clientWidth + 'px';
         this.container.style.height = parentContainer.clientHeight + 'px'
 
-        const { canvasLayer, htmlLayer } = this.parse();
+        const { canvasLayer, htmlLayer } = this.getLayers();
         this.canvasLayer = canvasLayer;
         this.htmlLayer = htmlLayer;
 
-        this.container.appendChild(canvasLayer.container);
         this.container.appendChild(htmlLayer.container);
+        this.htmlLayer.container.appendChild(canvasLayer.container);
     }
 
-    private parse() {
+    private getLayers() {
         const size = {
             width: this.parentContainer.clientWidth,
             height: this.parentContainer.clientHeight
@@ -41,9 +43,9 @@ export class PageRenderer {
 
         components.forEach((component) => {
             if (component.tag === componentTag.CANVAS) {
-                canvasLayer.add(component);
+                canvasLayer.add(component as CanvasComponent);
             } else {
-                htmlLayer.add(component);
+                htmlLayer.add(component as HTMLComponent);
             }
         })
 
@@ -52,6 +54,14 @@ export class PageRenderer {
 
     public getContainer() {
         return this.container;
+    }
+
+    public getCanvasLayer() {
+        return this.canvasLayer;
+    }
+
+    public getHtmlLayer() {
+        return this.htmlLayer;
     }
 
     public render() {

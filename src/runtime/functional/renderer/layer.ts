@@ -1,4 +1,6 @@
 import { Component } from "runtime/functional/project/component/common";
+import { HTMLComponent } from "runtime/functional/project/component/html/htmlComponent";
+import { CanvasComponent } from "runtime/functional/project/component/canvas/canvasComponent";
 import { CanvasRenderer } from './canvas';
 import { parseHTML } from './html';
 
@@ -40,7 +42,7 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
     zIndex: string
     type: LayerType;
     container: HTMLCanvasElement;
-    components: Component[] = [];
+    components: CanvasComponent[] = [];
     width: number;
     height: number;
     renderer: CanvasRenderer;
@@ -55,16 +57,16 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
         this.container = this.renderer.getContainer();
     }
 
-    add(component: Component) {
+    add(component: CanvasComponent) {
         this.components.push(component);
         return this;
     }
 
-    del(component: Component) {
+    del(component: CanvasComponent) {
         return this;
     }
 
-    update(component: Component) {
+    update(component: CanvasComponent) {
         return this;
     }
 
@@ -77,7 +79,7 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
     zIndex: string;
     type: LayerType;
     container: HTMLDivElement;
-    components: Component[] = [];
+    components: HTMLComponent[] = [];
     width: number;
     height: number;
 
@@ -88,7 +90,7 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         this.height = size.height;
         const container = document.createElement('div');
         this.container = container;
-        container.style.position = 'absolute';
+        container.style.position = 'relative';
         container.style.zIndex = this.zIndex;
         container.style.left = '0px';
         container.style.right = '0px';
@@ -96,16 +98,16 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         container.style.height = this.height + 'px';
     }
 
-    add(component: Component) {
+    add(component: HTMLComponent) {
         this.components.push(component);
         return this;
     }
 
-    del(component: Component) {
+    del(component: HTMLComponent) {
         return this;
     }
 
-    update(component: Component) {
+    update(component: HTMLComponent) {
         return this;
     }
 

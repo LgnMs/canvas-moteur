@@ -13,6 +13,6 @@ module.exports = {
     ],
   },
   moduleNameMapper: {
-    '^runtime/(.*)$': '<rootDir>/src/runtime/$1',
-  }
+    '^runtime/(.*)$': '<rootDir>/src/runtime/$1'
+  },
 };

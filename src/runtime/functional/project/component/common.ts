@@ -31,7 +31,6 @@ export interface IComponent {
     type: componentType;
     tag: componentTag;
     components: Component[];
-    style: ComponentStyle;
     position: {
         x: number;
         y: number;
@@ -47,10 +46,10 @@ export interface IComponentOptions {
         y: number;
     },
     name: string;
-    style?: ComponentStyle;
+    style?: ComponentStyle | CSSStyleDeclaration;
 }
 
-interface COptions {
+export interface COptions {
     name: string;
     type: componentType;
     tag: componentTag;
@@ -62,7 +61,6 @@ export abstract class Component implements IComponent {
     type: componentType;
     tag: componentTag;
     components: Component[] = [];
-    style!: ComponentStyle;
     position!: {
         x: number;
         y: number;
