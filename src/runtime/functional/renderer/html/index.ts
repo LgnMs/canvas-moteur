@@ -7,7 +7,6 @@ export function parseHTML(component: HTMLComponent) {
     Object.keys(component.style).forEach(key => {
         Reflect.set(node.style, key, Reflect.get(component.style, key))
     })
-    console.log(component.style, node.style)
 
     return node;
 }

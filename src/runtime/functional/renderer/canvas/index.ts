@@ -24,7 +24,7 @@ export class CanvasRenderer {
     private layer: CanvasLayer;
     renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
-    camera: THREE.OrthographicCamera;
+    camera: THREE.OrthographicCamera | THREE.PerspectiveCamera;
     container: HTMLCanvasElement;
     objects: THREE.Mesh[] = [];
     private getComponentRenderer: ReturnType<typeof loadComponentRender>;
@@ -44,8 +44,11 @@ export class CanvasRenderer {
         container.style.height = layer.height + 'px';
         this.container = container;
 
-        const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
-        camera.position.set( 0, 0, 100 );
+        const ctx = renderer.getContext();
+
+        const camera = new THREE.PerspectiveCamera(45, layer.width / layer.height, 1, 1000);
+        // const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
+        camera.position.set( 0, 0, 500 );
         camera.lookAt( 0, 0, 0 );
 
         this.renderer = renderer;
@@ -62,11 +65,13 @@ export class CanvasRenderer {
      * 解析组件数据
      */
     public parse() {
-        this.layer.components.forEach(component => {
+        this.layer.components.forEach((component, index) => {
             const componentRenderer = this.getComponentRenderer(component.type);
             const value = new componentRenderer(component)
                 .toWebAxis(this.layer.width, this.layer.height)
-                .parse();
+                .parse(index);
+
+                console.log(component)
 
             this.objects.push(value);
             this.scene.add(value);

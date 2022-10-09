@@ -17,25 +17,18 @@ export class RectRender extends ComponentRender<Rect> {
     }
 
     toWebAxis(layerWidth: number, layerHeight: number) {
-        const toX = (val: number) => val - layerWidth / 2;
-        const toY = (val: number) => -(val - layerHeight / 2);
-        this.startX = toX(this.component.position.x);
-        this.startY = toY(this.component.position.y);
-        this.endX = toX(this.component.position.x + this.component.style.height!);
-        this.endY = toY(this.component.position.y + this.component.style.height!);
+        const toX = (val: number) => val - (layerWidth / 2);
+        const toY = (val: number) => -(val - layerHeight / 2 + (this.component.style.width! / 2));
+        this.startX = toX(this.startX);
+        this.startY = toY(this.startY);
+        this.endX = toX(this.endX);
+        this.endY = toY(this.endY);
+        
         return this;
     }
 
     getGeometry(): THREE.BufferGeometry {
-        const { startX, startY, endX, endY } = this;
-        const Shape = new THREE.Shape();
-
-        Shape.moveTo(startX, startY);
-        Shape.lineTo(endX, startY);
-        Shape.lineTo(endX, endY);
-        Shape.lineTo(startX, endY);
-
-        return new THREE.ShapeGeometry(Shape);
+        return new THREE.BoxGeometry( this.component.style.width, this.component.style.height, 0 )
     }
 
     getMaterial(): THREE.Material {
@@ -43,10 +36,16 @@ export class RectRender extends ComponentRender<Rect> {
         return  new THREE.MeshBasicMaterial({ color })
     }
 
-    parse() {
+    parse(zIndex: number) {
         const geometry = this.getGeometry();
         const material = this.getMaterial();
-        return new THREE.Mesh(geometry, material)
+        const object = new THREE.Mesh(geometry, material);
+
+        object.position.x = this.startX;
+        object.position.y = this.startY;
+        object.position.z = zIndex;
+
+        return object;
     }
 
 }

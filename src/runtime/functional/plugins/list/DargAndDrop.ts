@@ -35,7 +35,6 @@ export class DargAndDrop extends Plugin {
         });
 
         controls.addEventListener('dragend', e => {
-            console.log(e)
         });
     }
 }
