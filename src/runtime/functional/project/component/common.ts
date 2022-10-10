@@ -82,6 +82,10 @@ export abstract class Component implements IComponent {
     public getAllComponents() {
         return this.components;
     }
+
+    public setPosition(x: number, y: number) {
+        this.position = { x, y };
+    }
     // TODO 组件管理相关功能
 }
 

@@ -27,7 +27,7 @@ export class DargAndDrop extends Plugin {
         // add event listener to highlight dragged objects
 
         controls.addEventListener('dragstart', e => {
-            console.log(e)
+            // console.log(e)
         });
 
         controls.addEventListener('drag', e => {
@@ -35,6 +35,10 @@ export class DargAndDrop extends Plugin {
         });
 
         controls.addEventListener('dragend', e => {
+            const object = e.object as THREE.Mesh;
+            const component = canvasLayer.renderer.getComponentByObject(object);
+
+            component?.setPosition(object.position.x, object.position.y);
         });
     }
 }

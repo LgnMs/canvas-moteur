@@ -4,6 +4,7 @@ import { RectRender } from './rect'
 import { componentType } from "runtime/functional/project/component/common";
 import { error } from 'runtime/core/log';
 import { ComponentRender } from './common';
+import { CanvasComponent } from 'runtime/functional/project/component/canvas/canvasComponent';
 
 export function loadComponentRender() {
     const map = new Map<componentType, new (component: any) => ComponentRender<any>>();
@@ -27,6 +28,8 @@ export class CanvasRenderer {
     camera: THREE.OrthographicCamera | THREE.PerspectiveCamera;
     container: HTMLCanvasElement;
     objects: THREE.Mesh[] = [];
+    componentOfObjectMap: Map<THREE.Mesh, CanvasComponent> = new Map();
+
     private getComponentRenderer: ReturnType<typeof loadComponentRender>;
 
     constructor(layer: CanvasLayer) {
@@ -61,20 +64,23 @@ export class CanvasRenderer {
     public getContainer() {
         return this.container;
     }
+
+    public getComponentByObject(object: THREE.Mesh) {
+        return this.componentOfObjectMap.get(object);
+    }
     /**
      * 解析组件数据
      */
     public parse() {
         this.layer.components.forEach((component, index) => {
             const componentRenderer = this.getComponentRenderer(component.type);
-            const value = new componentRenderer(component)
+            const object = new componentRenderer(component)
                 .toWebAxis(this.layer.width, this.layer.height)
                 .parse(index);
 
-                console.log(component)
-
-            this.objects.push(value);
-            this.scene.add(value);
+            this.objects.push(object);
+            this.scene.add(object);
+            this.componentOfObjectMap.set(object, component)
         })
         return this;
     }
