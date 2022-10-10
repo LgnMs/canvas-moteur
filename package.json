@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "vite --config src/editor/ui/vite.config.js",
     "build": "tsc --project src/tsconfig.json --noEmit && vite build --config src/editor/ui/vite.config.js",
+    "build-desktop": "cargo tauri build",
+    "dev-desktop": "cargo tauri dev",
     "test": "jest"
   },
   "repository": {

@@ -5,24 +5,15 @@ import { ComponentRender } from "./common";
 export class RectRender extends ComponentRender<Rect> {
     startX: number;
     startY: number;
-    endX: number;
-    endY: number;
 
     constructor(component: Rect) {
         super(component);
         this.startX = this.component.position.x;
         this.startY = this.component.position.y;
-        this.endX = this.component.position.x + this.component.style.width!;
-        this.endY = this.component.position.y + this.component.style.height!;
     }
 
     toWebAxis(layerWidth: number, layerHeight: number) {
-        const toX = (val: number) => val - (layerWidth / 2);
-        const toY = (val: number) => -(val - layerHeight / 2 + (this.component.style.width! / 2));
-        this.startX = toX(this.startX);
-        this.startY = toY(this.startY);
-        this.endX = toX(this.endX);
-        this.endY = toY(this.endY);
+        // TODO webGL坐标转换为web坐标
         
         return this;
     }

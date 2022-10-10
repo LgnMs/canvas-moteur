@@ -1,7 +1,6 @@
 import { Page } from 'runtime/functional/project/page';
 import { PageRenderer } from "./pageRenderer";
 import { DargAndDrop } from 'runtime/functional/plugins/list/DargAndDrop';
-import { Orbit } from 'runtime/functional/plugins/list/Orbit';
 import { PluginSystem } from '../plugins';
 
 /**
@@ -21,8 +20,8 @@ export function render(page: Page, parentContainer: HTMLElement) {
     PluginSystem
         .init({pageRenderer})
         .install(DargAndDrop.new({ name: '拖拽插件' }))
-        // .install(Orbit.new({ name: '轨道控制器' }))
         .run();
 
     return pageRenderer;
 }
+
