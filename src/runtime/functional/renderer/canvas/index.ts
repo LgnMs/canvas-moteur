@@ -47,8 +47,6 @@ export class CanvasRenderer {
         container.style.height = layer.height + 'px';
         this.container = container;
 
-        const ctx = renderer.getContext();
-
         const camera = new THREE.PerspectiveCamera(45, layer.width / layer.height, 1, 1000);
         // const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
         camera.position.set( 0, 0, 500 );

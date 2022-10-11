@@ -17,36 +17,36 @@ export function renderHtml(container: HTMLDivElement) {
             y: 0
         },
         style: {
-            height: 200,
-            width: 200,
+            height: 100,
+            width: 100,
             backgroundColor: 'yellowGreen',
         }
     }));
-    // page.addComponent(componentClass.Rect.new({
-    //     name: "测试组件5",
-    //     position: {
-    //         x: 0,
-    //         y: 0
-    //     },
-    //     style: {
-    //         height: 200,
-    //         width: 200,
-    //         backgroundColor: 'blue',
-    //     }
-    // }));
+    page.addComponent(componentClass.Rect.new({
+        name: "测试组件5",
+        position: {
+            x: 0,
+            y: 0
+        },
+        style: {
+            height: 100,
+            width: 100,
+            backgroundColor: 'blue',
+        }
+    }));
 
-    // page.addComponent(componentClass.Rect.new({
-    //     name: "测试组件6",
-    //     position: {
-    //         x: 100,
-    //         y: 100
-    //     },
-    //     style: {
-    //         height: 250,
-    //         width: 250,
-    //         backgroundColor: 'red',
-    //     }
-    // }));
+    page.addComponent(componentClass.Rect.new({
+        name: "测试组件6",
+        position: {
+            x: 100,
+            y: 100
+        },
+        style: {
+            height: 100,
+            width: 100,
+            backgroundColor: 'red',
+        }
+    }));
     render(page, container);
     
 }
