@@ -1,4 +1,4 @@
-import { Component, componentTag, componentType, IComponent, IComponentOptions } from "../common"
+import { Component, componentTag, componentType, createComponent, IComponent, IComponentOptions } from "../common"
 import { HTMLComponent, IHTMLComponentOptions } from "./htmlComponent";
 
 export class Input extends HTMLComponent {
@@ -13,16 +13,7 @@ export class Input extends HTMLComponent {
         this.style = { position: 'relative', ...style};
     }
 
-    public static new(options: IHTMLComponentOptions) {
-        const target = new Input(options);
-
-        return new Proxy(target, {
-            get(target, prop, receiver) {
-                return Reflect.get(target, prop, receiver);
-            },
-            set(target, prop, value, receiver) {
-                return Reflect.set(target, prop, value, receiver)
-            }
-        });
-    }
+    public static new = createComponent<IHTMLComponentOptions, Input>(Input);
 }
+
+export const createInput = Input.new;

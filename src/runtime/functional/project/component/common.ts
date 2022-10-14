@@ -26,6 +26,8 @@ export enum componentType {
 }
 
 export interface IComponent {
+    [key: string]: any;
+
     id: string;
     name: string;
     type: componentType;
@@ -35,6 +37,10 @@ export interface IComponent {
         x: number;
         y: number;
     };
+
+    onCreated: () => void;
+    onMounted: () => void;
+    onUnMounted: () => void;
 
     addComponent(components: Component): Component;
     getAllComponents(): Component[];
@@ -56,6 +62,8 @@ export interface COptions {
 } 
 
 export abstract class Component implements IComponent {
+    [key: string]: any;
+
     id: string;
     name: string;
     type: componentType;
@@ -65,6 +73,9 @@ export abstract class Component implements IComponent {
         x: number;
         y: number;
     };
+    onCreated = () => {};
+    onMounted = () => {};
+    onUnMounted = () => {};
     
     constructor({ name, type, tag }: COptions) {
         this.id = generateId({ suffix: '_component' });
@@ -86,6 +97,27 @@ export abstract class Component implements IComponent {
     public setPosition(x: number, y: number) {
         this.position = { x, y };
     }
+
+    public injectScript(setup: () => object) {
+        const obj = setup();
+        Object.keys(obj).forEach(key => Reflect.set(this, key, Reflect.get(obj, key)));
+    }
     // TODO 组件管理相关功能
 }
 
+export function createComponent<T, C extends Component>(Component: new (options: T) => C) {
+    return (options: T) => {
+        const target = new Component(options);
+        return new Proxy(target, {
+            get(target, prop, receiver) {
+                return Reflect.get(target, prop, receiver);
+            },
+            set(target, prop, value, receiver) {
+                if (prop === 'setup') {
+                    target.injectScript(value);
+                }
+                return Reflect.set(target, prop, value, receiver)
+            }
+        });
+    }
+}

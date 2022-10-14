@@ -1,4 +1,4 @@
-import { componentTag, componentType, IComponentOptions } from "../common"
+import { componentTag, componentType, Component, createComponent } from "../common"
 import { CanvasComponent, ICanvasComponentOptions } from "./canvasComponent";
 
 export class Rect extends CanvasComponent {
@@ -12,16 +12,7 @@ export class Rect extends CanvasComponent {
         this.style = style
     }
 
-    public static new(options: ICanvasComponentOptions) {
-        const target = new Rect(options);
-
-        return new Proxy(target, {
-            get(target, prop, receiver) {
-                return Reflect.get(target, prop, receiver);
-            },
-            set(target, prop, value, receiver) {
-                return Reflect.set(target, prop, value, receiver)
-            }
-        });
-    }
+    public static new = createComponent<ICanvasComponentOptions, Rect>(Rect);
 }
+
+export const createRect = Rect.new;

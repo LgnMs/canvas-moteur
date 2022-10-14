@@ -115,7 +115,11 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         this.components.forEach(component => {
             const node = parseHTML(component);
 
+            component.onCreated();
+
             this.container.appendChild(node);
+            
+            component.onMounted();
         });
     }
 }

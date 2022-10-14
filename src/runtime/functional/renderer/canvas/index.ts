@@ -71,6 +71,8 @@ export class CanvasRenderer {
      */
     public parse() {
         this.layer.components.forEach((component, index) => {
+            component.onCreated();
+
             const componentRenderer = this.getComponentRenderer(component.type);
             const object = new componentRenderer(component)
                 .toWebAxis(this.layer.width, this.layer.height)
@@ -79,6 +81,8 @@ export class CanvasRenderer {
             this.objects.push(object);
             this.scene.add(object);
             this.componentOfObjectMap.set(object, component)
+
+            component.onMounted();
         })
         return this;
     }

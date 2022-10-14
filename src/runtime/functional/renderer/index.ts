@@ -10,12 +10,14 @@ import { PluginSystem } from '../plugins';
  * @returns 当前页面的渲染器 
  */
 export function render(page: Page, parentContainer: HTMLElement) {
+    page.onCreated();
     const pageRenderer = new PageRenderer(page, parentContainer);
-
+    
     parentContainer.appendChild(pageRenderer.getContainer());
+    page.onMounted();
     
     pageRenderer.render();
-
+ 
     // TODO 完善插件加载的时机
     PluginSystem
         .init({pageRenderer})

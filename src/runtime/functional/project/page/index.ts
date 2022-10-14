@@ -1,5 +1,4 @@
 import { generateId } from "runtime/core/common/utils";
-import { Script, ScriptData, ScriptLifeCycle } from "runtime/functional/script";
 import { Component } from "../component/common";
 
 export interface pageOptions {
@@ -12,11 +11,9 @@ export class Page {
     private name: string;
     private components: Component[] = [];
 
-    public data: ScriptData = {};
-    onCreated: ScriptLifeCycle = () => {};
-    onMounted: ScriptLifeCycle = () => {};
-    onUpdate: ScriptLifeCycle = () => {};
-    onUnmounted: ScriptLifeCycle = () => {};
+    onCreated = () => {};
+    onMounted = () => {};
+    onUnMounted = () => {};
     
     constructor(options: pageOptions) {
         this.id = generateId({ suffix: '_page' });

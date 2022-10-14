@@ -3,9 +3,23 @@ export default function page1Script() {
     const del = () => {
         console.log('del')
     }
+    const onCreated = () => {
+        console.log('onCreated')
+    }
+
+    const onMounted = () => {
+        console.log('onMounted')
+    }
+
+    const onUnMounted = () => {
+        console.log('onUnMounted')
+    }
 
     return {
         a,
-        del
+        del,
+        onCreated,
+        onMounted,
+        onUnMounted,
     }
 }
