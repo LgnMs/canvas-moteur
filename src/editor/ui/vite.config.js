@@ -6,7 +6,8 @@ export default defineConfig({
     publicDir: path.join(__dirname, 'public'),
     resolve: {
         alias: [
-            {find: 'runtime', replacement: path.join(__dirname, '../../runtime')}
+            {find: 'runtime', replacement: path.join(__dirname, '../../runtime')},
+            {find: 'editor', replacement: path.join(__dirname, '../../editor')},
         ]
     },
     build: {

@@ -1,0 +1,94 @@
+{
+    "pages": [
+        {
+            "components": [
+                {
+                    "components": [],
+                    "id": "16659732138762_component",
+                    "name": "测试组件1",
+                    "type": "Input",
+                    "tag": 1,
+                    "style": {
+                        "position": "relative"
+                    },
+                    "scriptPath": "source/component1.ts" 
+                },
+                {
+                    "components": [],
+                    "id": "16659732138763_component",
+                    "name": "测试组件1",
+                    "type": "Input",
+                    "tag": 1,
+                    "style": {
+                        "position": "relative"
+                    }
+                },
+                {
+                    "components": [],
+                    "id": "16659732138764_component",
+                    "name": "测试组件1",
+                    "type": "Input",
+                    "tag": 1,
+                    "style": {
+                        "position": "relative"
+                    }
+                },
+                {
+                    "components": [],
+                    "id": "16659732138765_component",
+                    "name": "测试组件4",
+                    "type": "Rect",
+                    "tag": 2,
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "style": {
+                        "height": 100,
+                        "width": 100,
+                        "backgroundColor": "yellowGreen"
+                    }
+                },
+                {
+                    "components": [],
+                    "id": "16659732138766_component",
+                    "name": "测试组件5",
+                    "type": "Rect",
+                    "tag": 2,
+                    "position": {
+                        "x": 50,
+                        "y": 10
+                    },
+                    "style": {
+                        "height": 100,
+                        "width": 100,
+                        "backgroundColor": "blue"
+                    }
+                },
+                {
+                    "components": [],
+                    "id": "16659732138767_component",
+                    "name": "测试组件6",
+                    "type": "Rect",
+                    "tag": 2,
+                    "position": {
+                        "x": 100,
+                        "y": 100
+                    },
+                    "style": {
+                        "height": 100,
+                        "width": 100,
+                        "backgroundColor": "red"
+                    }
+                }
+            ],
+            "id": "16659732138761_page",
+            "name": "测试页面1",
+            "a": 1,
+            "scriptPath": "source/page1Script.ts" 
+        }
+    ],
+    "id": "16659732138760_project",
+    "name": "测试项目1",
+    "version": "0.0.1"
+}

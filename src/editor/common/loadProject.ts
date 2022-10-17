@@ -1,0 +1,70 @@
+import { Project } from "runtime/functional/project";
+import { componentClass } from "runtime/functional/project/component";
+import { componentType } from "runtime/functional/project/component/common";
+import { Page } from "runtime/functional/project/page";
+
+export interface ProjectJson {
+    [key: string]: any;
+    id: string;
+    name: string;
+    pages: {
+        [key: string]: any;
+        id: string;
+        name: string;
+        components: {
+            [key: string]: any;
+            id: string;
+            name: string;
+            type: componentType | string;
+        }[]
+    }[]
+}
+
+export async function loadPorject(data: ProjectJson) {
+    const project = Project.new(data.name);
+
+    const loadScript = function*(list: any[]) {
+        for (let i = 0; i < list.length; i++) {
+            const path = '../../../demo/project1/' + list[i].scriptPath;
+            if (list[i].scriptPath) {
+                yield (() => import(/* @vite-ignore */ path))();
+            } else {
+                yield new Promise((resolve, reject) => resolve(null));
+            }
+        }
+    }
+
+    let pageIndex = 0;
+    for (const pageScript of loadScript(data.pages)) {
+        const res = await pageScript;
+        const page = project.addPage(Page.new({ name: data.pages[pageIndex].name }));
+        page.setup = res.default;
+
+        let comIndex = 0;
+        for (const componentScript of loadScript(data.pages[pageIndex].components)) {
+            const res2 = await componentScript;
+
+            const item2 = data.pages[pageIndex].components[comIndex];
+            const com = componentClass[item2.type as componentType].new(item2);
+            if (res2) {
+                com.setup = res2.default;
+            }
+            page.addComponent(com)
+            comIndex += 1;
+        }
+        pageIndex += 1;
+    }
+    console.log(project)
+    // data.pages.forEach(async (item) => {
+    //     const page = project.addPage(Page.new({ name: item.name }));
+    //     const res = 
+    //     console.log(res)
+    //     page.setup = res.default;
+
+    //     item.components.forEach(item2 => {
+    //         const com = componentClass[item2.type].new(item2);
+    //         page.addComponent(com)
+    //     })
+    // })
+    return project;
+}

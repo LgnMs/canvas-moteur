@@ -81,4 +81,6 @@ export function renderHtml(container: HTMLDivElement) {
     }));
     render(page, container);
     
+    console.log(JSON.stringify(project))
+    console.log(project)
 }

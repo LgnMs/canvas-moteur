@@ -1,4 +1,4 @@
-import { renderHtml } from "../examples/renderer"
+import { render } from "../examples/demo1";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -11,4 +11,5 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `
 
-renderHtml(document.querySelector("#example1")!);
+render();
+
