@@ -20,7 +20,10 @@ export interface ProjectJson {
     }[]
 }
 
-export async function loadPorject(data: ProjectJson) {
+export async function loadPorject(projectPath: string) {
+    // 加载项目配置文件
+    const data = await import(/* @vite-ignore */ projectPath + '.cm.json');
+
     const project = Project.new(data.name);
 
     const loadScript = function*(list: any[]) {
@@ -54,17 +57,5 @@ export async function loadPorject(data: ProjectJson) {
         }
         pageIndex += 1;
     }
-    console.log(project)
-    // data.pages.forEach(async (item) => {
-    //     const page = project.addPage(Page.new({ name: item.name }));
-    //     const res = 
-    //     console.log(res)
-    //     page.setup = res.default;
-
-    //     item.components.forEach(item2 => {
-    //         const com = componentClass[item2.type].new(item2);
-    //         page.addComponent(com)
-    //     })
-    // })
     return project;
 }

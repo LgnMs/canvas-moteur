@@ -1,8 +1,8 @@
 import { loadPorject } from "editor/common/loadProject";
 import { renderPage } from "editor/common/renderPage";
 
-export async function render() {
-    const data = await (() => import('../../../../demo/project1/.cm.json'))()
-    const project = await loadPorject(data)
-    renderPage(document.querySelector("#example1")!, project.getAllPages()[0])
+export async function demo1(container: HTMLElement) {
+    const project = await loadPorject('/Users/liguang/Desktop/workSpace/MyProject/canvas-moteur/demo/project1/');
+
+    renderPage(container.querySelector("#example1")!, project.getAllPages()[0])
 }
