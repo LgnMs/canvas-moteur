@@ -30,7 +30,7 @@ export async function loadPorject(projectPath: string) {
         for (let i = 0; i < list.length; i++) {
             const path = '../../../demo/project1/' + list[i].scriptPath;
             if (list[i].scriptPath) {
-                yield (() => import(/* @vite-ignore */ path))();
+                yield import(/* @vite-ignore */ path);
             } else {
                 yield new Promise((resolve, reject) => resolve(null));
             }
