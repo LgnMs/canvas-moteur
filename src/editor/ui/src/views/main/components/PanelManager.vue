@@ -1,12 +1,10 @@
 <template>
-    <div class="tools"></div>
+    <div class="PanelManager">PanelManager</div>
 </template>
 
 <style lang="scss">
-    .tools {
-        grid-area: tools;
-        height: 12px;
-        padding: 8px 24px;
+    .PanelManager {
+        grid-area: left;
         background-color: lighten($color: $basic-color, $amount: 5);
     }
 </style>
