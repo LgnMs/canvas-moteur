@@ -10,6 +10,7 @@ export default defineConfig({
         alias: [
             {find: 'runtime', replacement: path.join(__dirname, '../../runtime')},
             {find: 'editor', replacement: path.join(__dirname, '../../editor')},
+            {find: 'ui', replacement: path.join(__dirname, '../../editor/ui')},
         ]
     },
     build: {

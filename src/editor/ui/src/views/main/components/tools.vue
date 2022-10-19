@@ -7,6 +7,6 @@
         grid-area: tools;
         height: 12px;
         padding: 8px 24px;
-        background-color: lighten($color: $basic-color, $amount: 5);
+        background-color: lighten($color: $basic-color, $amount: 3);
     }
 </style>

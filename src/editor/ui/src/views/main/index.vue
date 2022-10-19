@@ -1,9 +1,19 @@
 <script lang="ts" setup>
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import Tools from './components/Tools.vue'
 import PanelManager from './components/PanelManager.vue'
 import Panelinspection from './components/Panelinspection.vue'
 import View from './components/View.vue'
+import { useProjectStore } from '../../stores/project';
 
+const projectStore = useProjectStore();
+
+onMounted(() => {
+    if (projectStore.isEmpty()) {
+        useRouter().push('/welcome');
+    }
+})
 </script>
 
 <template>

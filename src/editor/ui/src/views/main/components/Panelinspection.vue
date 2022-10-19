@@ -5,6 +5,6 @@
 <style lang="scss">
     .Panelinspection {
         grid-area: right;
-        background-color: lighten($color: $basic-color, $amount: 5);
+        background-color: lighten($color: $basic-color, $amount: 8);
     }
 </style>

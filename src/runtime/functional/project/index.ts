@@ -16,17 +16,17 @@ export interface ProjectOptions {
  */
 export class Project {
     readonly id: string;
-    private name: string;
-    private version: string;
+    name: string;
+    version: string;
     /**
      * 文件路径
      */
-    private filePath?: string;
+    filePath?: string;
 
     /**
      * 页面列表
      */
-    private pages: Page[] = [];
+    pages: Page[] = [];
 
     constructor(name: string) {
         this.id = generateId({ suffix: '_project' });
