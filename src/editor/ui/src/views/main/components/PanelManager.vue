@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
-import Tree, { ITree } from 'ui/src/components/cm-tree/index.vue'
+import Tree, { ITree } from 'ui/src/components/TreeList/index.vue'
+import Icon from 'ui/src/components/Icon/index.vue'
 
 const projectStore = useProjectStore()
 
@@ -12,7 +13,7 @@ watch(() => projectStore.changeTime, () => {
         treeData.value = {
             name: projectStore.projectInfo!.name,
             childrens: projectStore.projectInfo!.pages.map(page => { 
-                return { name: page.name, icon: 'page', childrens: [] }
+                return { name: page.name, icon: 'description', childrens: [] }
             })
         }
     }
@@ -21,7 +22,9 @@ watch(() => projectStore.changeTime, () => {
 
 <template>
     <div class="PanelManager">
-        <div @click="projectStore.addPage">+ 新增页面</div>
+        <div @click="projectStore.addPage">
+            <Icon icon="add"/>新增页面
+        </div>
         <Tree v-if="treeData" :data="treeData"></Tree>
     </div>
 </template>

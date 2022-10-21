@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Icon from '../Icon/index.vue'
+
 interface ITree {
     name: string,
     icon?: string,
@@ -10,8 +12,8 @@ const props = defineProps<{data: ITree}>();
 
 <template>
     <div class="cm-tree-item">
-        <span>></span>
-        <span>{{props.data.icon}}</span>
-        <span>{{props.data.name}}</span>
+        <Icon icon="expand_more"/>
+        <Icon v-if="data.icon" :icon="data.icon"/>
+        <span>{{data.name}}</span>
     </div>
 </template>
