@@ -7,9 +7,9 @@ export interface pageOptions {
 
 export class Page {
     [key: string]: any;
-    private id: string;
-    private name: string;
-    private components: Component[] = [];
+    id: string;
+    name: string;
+    components: Component[] = [];
 
     onCreated = () => {};
     onMounted = () => {};

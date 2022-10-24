@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-import Dialog from 'ui/src/components/cm-dialog.vue'
+import { onMounted, ref } from 'vue';
+import Dialog from 'editor/ui/src/components/Dialog.vue'
 import { Project } from 'runtime/functional/project';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../../stores/project';
@@ -18,6 +18,11 @@ function createProject() {
     router.replace('/main');
 }
 
+// 测试用
+onMounted(() => {
+    name.value = '项目名称'
+    createProject()
+})
 </script>
 
 <template>
