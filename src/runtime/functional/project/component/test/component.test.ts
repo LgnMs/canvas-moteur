@@ -1,10 +1,8 @@
+import { createRect } from '../canvas/rect';
 import { componentTag } from '../common';
-import { getComponentClass } from '../index'
+import { createInput } from '../html/input';
 
 test('初始化组件', () => {
-    const Rect = getComponentClass('Rect');
-    const Input = getComponentClass('Input');
-
-    expect(new Rect({name: 'rect'}).tag).toEqual(componentTag.CANVAS);
-    expect(new Input({name: 'input'}).tag).toEqual(componentTag.HTML);
+    expect(createRect({name: 'rect'}).tag).toEqual(componentTag.CANVAS);
+    expect(createInput({name: 'input'}).tag).toEqual(componentTag.HTML);
 })

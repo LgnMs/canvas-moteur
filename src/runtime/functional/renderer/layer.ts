@@ -17,6 +17,7 @@ export interface Layer<T extends HTMLElement> {
     width: number;
     height: number;
 
+    clear(): Layer<T>;
     /**
      * 向Layer中添加元素
      */
@@ -55,6 +56,11 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
 
         this.renderer = new CanvasRenderer(this);
         this.container = this.renderer.getContainer();
+    }
+
+    clear() {
+        this.components = [];
+        return this;
     }
 
     add(component: CanvasComponent) {
@@ -96,6 +102,11 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         container.style.right = '0px';
         container.style.width = this.width + 'px';
         container.style.height = this.height + 'px';
+    }
+
+    clear() {
+        this.components = [];
+        return this;
     }
 
     add(component: HTMLComponent) {

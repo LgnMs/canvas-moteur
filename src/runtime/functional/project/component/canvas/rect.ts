@@ -1,4 +1,4 @@
-import { componentTag, componentType, Component, createComponent } from "../common"
+import { componentTag, componentType, createComponent } from "../common"
 import { CanvasComponent, ICanvasComponentOptions } from "./canvasComponent";
 
 export class Rect extends CanvasComponent {

@@ -12,7 +12,6 @@ import { PluginSystem } from '../plugins';
 export function render(page: Page, parentContainer: HTMLElement) {
     page.onCreated();
     const pageRenderer = new PageRenderer(page, parentContainer);
-    
     parentContainer.appendChild(pageRenderer.getContainer());
     page.onMounted();
     

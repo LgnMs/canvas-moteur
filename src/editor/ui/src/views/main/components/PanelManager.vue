@@ -1,35 +1,53 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
-import Tree, { ITree } from 'ui/src/components/Tree/index.vue';
 import ButtonIcon from 'ui/src/components/Button/ButtonIcon.vue'
+import Tree, { ITreeNode } from 'editor/ui/src/components/Tree';
+import { componentTag, componentType } from 'runtime/functional/project/component/common';
 
 const projectStore = useProjectStore()
 const projectInfo = projectStore.projectInfo;
-const treeData = ref<ITree[]>()
+const treeData = ref<ITreeNode[]>()
 let isAddPage = false;
+
+watch(() => projectStore.changeTime, () => {
+    if (!projectStore.isEmpty()) {
+        treeData.value = projectInfo?.pages.map((page, index) => {
+            let isEdit = false;
+            let isActive = false;
+            if (isAddPage && index +1 === projectInfo.pages.length) {
+                isEdit = true
+                isActive = true
+            }
+            return { 
+                name: page.name,
+                icon: 'description',
+                active: isActive,
+                isEdit,
+                childrens: [],
+                data: page
+            }
+        })
+    }
+})
 
 const addPage = () => {
     projectStore.addPage()
     isAddPage = true;
 }
-watch(() => projectStore.changeTime, () => {
-    if (!projectStore.isEmpty()) {
-        treeData.value = projectInfo?.pages.map((page, index) => { 
-            let isEdit = false;
-            if (isAddPage && index +1 === projectInfo.pages.length) {
-                isEdit = true
-            }
-            return { 
-                name: page.name,
-                icon: 'description',
-                active: false,
-                isEdit,
-                childrens: []
-            }
-        })
-    }
-})
+
+const onTreeDataChange = (data: ITreeNode) => {
+    projectStore.changePageNameById(data.data.id, data.name);
+}
+
+const addComponent = () => {
+    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试', style: {
+        backgroundColor: 'green',
+        height: 100,
+        width: 100,
+    } })
+    // projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试', style: {} })
+}
 </script>
 
 <template>
@@ -37,10 +55,13 @@ watch(() => projectStore.changeTime, () => {
         <div class="PanelManager-projectpanle">
             <div class="header">
                 <span>{{projectInfo?.name}}</span>
-                <ButtonIcon icon="note_add"  @click="addPage" />
+                <span>
+                    <ButtonIcon icon="note_add"  @click="addPage" />
+                    <ButtonIcon icon="add_circle"  @click="addComponent" />
+                </span>
             </div>
             <div class="body">
-                <Tree v-if="treeData" :data="treeData"></Tree>
+                <Tree v-if="treeData" :data="treeData" @onTreeDataChange="onTreeDataChange"></Tree>
             </div>
         </div>
     </div>

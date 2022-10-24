@@ -1,15 +1,17 @@
-import { Rect } from './canvas/rect';
-import { Input } from './html/input';
+import { createRect } from './canvas/rect';
+import { componentType } from './common';
+import { createInput } from './html/input';
 
-export const componentClass = {
-    Rect,
-    Input
+export const htmlfactory = (type: componentType) => {
+    switch (type) {
+        case componentType.Input:
+            return createInput;
+    }
 }
 
-export type componentKeys = keyof(typeof componentClass);
-
-export function getComponentClass(type: componentKeys) {
-    return componentClass[type];
+export const canvasfactory = (type: componentType) => {
+    switch (type) {
+        case componentType.Rect:
+            return createRect;
+    }
 }
-
-export type componentClassType = Rect | Input;

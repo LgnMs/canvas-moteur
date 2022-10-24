@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import Welcome from './views/welcome/index.vue'
-import Main from './views/main/index.vue'
+import Main from './views/main/main.vue'
 
 const routes = [
     { path: '/', redirect: 'main' },

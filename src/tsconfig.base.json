@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "esnext",
         "target": "esnext",
+        "jsx": "preserve",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
@@ -15,5 +16,5 @@
             "ui/*": ["./editor/ui/*"],
         }
     },
-    "include": ["./runtime", "./editor"]
+    "include": ["runtime/**/*.ts", "editor/**/*.ts", "editor/**/*.tsx", "editor/**/*.vue"]
 }

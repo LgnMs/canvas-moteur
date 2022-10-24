@@ -31,6 +31,27 @@ export class PageRenderer {
         this.htmlLayer.container.appendChild(canvasLayer.container);
     }
 
+    /**
+     * 重新设置参数以便于重新渲染
+     * @param page 
+     */
+    public reset(page: Page) {
+        this.page = page;
+        const components = this.page.getAllComponents();
+        this.canvasLayer.clear();
+        this.htmlLayer.clear();
+
+        this.htmlLayer.container.innerHTML = '';
+        this.htmlLayer.container.appendChild(this.canvasLayer.container);
+        components.forEach((component) => {
+            if (component.tag === componentTag.CANVAS) {
+                this.canvasLayer.add(component as CanvasComponent);
+            } else {
+                this.htmlLayer.add(component as HTMLComponent);
+            }
+        })
+    }
+
     private getLayers() {
         const size = {
             width: this.parentContainer.clientWidth,
@@ -64,7 +85,10 @@ export class PageRenderer {
         return this.htmlLayer;
     }
 
-    public render() {
+    public render(page?: Page){
+        if (page) {
+            this.reset(page);
+        }
         this.canvasLayer.render();
         this.htmlLayer.render();
     }

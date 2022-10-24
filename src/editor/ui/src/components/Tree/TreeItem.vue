@@ -1,26 +1,27 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import Icon from '../Icon/index.vue'
+import Icon from '../Icon/Icon.vue'
+import { ITreeNode } from './common';
 
-interface ITree {
-    name: string,
-    icon?: string,
-    active: boolean,
-    isEdit: boolean,
-    childrens: ITree[]
-}
-const props = defineProps<{data: ITree}>();
+const emit = defineEmits<{
+    (e: 'onNodeDataChange', node: ITreeNode): void,
+}>()
+
+const props = defineProps<{data: ITreeNode}>();
 
 const InputRef = ref();
+const name = ref('');
 
 onMounted(() => {
     if (props.data.isEdit) {
         InputRef.value.focus();
     }
+    name.value = props.data.name;
 })
 
 const onInputBlur = () => {
     props.data.isEdit = false;
+    emit('onNodeDataChange', {...props.data, name: name.value})
 }
 </script>
 
@@ -32,11 +33,13 @@ const onInputBlur = () => {
             class="name-input"
             ref="InputRef"
             :disabled="!data.isEdit"
-            v-model="data.name"
+            v-model="name"
             @blur="onInputBlur"
         />
         <div class="tree-item-children">
-            <slot></slot>
+            <template v-if="data.childrens instanceof Array && data.childrens.length > 0">
+                <TreeItem v-for="children in data.childrens" :data="children"></TreeItem>
+            </template>
         </div>
     </div>
 </template>
