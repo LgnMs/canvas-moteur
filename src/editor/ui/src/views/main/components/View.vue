@@ -12,11 +12,6 @@ watch([
     () => projectStore.activePage,
     () => projectStore.shouldRender,
 ], () => {
-    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试', style: {
-        backgroundColor: 'green',
-        height: 100,
-        width: 100,
-    } })
     projectStore.render(container.value!)
 })
 

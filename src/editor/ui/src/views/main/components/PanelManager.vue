@@ -41,6 +41,7 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
+    // TODO 在threejs中完成场景更新的操作
     projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试', style: {
         backgroundColor: 'green',
         height: 100,
