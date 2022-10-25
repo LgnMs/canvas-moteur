@@ -11,8 +11,10 @@ const props = defineProps<{data: ITreeNode}>();
 
 const InputRef = ref();
 const name = ref('');
+const isEditInput =ref(false);
 
 onMounted(() => {
+    isEditInput.value = props.data.isEdit;
     if (props.data.isEdit) {
         InputRef.value.focus();
     }
@@ -23,6 +25,7 @@ const onInputBlur = () => {
     props.data.isEdit = false;
     emit('onNodeDataChange', {...props.data, name: name.value})
 }
+
 </script>
 
 <template>
@@ -32,7 +35,7 @@ const onInputBlur = () => {
         <input
             class="name-input"
             ref="InputRef"
-            :disabled="!data.isEdit"
+            :disabled="!isEditInput"
             v-model="name"
             @blur="onInputBlur"
         />
@@ -48,7 +51,7 @@ const onInputBlur = () => {
     .tree-item {
         display: flex;
         align-items: center;
-        padding: 0 8px;
+        padding: 2px 8px;
         cursor: pointer;
         user-select: none;
         &:hover {
@@ -62,7 +65,7 @@ const onInputBlur = () => {
             color: $text-color;
             outline: none;
             cursor: pointer;
-            &:focus-visible {
+            &:focus {
                 outline: 1px solid $color-outline;
             }
         }

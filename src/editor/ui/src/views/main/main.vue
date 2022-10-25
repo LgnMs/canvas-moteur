@@ -5,6 +5,7 @@ import Tools from './components/Tools.vue'
 import PanelManager from './components/PanelManager.vue'
 import Panelinspection from './components/Panelinspection.vue'
 import View from './components/View.vue'
+import Footer from './components/Footer.vue'
 import { useProjectStore } from '../../stores/project';
 
 const projectStore = useProjectStore();
@@ -18,10 +19,11 @@ onMounted(() => {
 
 <template>
     <div class="main-container">
-        <Tools></Tools>
         <PanelManager></PanelManager>
+        <Tools></Tools>
         <View></View>
         <Panelinspection></Panelinspection>
+        <Footer></Footer>
     </div>
 </template>
 
@@ -31,10 +33,11 @@ onMounted(() => {
         height: 100vh;
         display: grid;
         grid-template-columns: 200px 1fr 200px;
-        grid-auto-rows: min-content auto;
+        grid-auto-rows: 28px auto 20px;
         grid-template-areas:
-            "tools tools tools"
-            "left middle right";
+            "left tools right"
+            "left middle right"
+            "footer footer footer";
         color: $text-color;
         background-color: $basic-color;
     }

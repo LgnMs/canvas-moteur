@@ -15,13 +15,19 @@ watch([
 </script>
 
 <template>
-    <div class="View" ref="container">
-        
+    <div class="view">
+        <div class="view-canvas" ref="container"></div>
     </div>
 </template>
 
 <style lang="scss">
-    .View {
+    $canvas-margin: 16px;
+    .view {
         grid-area: middle;
+        &-canvas {
+            margin: $canvas-margin;
+            width: calc(100% - ($canvas-margin * 2));
+            height: calc(100% - ($canvas-margin * 2));
+        }
     }
 </style>

@@ -71,21 +71,24 @@ const addComponent = () => {
     .PanelManager {
         grid-area: left;
         background-color: lighten($color: $basic-color, $amount: 8);
-        height: calc(100vh - 28px);
+        // height: calc(100vh - 28px);
+        height: 100%;
         &-projectpanle {
             height: 100%;
             .header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 8px 12px;
+                padding: 4px 12px;
                 font-size: 14px;
                 font-weight: bolder;
-                height: 44px;
+                height: 38px;
                 box-sizing: border-box;
             }
             .body {
                 height: calc(100% - 44px);
+                box-sizing: border-box;
+                padding: 4px 0;
                 overflow: auto;
             }
         }
