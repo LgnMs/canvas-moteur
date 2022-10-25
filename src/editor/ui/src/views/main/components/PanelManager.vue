@@ -41,13 +41,12 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
-    // TODO 在threejs中完成场景更新的操作
     projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试', style: {
-        backgroundColor: 'green',
+        backgroundColor: 'yellowgreen',
         height: 100,
         width: 100,
     } })
-    // projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试', style: {} })
+    projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试', style: {} })
 }
 </script>
 

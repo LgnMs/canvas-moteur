@@ -8,5 +8,7 @@ export function parseHTML(component: HTMLComponent) {
         Reflect.set(node.style, key, Reflect.get(component.style, key))
     })
 
+    // 组件已经被解析过了，就重新设置渲染状态
+    component.setShouldRender(false);
     return node;
 }

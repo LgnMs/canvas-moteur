@@ -34,8 +34,14 @@ export class CanvasRenderer {
 
     constructor(layer: CanvasLayer) {
         this.layer = layer;
-        const renderer = new THREE.WebGLRenderer();
-        
+        const renderer = new THREE.WebGLRenderer({
+            // /* 开启抗锯齿 */ antialias: true
+        });
+
+
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(layer.width, layer.height);
+
         renderer.setClearColor(new THREE.Color('#FFFFFF'), 1);
 
         const container = renderer.domElement;
@@ -47,9 +53,9 @@ export class CanvasRenderer {
         container.style.height = layer.height + 'px';
         this.container = container;
 
-        const camera = new THREE.PerspectiveCamera(45, layer.width / layer.height, 1, 1000);
-        // const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
-        camera.position.set( 0, 0, 500 );
+        // const camera = new THREE.PerspectiveCamera(45, layer.width / layer.height, 1, 1000);
+        const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
+        camera.position.set( 0, 0, 1000 );
         camera.lookAt( 0, 0, 0 );
 
         this.renderer = renderer;
@@ -71,6 +77,8 @@ export class CanvasRenderer {
      */
     public parse() {
         this.layer.components.forEach((component, index) => {
+            if (!component.shouldRender) return;
+
             component.onCreated();
 
             const componentRenderer = this.getComponentRenderer(component.type);
@@ -83,6 +91,8 @@ export class CanvasRenderer {
             this.componentOfObjectMap.set(object, component)
 
             component.onMounted();
+
+            component.setShouldRender(false);
         })
         return this;
     }

@@ -7,7 +7,7 @@ import { Page } from 'runtime/functional/project/page';
 import { ICanvasComponentOptions } from 'runtime/functional/project/component/canvas/canvasComponent';
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
 import { PageRenderer } from 'runtime/functional/renderer/pageRenderer';
-import { render as viewrender } from 'runtime/functional/renderer';
+import { initPageRenderer } from 'runtime/functional/renderer';
 import { error } from 'runtime/core/log';
 
 export const useProjectStore = defineStore('project', () => {
@@ -15,7 +15,7 @@ export const useProjectStore = defineStore('project', () => {
     const changeTime = ref(0);
     const activePage = ref<Page>();
     const shouldRender = ref(false);
-    const renderer = ref<PageRenderer>();
+    let pageRenderer: PageRenderer;
 
     function setProjectInfo(data: Project) {
         projectInfo.value = data;
@@ -74,11 +74,13 @@ export const useProjectStore = defineStore('project', () => {
 
     function render(container: HTMLElement) {
         if (activePage.value) {
-            if (renderer.value) {
-                renderer.value.render(activePage.value);
+            if (pageRenderer) {
+                pageRenderer.update(activePage.value);
             } else {
-                renderer.value = viewrender(activePage.value, container)
+                pageRenderer = initPageRenderer(activePage.value, container)
+                pageRenderer.render();
             }
+            
             shouldRender.value = false;
         } else {
             error('没有激活的页面')

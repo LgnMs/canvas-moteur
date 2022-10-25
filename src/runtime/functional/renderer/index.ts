@@ -26,3 +26,18 @@ export function render(page: Page, parentContainer: HTMLElement) {
     return pageRenderer;
 }
 
+export function initPageRenderer(page: Page, parentContainer: HTMLElement) {
+    page.onCreated();
+    const pageRenderer = new PageRenderer(page, parentContainer);
+    parentContainer.appendChild(pageRenderer.getContainer());
+    page.onMounted();
+
+    // TODO 完善插件加载的时机
+    PluginSystem
+        .init({pageRenderer})
+        .install(DargAndDrop.new({ name: '拖拽插件' }))
+        .run();
+
+    return pageRenderer;
+}
+

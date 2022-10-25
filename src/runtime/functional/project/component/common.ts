@@ -37,6 +37,7 @@ export interface IComponent {
         x: number;
         y: number;
     };
+    shouldRender: boolean;
 
     onCreated: () => void;
     onMounted: () => void;
@@ -76,6 +77,13 @@ export abstract class Component implements IComponent {
     onCreated = () => {};
     onMounted = () => {};
     onUnMounted = () => {};
+
+    /**
+     * 1.该组件是新添加的
+     * 2.该组件的属性发生过变动
+     * 3.该组件需要被重新渲染
+     */
+    shouldRender: boolean = true;
     
     constructor({ name, type, tag }: COptions) {
         this.id = generateId({ suffix: '_component' });
@@ -88,7 +96,10 @@ export abstract class Component implements IComponent {
         this.components.push(component);
         return component;
     }
-    
+
+    public setShouldRender(state: boolean) {
+        this.shouldRender = state;
+    }
 
     public getAllComponents() {
         return this.components;

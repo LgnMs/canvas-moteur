@@ -31,27 +31,6 @@ export class PageRenderer {
         this.htmlLayer.container.appendChild(canvasLayer.container);
     }
 
-    /**
-     * 重新设置参数以便于重新渲染
-     * @param page 
-     */
-    public reset(page: Page) {
-        this.page = page;
-        const components = this.page.getAllComponents();
-        this.canvasLayer.clear();
-        this.htmlLayer.clear();
-
-        this.htmlLayer.container.innerHTML = '';
-        this.htmlLayer.container.appendChild(this.canvasLayer.container);
-        components.forEach((component) => {
-            if (component.tag === componentTag.CANVAS) {
-                this.canvasLayer.add(component as CanvasComponent);
-            } else {
-                this.htmlLayer.add(component as HTMLComponent);
-            }
-        })
-    }
-
     private getLayers() {
         const size = {
             width: this.parentContainer.clientWidth,
@@ -85,11 +64,29 @@ export class PageRenderer {
         return this.htmlLayer;
     }
 
-    public render(page?: Page){
-        if (page) {
-            this.reset(page);
-        }
+    public render() {
         this.canvasLayer.render();
         this.htmlLayer.render();
+    }
+
+    public update(page: Page) {
+        // 1 diff算法算出需要更新的组件
+        // 2 单独添加这些组件
+        this.page = page;
+        const components = this.page.getAllComponents();
+
+        components.forEach((component) => {
+            if (!component.shouldRender) return;
+
+            if (component.tag === componentTag.CANVAS) {
+                this.canvasLayer.add(component as CanvasComponent);
+            } else {
+                this.htmlLayer.add(component as HTMLComponent);
+            }
+        })
+        
+        this.canvasLayer.update();
+        this.htmlLayer.update();
+        
     }
 }

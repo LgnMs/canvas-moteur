@@ -31,7 +31,7 @@ export interface Layer<T extends HTMLElement> {
     /**
      * 更新Layer中添加元素
      */
-    update(component: Component): Layer<T>;
+    update(component: Component): void;
 
     /**
      * 渲染Layer
@@ -72,8 +72,8 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
         return this;
     }
 
-    update(component: CanvasComponent) {
-        return this;
+    update() {
+        this.renderer.parse().render();
     }
 
     render() {
@@ -118,8 +118,23 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         return this;
     }
 
-    update(component: HTMLComponent) {
-        return this;
+    update() {
+        const diffComponents: HTMLComponent[] = [];
+
+        this.components.forEach(item => {
+            if (item.shouldRender) {
+                diffComponents.push(item)
+            }
+        })
+
+        diffComponents.forEach(component => {
+            const node = parseHTML(component);
+
+            component.onCreated();
+
+            this.container.appendChild(node);
+            component.onMounted();
+        });
     }
 
     render() {
@@ -129,8 +144,8 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
             component.onCreated();
 
             this.container.appendChild(node);
-            
             component.onMounted();
         });
     }
+
 }

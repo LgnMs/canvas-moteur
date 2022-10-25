@@ -19,7 +19,7 @@ export class RectRender extends ComponentRender<Rect> {
     }
 
     getGeometry(): THREE.BufferGeometry {
-        return new THREE.BoxGeometry( this.component.style.width, this.component.style.height, 0 )
+        return new THREE.PlaneGeometry( this.component.style.width, this.component.style.height)
     }
 
     getMaterial(): THREE.Material {
