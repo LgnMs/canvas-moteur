@@ -24,6 +24,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@better-scroll/core": "^2.5.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.23",
     "three": "^0.145.0",

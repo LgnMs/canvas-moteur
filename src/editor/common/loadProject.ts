@@ -1,5 +1,5 @@
 import { Project } from "runtime/functional/project";
-import { componentClass } from "runtime/functional/project/component";
+import { componentfactory } from "runtime/functional/project/component";
 import { componentType } from "runtime/functional/project/component/common";
 import { Page } from "runtime/functional/project/page";
 
@@ -48,12 +48,16 @@ export async function loadPorject(projectPath: string) {
             const res2 = await componentScript;
 
             const item2 = data.pages[pageIndex].components[comIndex];
-            const com = componentClass[item2.type as componentType].new(item2);
-            if (res2) {
-                com.setup = res2.default;
+            const createComponentfn = componentfactory(item2.tag, item2.type);
+            
+            if (createComponentfn) {
+                const com = createComponentfn(item2);
+                if (res2) {
+                    com.setup = res2.default;
+                }
+                page.addComponent(com)
+                comIndex += 1;
             }
-            page.addComponent(com)
-            comIndex += 1;
         }
         pageIndex += 1;
     }
