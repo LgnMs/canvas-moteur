@@ -53,6 +53,7 @@ export const useProjectStore = defineStore('project', () => {
                 page.addComponent(com)
                 changeTime.value += 1;
                 shouldRender.value = true;
+                attachEventForComponent(com);
             }
         }
     }
@@ -74,8 +75,9 @@ export const useProjectStore = defineStore('project', () => {
     }
 
 
-    const attachEventForComponent = (component: Component) => {
+    function attachEventForComponent(component: Component) {
         component.addEventListener('click', target => {
+            console.log(345)
             activeComponent.value = target;
         })
     }
@@ -87,11 +89,12 @@ export const useProjectStore = defineStore('project', () => {
             } else {
                 pageRenderer = initPageRenderer(activePage.value, container)
                 pageRenderer.render();
+
+                activePage.value.components.forEach(component => {
+                    attachEventForComponent(component);
+                })
             }
 
-            activePage.value.components.forEach(component => {
-                attachEventForComponent(component);
-            })
             
             shouldRender.value = false;
         } else {
