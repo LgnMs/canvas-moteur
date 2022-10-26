@@ -41,12 +41,12 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
-    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试', style: {
+    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试1', style: {
         backgroundColor: 'yellowgreen',
         height: 100,
         width: 100,
     } })
-    projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试', style: {} })
+    projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试2', style: {} })
 }
 </script>
 

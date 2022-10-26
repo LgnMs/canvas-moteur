@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { InteractionManager } from 'three.interactive';
 import { CanvasLayer } from "runtime/functional/renderer/layer";
 import { RectRender } from './rect'
 import { componentType } from "runtime/functional/project/component/common";
@@ -23,6 +24,12 @@ export function loadComponentRender() {
  */
 export class CanvasRenderer {
     private layer: CanvasLayer;
+    /**
+     * 基于Raycaster实现的事件管理器
+     * https://threejs.org/docs/index.html#api/en/core/Raycaster
+     * https://github.com/markuslerner/THREE.Interactive
+     */
+    interactionManager: InteractionManager;
     renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
     camera: THREE.OrthographicCamera | THREE.PerspectiveCamera;
@@ -62,6 +69,12 @@ export class CanvasRenderer {
         this.scene = new THREE.Scene();
         this.camera = camera;
 
+        this.interactionManager = new InteractionManager(
+            renderer,
+            camera,
+            renderer.domElement,
+            false
+        );
         this.getComponentRenderer = loadComponentRender();
     }
 
@@ -72,6 +85,17 @@ export class CanvasRenderer {
     public getComponentByObject(object: THREE.Mesh) {
         return this.componentOfObjectMap.get(object);
     }
+
+    public attachEvent(object: THREE.Mesh, component: CanvasComponent) {
+
+        object.addEventListener('click', () => {
+            component.dispatchEvent('click');
+        })
+
+
+        this.interactionManager.add(object);
+    }
+
     /**
      * 解析组件数据
      */
@@ -92,6 +116,8 @@ export class CanvasRenderer {
 
             component.onMounted();
 
+            this.attachEvent(object, component);
+
             component.setShouldRender(false);
         })
         return this;
@@ -101,6 +127,7 @@ export class CanvasRenderer {
      * 渲染组件
      */
     public render() {
+        this.interactionManager.update();
         this.renderer.render(this.scene, this.camera);
         return this;
     }

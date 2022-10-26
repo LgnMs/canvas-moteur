@@ -37,6 +37,7 @@ export interface IComponent {
         x: number;
         y: number;
     };
+    eventStore: Map<ComponentEventType, ComponentEvent[]>;
     shouldRender: boolean;
 
     onCreated: () => void;
@@ -62,6 +63,8 @@ export interface COptions {
     tag: componentTag;
 } 
 
+export type ComponentEventType = 'click';
+export type ComponentEvent = (taget: Component) => void;
 export abstract class Component implements IComponent {
     [key: string]: any;
 
@@ -77,6 +80,8 @@ export abstract class Component implements IComponent {
     onCreated = () => {};
     onMounted = () => {};
     onUnMounted = () => {};
+
+    eventStore: Map<ComponentEventType, ComponentEvent[]> = new Map();
 
     /**
      * 1.该组件是新添加的
@@ -112,6 +117,26 @@ export abstract class Component implements IComponent {
     public injectScript(setup: () => object) {
         const obj = setup();
         Object.keys(obj).forEach(key => Reflect.set(this, key, Reflect.get(obj, key)));
+    }
+
+    public addEventListener(type: ComponentEventType, callback: (target: Component) => void) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+            events.push(callback);
+            this.eventStore.set(type, events);
+        } else {
+            this.eventStore.set(type, [callback]);
+        }
+    }
+
+    public dispatchEvent(type: ComponentEventType) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+    
+            events.forEach(event => {
+                event(this);
+            })
+        }
     }
     // TODO 组件管理相关功能
 }

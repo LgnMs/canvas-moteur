@@ -1,7 +1,16 @@
+<script lang="ts" setup>
+import { useProjectStore } from 'editor/ui/src/stores/project';
+
+const projectStore = useProjectStore()
+
+</script>
+
 <template>
     <div class="Panelinspection">
         <div class="PropPanel">
             <div class="header">属性检查器</div>
+
+            <div>名称: {{projectStore.activeComponent?.name}}</div>
         </div>
     </div>
 </template>

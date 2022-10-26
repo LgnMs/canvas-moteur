@@ -14,6 +14,7 @@ export const useProjectStore = defineStore('project', () => {
     const projectInfo = ref<Project>();
     const changeTime = ref(0);
     const activePage = ref<Page>();
+    const activeComponent = ref<Component>();
     const shouldRender = ref(false);
     let pageRenderer: PageRenderer;
 
@@ -72,6 +73,13 @@ export const useProjectStore = defineStore('project', () => {
         return activePage.value!;
     }
 
+
+    const attachEventForComponent = (component: Component) => {
+        component.addEventListener('click', target => {
+            activeComponent.value = target;
+        })
+    }
+
     function render(container: HTMLElement) {
         if (activePage.value) {
             if (pageRenderer) {
@@ -80,6 +88,10 @@ export const useProjectStore = defineStore('project', () => {
                 pageRenderer = initPageRenderer(activePage.value, container)
                 pageRenderer.render();
             }
+
+            activePage.value.components.forEach(component => {
+                attachEventForComponent(component);
+            })
             
             shouldRender.value = false;
         } else {
@@ -91,6 +103,7 @@ export const useProjectStore = defineStore('project', () => {
         changeTime,
         projectInfo,
         activePage,
+        activeComponent,
         shouldRender,
         setProjectInfo,
         addPage,
