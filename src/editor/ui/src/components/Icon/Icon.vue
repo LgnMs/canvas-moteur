@@ -22,8 +22,7 @@ defineProps<IconOptions>()
   font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 100 700;
-  /* src: url(./fonts/MaterialIcons.woff2) format('woff2'); */
-  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v61/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsLjBuVY.woff2) format('woff2');
+  src: url(./fonts/MaterialIcons.woff2) format('woff2');
 }
 
 .material-symbols-outlined {
