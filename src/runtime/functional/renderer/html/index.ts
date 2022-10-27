@@ -10,6 +10,8 @@ export function parseHTML(component: HTMLComponent) {
 
     // 组件已经被解析过了，就重新设置渲染状态
     component.setShouldRender(false);
+    component.setNotRendered(false);
+    component.setEl(node);
 
     node.addEventListener('click', () => {
         component.dispatchEvent('click');

@@ -103,26 +103,35 @@ export class CanvasRenderer {
         this.layer.components.forEach((component, index) => {
             if (!component.shouldRender) return;
 
-            component.onCreated();
+            if (component.notRendered) {
+                component.onCreated();
+    
+                const componentRenderer = this.getComponentRenderer(component.type);
+                const object = new componentRenderer(component)
+                    .toWebAxis(this.layer.width, this.layer.height)
+                    .parse(index);
+    
+                component.mesh = object;
+                    
+                this.objects.push(object);
+                this.scene.add(object);
+                this.componentOfObjectMap.set(object, component)
+    
+                component.onMounted();
+    
+                this.attachEvent(object, component);
 
-            const componentRenderer = this.getComponentRenderer(component.type);
-            const object = new componentRenderer(component)
-                .toWebAxis(this.layer.width, this.layer.height)
-                .parse(index);
-
-            this.objects.push(object);
-            this.scene.add(object);
-            this.componentOfObjectMap.set(object, component)
-
-            component.onMounted();
-
-            this.attachEvent(object, component);
-
+                component.setNotRendered(false);
+            } else {
+                const componentRenderer = this.getComponentRenderer(component.type);
+                new componentRenderer(component)
+                    .update();
+                
+            }
             component.setShouldRender(false);
         })
         return this;
     }
-
     /**
      * 渲染组件
      */

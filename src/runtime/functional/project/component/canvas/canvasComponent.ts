@@ -12,6 +12,7 @@ export interface ICanvasComponentOptions {
 
 export class CanvasComponent extends Component {
     style!: ComponentStyle;
+    mesh?: THREE.Mesh;
 
     constructor(options: COptions) {
         super(options);

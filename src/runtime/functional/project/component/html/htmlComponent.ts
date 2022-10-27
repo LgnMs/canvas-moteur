@@ -11,8 +11,22 @@ export interface IHTMLComponentOptions {
 
 export class HTMLComponent extends Component {
     style!: Partial<CSSStyleDeclaration>;
+    el?: HTMLElement;
 
     constructor(options: COptions) {
         super(options);
+    }
+
+    public setEl(el: HTMLElement) {
+        this.el = el;
+    }
+
+    public setStyle(style: Partial<CSSStyleDeclaration>) {
+        if (this.el) {
+            Object.keys(style).forEach(key => {
+                Reflect.set(this.el!.style, key, Reflect.get(style, key))
+            })
+            console.dir(this.el!)
+        }
     }
 }

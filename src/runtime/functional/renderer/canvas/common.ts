@@ -9,5 +9,6 @@ export abstract class ComponentRender<T> {
     abstract toWebAxis(layerWidth: number, layerHeight: number): this;
     abstract getGeometry(): THREE.BufferGeometry;
     abstract getMaterial(): THREE.Material;
+    abstract update(): void;
     abstract parse(zIndex: number): THREE.Mesh;
 }

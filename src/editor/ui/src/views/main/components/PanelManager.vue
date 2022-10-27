@@ -46,7 +46,10 @@ const addComponent = () => {
         height: 100,
         width: 100,
     } })
-    projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试2', style: {} })
+    projectStore.addComponent(componentType.Input, componentTag.HTML, { name: '测试2', style: {
+        width: '120px',
+        height: '40px'
+    } })
 }
 </script>
 

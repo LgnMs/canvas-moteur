@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Project } from 'runtime/functional/project';
 import { canvasfactory, htmlfactory } from 'runtime/functional/project/component';
-import { componentType, componentTag, Component } from 'runtime/functional/project/component/common';
+import { componentType, componentTag, Component, IComponent } from 'runtime/functional/project/component/common';
 import { Page } from 'runtime/functional/project/page';
 import { ICanvasComponentOptions } from 'runtime/functional/project/component/canvas/canvasComponent';
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
@@ -77,22 +77,25 @@ export const useProjectStore = defineStore('project', () => {
 
     function attachEventForComponent(component: Component) {
         component.addEventListener('click', target => {
-            console.log(345)
             activeComponent.value = target;
         })
     }
 
-    function render(container: HTMLElement) {
+    function render(container?: HTMLElement) {
         if (activePage.value) {
             if (pageRenderer) {
                 pageRenderer.update(activePage.value);
             } else {
-                pageRenderer = initPageRenderer(activePage.value, container)
-                pageRenderer.render();
-
-                activePage.value.components.forEach(component => {
-                    attachEventForComponent(component);
-                })
+                if (container) {
+                    pageRenderer = initPageRenderer(activePage.value, container)
+                    pageRenderer.render();
+    
+                    activePage.value.components.forEach(component => {
+                        attachEventForComponent(component);
+                    })
+                } else {
+                    error('请传入container')
+                }
             }
 
             

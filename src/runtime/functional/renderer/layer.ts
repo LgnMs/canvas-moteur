@@ -128,12 +128,15 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
         })
 
         diffComponents.forEach(component => {
-            const node = parseHTML(component);
-
-            component.onCreated();
-
-            this.container.appendChild(node);
-            component.onMounted();
+            if (component.notRendered) {
+                const node = parseHTML(component);
+    
+                component.onCreated();
+                this.container.appendChild(node);
+                component.onMounted();
+            } else {
+                component.setStyle(component.style);
+            }
         });
     }
 

@@ -39,6 +39,7 @@ export interface IComponent {
     };
     eventStore: Map<ComponentEventType, ComponentEvent[]>;
     shouldRender: boolean;
+    style?: object;
 
     onCreated: () => void;
     onMounted: () => void;
@@ -87,8 +88,13 @@ export abstract class Component implements IComponent {
      * 1.该组件是新添加的
      * 2.该组件的属性发生过变动
      * 3.该组件需要被重新渲染
+     * 第一次初始化的组件都是需要被渲染的
      */
     shouldRender: boolean = true;
+    /**
+     * 该组件还没有在layer中渲染过
+     */ 
+    notRendered: boolean = true;
     
     constructor({ name, type, tag }: COptions) {
         this.id = generateId({ suffix: '_component' });
@@ -104,6 +110,10 @@ export abstract class Component implements IComponent {
 
     public setShouldRender(state: boolean) {
         this.shouldRender = state;
+    }
+
+    public setNotRendered(state: boolean) {
+        this.notRendered = state;
     }
 
     public getAllComponents() {

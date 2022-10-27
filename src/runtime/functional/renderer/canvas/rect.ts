@@ -27,6 +27,15 @@ export class RectRender extends ComponentRender<Rect> {
         return  new THREE.MeshBasicMaterial({ color })
     }
 
+    update() {
+        this.component.mesh?.geometry.dispose();
+        const geometry = this.getGeometry();
+        this.component.mesh!.geometry = geometry;
+
+        const color: THREE.Color = (this.component.mesh!.material as any).color;
+        color.setStyle(this.component.style.backgroundColor!);
+    }
+
     parse(zIndex: number) {
         const geometry = this.getGeometry();
         const material = this.getMaterial();
