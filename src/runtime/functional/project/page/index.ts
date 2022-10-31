@@ -36,7 +36,7 @@ export class Page {
         });
     }
 
-    private injectScript(setup: () => object) {
+    public injectScript(setup: () => object) {
         const obj = setup();
         Object.keys(obj).forEach(key => Reflect.set(this, key, Reflect.get(obj, key)));
     }

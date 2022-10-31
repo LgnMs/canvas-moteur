@@ -12,6 +12,7 @@ const props = defineProps<{data: ITreeNode}>();
 const InputRef = ref();
 const name = ref('');
 const isEditInput =ref(false);
+const expand = ref(false);
 
 onMounted(() => {
     isEditInput.value = props.data.isEdit;
@@ -30,7 +31,7 @@ const onInputBlur = () => {
 
 <template>
     <div class="tree-item" @click="data.active = !data.active">
-        <Icon class="expand_more" :class="{active: data.active}" icon="expand_more"/>
+        <Icon class="expand_more" @click="expand = !expand" :class="{active: expand}" icon="expand_more"/>
         <Icon v-if="data.icon" :icon="data.icon"/>
         <input
             class="name-input"
@@ -39,7 +40,7 @@ const onInputBlur = () => {
             v-model="name"
             @blur="onInputBlur"
         />
-        <div class="tree-item-children">
+        <div v-show="expand" class="tree-item-children">
             <template v-if="data.childrens instanceof Array && data.childrens.length > 0">
                 <TreeItem v-for="children in data.childrens" :data="children"></TreeItem>
             </template>
@@ -54,12 +55,13 @@ const onInputBlur = () => {
         padding: 2px 8px;
         cursor: pointer;
         user-select: none;
+        flex-wrap: wrap;
         &:hover {
             background-color: lighten($color: $basic-color, $amount: 15);
         }
         .name-input {
             margin-left: 4px;
-            width: 80%;
+            width: calc(100% - 56px);
             background-color: transparent;
             border: none;
             color: $text-color;
