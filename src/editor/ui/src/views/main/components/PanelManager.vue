@@ -72,6 +72,15 @@ const addComponent = () => {
         height: '40px'
     } })
 }
+
+const onNodeClick = (node: ITreeNode) => {
+    const data: Page | Component = node.data;
+    if (data.id.indexOf('page')) {
+        projectStore.setActivePage(data as Page);
+    } else if (data.id.indexOf('component')) {
+        projectStore.setActiveComponent(data as Component);
+    }
+}
 </script>
 
 <template>
@@ -85,7 +94,7 @@ const addComponent = () => {
                 </span>
             </div>
             <div class="body">
-                <Tree v-if="treeData" :data="treeData" @onTreeDataChange="onTreeDataChange"></Tree>
+                <Tree v-if="treeData" :data="treeData" @onTreeDataChange="onTreeDataChange" @onNodeClick="onNodeClick"></Tree>
             </div>
         </div>
     </div>

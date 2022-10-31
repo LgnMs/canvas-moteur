@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Project } from 'runtime/functional/project';
 import { canvasfactory, htmlfactory } from 'runtime/functional/project/component';
-import { componentType, componentTag, Component, IComponent } from 'runtime/functional/project/component/common';
+import { componentType, componentTag, Component } from 'runtime/functional/project/component/common';
 import { Page } from 'runtime/functional/project/page';
 import { ICanvasComponentOptions } from 'runtime/functional/project/component/canvas/canvasComponent';
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
@@ -16,7 +16,7 @@ export const useProjectStore = defineStore('project', () => {
     const activePage = ref<Page>();
     const activeComponent = ref<Component>();
     const shouldRender = ref(false);
-    let pageRenderer: PageRenderer;
+    let pageRenderer: PageRenderer | null = null;
 
     function setProjectInfo(data: Project) {
         projectInfo.value = data;
@@ -74,11 +74,24 @@ export const useProjectStore = defineStore('project', () => {
         return activePage.value!;
     }
 
+    function setActivePage(data: Page) {
+        activePage.value = data;
+    }
+
+    function setActiveComponent(data: Component) {
+        activeComponent.value = data;
+    }
 
     function attachEventForComponent(component: Component) {
         component.addEventListener('click', target => {
             activeComponent.value = target;
         })
+    }
+
+    function clear() {
+        if (pageRenderer) {
+            pageRenderer = null;
+        }
     }
 
     function render(container?: HTMLElement) {
@@ -93,8 +106,6 @@ export const useProjectStore = defineStore('project', () => {
                     activePage.value.components.forEach(component => {
                         attachEventForComponent(component);
                     })
-                } else {
-                    error('请传入container')
                 }
             }
 
@@ -117,6 +128,9 @@ export const useProjectStore = defineStore('project', () => {
         isEmpty,
         changePageNameById,
         getActivePage,
+        setActiveComponent,
+        setActivePage,
         render,
+        clear,
     }
 })

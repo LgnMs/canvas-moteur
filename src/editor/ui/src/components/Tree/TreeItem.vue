@@ -5,6 +5,7 @@ import { ITreeNode } from './common';
 
 const emit = defineEmits<{
     (e: 'onNodeDataChange', node: ITreeNode): void,
+    (e: 'onNodeClick', node: ITreeNode): void,
 }>()
 
 const props = defineProps<{data: ITreeNode}>();
@@ -15,22 +16,23 @@ const isEditInput =ref(false);
 const expand = ref(false);
 
 onMounted(() => {
-    isEditInput.value = props.data.isEdit;
-    if (props.data.isEdit) {
-        InputRef.value.focus();
-    }
     name.value = props.data.name;
 })
 
 const onInputBlur = () => {
-    props.data.isEdit = false;
+    isEditInput.value = false;
     emit('onNodeDataChange', {...props.data, name: name.value})
+}
+
+const nodeClick = () => {
+    props.data.active = !props.data.active;
+    emit('onNodeClick', props.data);
 }
 
 </script>
 
 <template>
-    <div class="tree-item" @click="data.active = !data.active">
+    <div class="tree-item" @click="nodeClick">
         <Icon class="expand_more" @click="expand = !expand" :class="{active: expand}" icon="expand_more"/>
         <Icon v-if="data.icon" :icon="data.icon"/>
         <input
@@ -40,11 +42,11 @@ const onInputBlur = () => {
             v-model="name"
             @blur="onInputBlur"
         />
-        <div v-show="expand" class="tree-item-children">
-            <template v-if="data.childrens instanceof Array && data.childrens.length > 0">
-                <TreeItem v-for="children in data.childrens" :data="children"></TreeItem>
-            </template>
-        </div>
+    </div>
+    <div v-show="expand" class="tree-item-children">
+        <template v-if="data.childrens instanceof Array && data.childrens.length > 0">
+            <TreeItem v-for="children in data.childrens" :data="children"></TreeItem>
+        </template>
     </div>
 </template>
 
@@ -76,6 +78,9 @@ const onInputBlur = () => {
             &.active {
                 transform: rotate(0deg);
             }
+        }
+        &-children {
+            padding-left: 8px;
         }
     }
 </style>

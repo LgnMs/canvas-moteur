@@ -10,8 +10,6 @@ const setViewCanvasSize = () => {
     const el = wrapper.value!;
 
     const viewWidth = el.offsetWidth!;
-    // el.style.height = el.offsetHeight + 'px';
-    // web 16:9大小
 
     const width = viewWidth - 48;
     const height = width * ( 9 / 16);
@@ -26,6 +24,14 @@ onMounted(() => {
 
 watch([
     () => projectStore.activePage,
+], () => {
+    // TODO 页面切换之后canvas layer没有正确渲染
+    projectStore.clear();
+    container.value!.innerHTML = '';
+    projectStore.render(container.value!)
+})
+
+watch([
     () => projectStore.shouldRender,
 ], () => {
     projectStore.render(container.value!)
