@@ -3,31 +3,52 @@ import { ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
 import ButtonIcon from 'ui/src/components/Button/ButtonIcon.vue'
 import Tree, { ITreeNode } from 'editor/ui/src/components/Tree';
-import { componentTag, componentType } from 'runtime/functional/project/component/common';
+import { Component, componentTag, componentType } from 'runtime/functional/project/component/common';
+import { Page } from 'runtime/functional/project/page';
 
 const projectStore = useProjectStore()
 const projectInfo = projectStore.projectInfo;
 const treeData = ref<ITreeNode[]>()
 let isAddPage = false;
 
-watch(() => projectStore.changeTime, () => {
-    if (!projectStore.isEmpty()) {
-        treeData.value = projectInfo?.pages.map((page, index) => {
-            let isEdit = false;
-            let isActive = false;
-            if (isAddPage && index +1 === projectInfo.pages.length) {
-                isEdit = true
-                isActive = true
-            }
-            return { 
-                name: page.name,
-                icon: 'description',
-                active: isActive,
-                isEdit,
-                childrens: [],
-                data: page
+const getTreeData = (pages: Page[]) => {
+    const getChildren = (components: Component[]): ITreeNode[] => {
+        if (components.length === 0) return [];
+
+        return components.map((component) => {
+            return {
+                name: component.name,
+                icon: 'circle',
+                isEdit: false,
+                active: false,
+                childrens: getChildren(component.components),
+                data: component
             }
         })
+    }
+
+    const data: ITreeNode[] = pages.map((page, index) => {
+        let isEdit = false;
+        let isActive = false;
+        if (isAddPage && index +1 === pages.length) {
+            isEdit = true
+            isActive = true
+        }
+        return { 
+            name: page.name,
+            icon: 'description',
+            active: isActive,
+            isEdit,
+            childrens: getChildren(page.components),
+            data: page
+        }
+    })
+    return data;
+}
+
+watch(() => projectStore.changeTime, () => {
+    if (!projectStore.isEmpty()) {
+        treeData.value = getTreeData(projectStore.projectInfo!.pages)
     }
 })
 
