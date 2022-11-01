@@ -29,12 +29,20 @@ const nodeClick = () => {
     emit('onNodeClick', props.data);
 }
 
+const onNodeDataChange = (node: ITreeNode) => {
+    emit('onNodeDataChange', node)
+}
+
+const onNodeClick = (node: ITreeNode) => {
+    emit('onNodeClick', node)
+}
+
 </script>
 
 <template>
     <div class="tree-item" @click="nodeClick">
         <Icon class="expand_more" @click="expand = !expand" :class="{active: expand}" icon="expand_more"/>
-        <Icon v-if="data.icon" :icon="data.icon"/>
+        <Icon v-if="data.icon" :size="16" :icon="data.icon"/>
         <input
             class="name-input"
             ref="InputRef"
@@ -45,7 +53,7 @@ const nodeClick = () => {
     </div>
     <div v-show="expand" class="tree-item-children">
         <template v-if="data.childrens instanceof Array && data.childrens.length > 0">
-            <TreeItem v-for="children in data.childrens" :data="children"></TreeItem>
+            <TreeItem v-for="children in data.childrens" :data="children" @onNodeDataChange="onNodeDataChange" @onNodeClick="onNodeClick"></TreeItem>
         </template>
     </div>
 </template>

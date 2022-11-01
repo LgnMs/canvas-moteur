@@ -76,6 +76,7 @@ export const useProjectStore = defineStore('project', () => {
 
     function setActivePage(data: Page) {
         activePage.value = data;
+        activePage.value.pageShouldRender();
     }
 
     function setActiveComponent(data: Component) {
@@ -89,7 +90,9 @@ export const useProjectStore = defineStore('project', () => {
     }
 
     function clear() {
+        // 清空当前页面的渲染器，但并不包括元素节点中的内容
         if (pageRenderer) {
+            pageRenderer.clear();
             pageRenderer = null;
         }
     }

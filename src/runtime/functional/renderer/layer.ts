@@ -60,6 +60,7 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
 
     clear() {
         this.components = [];
+        this.renderer.clear();
         return this;
     }
 
@@ -106,6 +107,7 @@ export class HTMLLayer implements Layer<HTMLDivElement> {
 
     clear() {
         this.components = [];
+        this.container.innerHTML = '';
         return this;
     }
 

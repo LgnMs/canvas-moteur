@@ -96,6 +96,16 @@ export class CanvasRenderer {
         this.interactionManager.add(object);
     }
 
+
+    /**
+     * 清空渲染器以及释放相关内存
+     */
+    public clear() {
+        this.renderer.clear();
+        this.renderer.dispose();
+        this.renderer.forceContextLoss();
+    }
+
     /**
      * 解析组件数据
      */

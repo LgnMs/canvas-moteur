@@ -88,4 +88,9 @@ export class PageRenderer {
         this.htmlLayer.update();
         
     }
+
+    public clear() {
+        this.canvasLayer.clear();
+        this.htmlLayer.clear();
+    }
 }

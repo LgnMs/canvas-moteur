@@ -22,13 +22,16 @@ onMounted(() => {
     setViewCanvasSize();
 })
 
-watch([
-    () => projectStore.activePage,
-], () => {
-    // TODO 页面切换之后canvas layer没有正确渲染
+const changePage = () => {
     projectStore.clear();
     container.value!.innerHTML = '';
     projectStore.render(container.value!)
+}
+
+watch([
+    () => projectStore.activePage,
+], () => {
+    changePage();
 })
 
 watch([
