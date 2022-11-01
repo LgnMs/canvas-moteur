@@ -34,7 +34,7 @@ const nodeClick = () => {
 <template>
     <div class="tree-item" @click="nodeClick">
         <Icon class="expand_more" @click="expand = !expand" :class="{active: expand}" icon="expand_more"/>
-        <Icon v-if="data.icon" :icon="data.icon"/>
+        <Icon v-if="data.icon" :size="16" :icon="data.icon"/>
         <input
             class="name-input"
             ref="InputRef"
