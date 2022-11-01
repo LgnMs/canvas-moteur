@@ -51,4 +51,20 @@ export class Page {
         return this.components;
     }
     
+    /**
+     *  重置该页面的渲染状态，用于页面切换后使用
+     */
+    public pageShouldRender() {
+        const fn = (components: Component[]) => {
+            components.forEach(component => {
+                component.setShouldRender(true);
+                component.setNotRendered(true);
+                if (component.components.length > 0) {
+                    fn(component.components);
+                }
+            })
+        }
+        
+        fn(this.components);
+    }
 }

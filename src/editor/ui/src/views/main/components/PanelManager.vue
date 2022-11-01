@@ -75,9 +75,11 @@ const addComponent = () => {
 
 const onNodeClick = (node: ITreeNode) => {
     const data: Page | Component = node.data;
-    if (data.id.indexOf('page')) {
+    console.log(data.id)
+    if (data.id.indexOf('page') !== -1) {
         projectStore.setActivePage(data as Page);
-    } else if (data.id.indexOf('component')) {
+    } else if (data.id.indexOf('component') !== -1) {
+        // 点击到组件时应当渲染组件所在的页面
         projectStore.setActiveComponent(data as Component);
     }
 }
@@ -106,6 +108,7 @@ const onNodeClick = (node: ITreeNode) => {
         background-color: lighten($color: $basic-color, $amount: 8);
         // height: calc(100vh - 28px);
         height: 100%;
+        user-select: none;
         &-projectpanle {
             height: 100%;
             .header {
@@ -119,7 +122,7 @@ const onNodeClick = (node: ITreeNode) => {
                 box-sizing: border-box;
             }
             .body {
-                height: calc(100% - 44px);
+                height: calc(100vh - 38px - 20px);
                 box-sizing: border-box;
                 padding: 4px 0;
                 overflow: auto;
