@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
+import { Page } from 'runtime/functional/project/page';
 
 const projectStore = useProjectStore()
 const container = ref<HTMLElement>();
 const wrapper = ref<HTMLElement>();
+const scale = ref(1);
 
-const setViewCanvasSize = () => {
-    const el = wrapper.value!;
+const setViewCanvasSize = (page: Page) => {
+    container.value!.style.width = page.width;
+    container.value!.style.height = page.height;
+    container.value!.style.minHeight = '100vh';
 
-    const viewWidth = el.offsetWidth!;
-
-    const width = viewWidth - 48;
-    const height = width * ( 9 / 16);
-
-    container.value!.style.width = width + 'px';
-    container.value!.style.height = height + 'px';
+    scale.value = wrapper.value!.clientWidth / container.value!.clientWidth;
+    
+    if (scale.value > 1) {
+        scale.value = 1;
+    }
+    container.value!.style.transform = `scale(${scale.value})`;
 }
 
-onMounted(() => {
-    setViewCanvasSize();
-})
 
 const changePage = () => {
     projectStore.clear();
@@ -28,15 +28,15 @@ const changePage = () => {
     projectStore.render(container.value!)
 }
 
-watch([
-    () => projectStore.activePage,
-], () => {
-    changePage();
+watch(() => projectStore.activePage, (page) => {
+    console.log(233)
+    if (page) {
+        setViewCanvasSize(page);
+        changePage();
+    }
 })
 
-watch([
-    () => projectStore.shouldRender,
-], () => {
+watch(() => projectStore.shouldRender, () => {
     projectStore.render(container.value!)
 })
 
@@ -52,13 +52,13 @@ watch([
     $canvas-margin: 16px;
     .view {
         grid-area: middle;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 16px;
         box-sizing: border-box;
-        overflow: hidden;
+        overflow: auto;
         &-canvas {
+            margin: 0 auto;
             overflow: auto;
+            transform-origin: left top;
         }
     }
 </style>

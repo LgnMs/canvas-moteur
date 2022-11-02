@@ -9,6 +9,8 @@ export class Page {
     [key: string]: any;
     id: string;
     name: string;
+    width: string = '1110px';
+    height: string = 'auto';
     components: Component[] = [];
 
     onCreated = () => {};

@@ -80,6 +80,7 @@ const onNodeClick = (node: ITreeNode) => {
     const data: Page | Component = node.data;
     if (data.id.indexOf('page') !== -1) {
         projectStore.setActivePage(data as Page);
+        projectStore.setSelectType(0);
     } else if (data.id.indexOf('component') !== -1) {
         // 点击到组件时应当渲染组件所在的页面
         const getPage = (node: ITreeNode): Page | null => {
@@ -102,6 +103,7 @@ const onNodeClick = (node: ITreeNode) => {
             error('未找到组件所在的页面')
         }
         projectStore.setActiveComponent(data as Component);
+        projectStore.setSelectType(1);
     }
 }
 </script>
