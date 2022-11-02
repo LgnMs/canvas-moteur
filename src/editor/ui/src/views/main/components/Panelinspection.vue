@@ -16,7 +16,6 @@ const onBlur = () => {
             <div class="header">属性检查器</div>
 
             <div class="body" v-if="projectStore.activeComponent" @blur="onBlur">
-                <Input label="名称" v-model="projectStore.activeComponent.name"></Input>
 
                 <div class="body-position" v-if="projectStore.activeComponent.position">
                     <Input label="x" v-model="projectStore.activeComponent.position.x"></Input>

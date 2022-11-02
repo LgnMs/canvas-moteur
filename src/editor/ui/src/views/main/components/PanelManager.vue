@@ -5,6 +5,7 @@ import ButtonIcon from 'ui/src/components/Button/ButtonIcon.vue'
 import Tree, { ITreeNode } from 'editor/ui/src/components/Tree';
 import { Component, componentTag, componentType } from 'runtime/functional/project/component/common';
 import { Page } from 'runtime/functional/project/page';
+import { error } from 'runtime/core/log';
 
 const projectStore = useProjectStore()
 const projectInfo = projectStore.projectInfo;
@@ -12,36 +13,38 @@ const treeData = ref<ITreeNode[]>()
 let isAddPage = false;
 
 const getTreeData = (pages: Page[]) => {
-    const getChildren = (components: Component[]): ITreeNode[] => {
+    const getChildren = (components: Component[], parent: ITreeNode): ITreeNode[] => {
         if (components.length === 0) return [];
 
         return components.map((component) => {
-            return {
+            const node: ITreeNode= {
                 name: component.name,
                 icon: 'circle',
-                isEdit: false,
                 active: false,
-                childrens: getChildren(component.components),
+                parent,
+                childrens: [],
                 data: component
             }
+            node.childrens = getChildren(component.components, node);
+            return node
         })
     }
 
     const data: ITreeNode[] = pages.map((page, index) => {
-        let isEdit = false;
         let isActive = false;
         if (isAddPage && index +1 === pages.length) {
-            isEdit = true
             isActive = true
         }
-        return { 
+        const node: ITreeNode  = { 
             name: page.name,
             icon: 'description',
             active: isActive,
-            isEdit,
-            childrens: getChildren(page.components),
+            parent: null,
+            childrens: [],
             data: page
         }
+        node.childrens = getChildren(page.components, node);
+        return node;
     })
     return data;
 }
@@ -75,11 +78,29 @@ const addComponent = () => {
 
 const onNodeClick = (node: ITreeNode) => {
     const data: Page | Component = node.data;
-    console.log(data.id)
     if (data.id.indexOf('page') !== -1) {
         projectStore.setActivePage(data as Page);
     } else if (data.id.indexOf('component') !== -1) {
         // 点击到组件时应当渲染组件所在的页面
+        const getPage = (node: ITreeNode): Page | null => {
+            const parent = node.parent;
+            if (!parent) return null;
+
+            if (parent.data.id.indexOf('page') !== -1) {
+                return parent.data;
+            } else if (parent.data.id.indexOf('component') !== -1) {
+                if (!parent.parent) return null;
+                return getPage(parent.parent)
+            }
+            return null;
+        }
+
+        const page = getPage(node);
+        if (page) {
+            projectStore.setActivePage(page)
+        } else {
+            error('未找到组件所在的页面')
+        }
         projectStore.setActiveComponent(data as Component);
     }
 }
