@@ -5,9 +5,15 @@ import Input from 'ui/src/components/Input/Input.vue'
 const projectStore = useProjectStore()
 
 const onBlur = () => {
+    // TODO 修复改变positon后图形位置未正确变化的问题
     projectStore.activeComponent?.setShouldRender(true);
     projectStore.render();
 }
+
+const onPageBlur =() => {
+    projectStore.refresh();
+}
+
 </script>
 
 <template>
@@ -15,12 +21,14 @@ const onBlur = () => {
         <div class="PropPanel">
             <div class="header">属性检查器</div>
 
-            <div class="body" v-if="projectStore.activeComponent" @blur="onBlur">
-                <Input label="名称" v-model="projectStore.activeComponent.name"></Input>
+            <div class="body" v-if="projectStore.activePage && projectStore.selectType === 0" >
+                <Input label="宽度" v-model="projectStore.activePage.width" @blur="onPageBlur"></Input>
+            </div>
+            <div class="body" v-if="projectStore.activeComponent && projectStore.selectType === 1" >
 
                 <div class="body-position" v-if="projectStore.activeComponent.position">
-                    <Input label="x" v-model="projectStore.activeComponent.position.x"></Input>
-                    <Input label="y" v-model="projectStore.activeComponent.position.y"></Input>
+                    <Input label="x" v-model="projectStore.activeComponent.position.x" @blur="onBlur"></Input>
+                    <Input label="y" v-model="projectStore.activeComponent.position.y" @blur="onBlur"></Input>
                 </div>
 
                 <div class="body-style" v-if="projectStore.activeComponent.style">

@@ -13,9 +13,11 @@ import { error } from 'runtime/core/log';
 export const useProjectStore = defineStore('project', () => {
     const projectInfo = ref<Project>();
     const changeTime = ref(0);
-    const activePage = ref<Page>();
+    const activePage = ref<Page | null>();
     const activeComponent = ref<Component>();
     const shouldRender = ref(false);
+    // 0 表示当前选中的是页面 1表示当前选中的是组件
+    const selectType = ref(0);
     let pageRenderer: PageRenderer | null = null;
 
     function setProjectInfo(data: Project) {
@@ -86,7 +88,16 @@ export const useProjectStore = defineStore('project', () => {
     function attachEventForComponent(component: Component) {
         component.addEventListener('click', target => {
             activeComponent.value = target;
+            setSelectType(1);
         })
+    }
+
+    /**
+     * 0 表示当前选中的是页面 1表示当前选中的是组件
+     * @param type 
+     */
+    function setSelectType(type: 0 | 1) {
+        selectType.value = type;
     }
 
     function clear() {
@@ -94,6 +105,18 @@ export const useProjectStore = defineStore('project', () => {
         if (pageRenderer) {
             pageRenderer.clear();
             pageRenderer = null;
+        }
+    }
+
+
+    function refresh() {
+        // 重置之后窗口界面会监听到然后重新渲染页面
+        const page = activePage.value;
+        if (page) {
+            activePage.value = null;
+            setTimeout(() => {
+                setActivePage(page);
+            }, 0)
         }
     }
 
@@ -125,6 +148,7 @@ export const useProjectStore = defineStore('project', () => {
         activePage,
         activeComponent,
         shouldRender,
+        selectType,
         setProjectInfo,
         addPage,
         addComponent,
@@ -133,7 +157,10 @@ export const useProjectStore = defineStore('project', () => {
         getActivePage,
         setActiveComponent,
         setActivePage,
+        setSelectType,
         render,
         clear,
+        refresh,
+        
     }
 })

@@ -7,7 +7,6 @@ defineEmits<{
     (e: 'update:modelValue', value: string): void,
     (e: 'blur', $event: FocusEvent): void,
 }>()
-
 </script>
 
 <template>

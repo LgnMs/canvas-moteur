@@ -20,8 +20,8 @@ export class PageRenderer {
         this.page = page;
         this.container = document.createElement('div');
         this.container.style.position = 'relative';
-        this.container.style.width = parentContainer.clientWidth + 'px';
-        this.container.style.height = parentContainer.clientHeight + 'px'
+        this.container.style.width = page.width;
+        this.container.style.height = page.height;
 
         const { canvasLayer, htmlLayer } = this.getLayers();
         this.canvasLayer = canvasLayer;
@@ -93,4 +93,5 @@ export class PageRenderer {
         this.canvasLayer.clear();
         this.htmlLayer.clear();
     }
+
 }
