@@ -28,8 +28,15 @@ const changePage = () => {
     projectStore.render(container.value!)
 }
 
+onMounted(() => {
+    if (projectStore.activePage) {
+        setViewCanvasSize(projectStore.activePage);
+        changePage();
+    }
+})
+
 watch(() => projectStore.activePage, (page) => {
-    console.log(233)
+    console.log(page)
     if (page) {
         setViewCanvasSize(page);
         changePage();

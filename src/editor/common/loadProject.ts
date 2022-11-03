@@ -1,6 +1,8 @@
+import { readTextFile, BaseDirectory } from '@tauri-apps/api/fs'
+import { join } from '@tauri-apps/api/path';
 import { Project } from "runtime/functional/project";
 import { componentfactory } from "runtime/functional/project/component";
-import { componentType } from "runtime/functional/project/component/common";
+import { componentTag, componentType } from "runtime/functional/project/component/common";
 import { Page } from "runtime/functional/project/page";
 
 export interface ProjectJson {
@@ -15,21 +17,29 @@ export interface ProjectJson {
             [key: string]: any;
             id: string;
             name: string;
-            type: componentType | string;
+            type: componentType;
+            tag: componentTag;
         }[]
     }[]
 }
 
-export async function loadPorject(projectPath: string) {
-    // 加载项目配置文件
-    const data = await import(/* @vite-ignore */ projectPath + '.cm.json');
+async function readFile(path: string) {
+    const content = await readTextFile(path, { dir: BaseDirectory.Home })
+    console.log(content)
+    const fn = new Function(content);
+    console.log(fn);
+    console.log(fn());
+}
+
+export async function loadPorject(data: ProjectJson, rootPath: string) {
 
     const project = Project.new(data.name);
 
     const loadScript = function*(list: any[]) {
         for (let i = 0; i < list.length; i++) {
-            const path = '../../../demo/project1/' + list[i].scriptPath;
+            const path = rootPath + list[i].scriptPath;
             if (list[i].scriptPath) {
+                // yield import(/* @vite-ignore */ path);
                 yield import(/* @vite-ignore */ path);
             } else {
                 yield new Promise((resolve, reject) => resolve(null));
@@ -38,6 +48,7 @@ export async function loadPorject(projectPath: string) {
     }
 
     let pageIndex = 0;
+    readFile(await join(rootPath, 'source', 'page1Script.ts'))
     for (const pageScript of loadScript(data.pages)) {
         const res = await pageScript;
         const page = project.addPage(Page.new({ name: data.pages[pageIndex].name }));

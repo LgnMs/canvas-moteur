@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
 import ButtonIcon from 'ui/src/components/Button/ButtonIcon.vue'
 import Tree, { ITreeNode } from 'editor/ui/src/components/Tree';
@@ -48,6 +48,12 @@ const getTreeData = (pages: Page[]) => {
     })
     return data;
 }
+
+onMounted(() => {
+    if (!projectStore.isEmpty()) {
+        treeData.value = getTreeData(projectStore.projectInfo!.pages)
+    }
+})
 
 watch(() => projectStore.changeTime, () => {
     if (!projectStore.isEmpty()) {
