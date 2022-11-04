@@ -16,10 +16,11 @@
   },
   "homepage": "https://github.com/LgnMs/canvas-moteur#readme",
   "scripts": {
-    "dev": "vite --config src/editor/ui/vite.config.js",
+    "dev": "vite --config src/editor/ui/vite.config.js --mode web",
+    "pre-dev-desktop": "vite --config src/editor/ui/vite.config.js --mode desktop",
+    "dev-desktop": "cargo tauri dev",
     "build": "vue-tsc --project src/tsconfig.json --noEmit && vite build --config src/editor/ui/vite.config.js",
     "build-desktop": "cargo tauri build",
-    "dev-desktop": "cargo tauri dev",
     "preview": "vite preview",
     "test": "jest"
   },

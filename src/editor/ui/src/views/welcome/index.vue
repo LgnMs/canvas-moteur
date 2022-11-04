@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import { invoke } from '@tauri-apps/api/tauri'
+import { ref } from 'vue';
 import { open } from '@tauri-apps/api/dialog';
 import Dialog from 'editor/ui/src/components/Dialog.vue'
 import { Project } from 'runtime/functional/project';
@@ -9,6 +8,7 @@ import { useProjectStore } from '../../stores/project';
 import { loadPorject } from 'editor/common/loadProject';
 import { BaseDirectory, readTextFile } from '@tauri-apps/api/fs';
 import { dirname } from '@tauri-apps/api/path';
+import { isDesktop } from 'editor/common/env';
 
 const router = useRouter()
 const projectStore = useProjectStore();
@@ -17,10 +17,7 @@ const dialogState = ref(false);
 const name = ref('');
 const input = ref();
 const loadData = ref();
-
-onMounted(() => {
-    invoke('print_app_info');
-})
+const desktop = isDesktop();
 
 function createProject() {
     const project = Project.new(name.value);
@@ -33,6 +30,8 @@ function createProject() {
  * @onlydesktop
  */
 async function openFile() {
+    if (!desktop) return;
+
     const path = await open({
         filters: [{
             name: 'load project',
@@ -55,7 +54,7 @@ async function openFile() {
 
 <template>
     <div class="welcome">
-        <div @click="dialogState = true">
+        <div v-if="desktop" @click="dialogState = true">
             <button>新建项目</button>
         </div>
         <div>
@@ -73,6 +72,10 @@ async function openFile() {
 
 <style lang="scss">
     .welcome {
+        width: 100vw;
+        height: 100vh;
+        background-color: $basic-color;
+        color: $text-color;
         display: flex;
         flex-direction: column;
         align-items: center;

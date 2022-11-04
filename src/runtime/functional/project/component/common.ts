@@ -148,6 +148,10 @@ export abstract class Component implements IComponent {
             })
         }
     }
+
+    public createScript(fn: () => void) {
+        fn();
+    }
     // TODO 组件管理相关功能
 }
 
