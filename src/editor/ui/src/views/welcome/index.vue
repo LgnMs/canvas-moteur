@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
+import { invoke } from '@tauri-apps/api/tauri'
 import { open } from '@tauri-apps/api/dialog';
-import {} from '@tauri-apps/api'
 import Dialog from 'editor/ui/src/components/Dialog.vue'
 import { Project } from 'runtime/functional/project';
 import { useRouter } from 'vue-router';
@@ -17,6 +17,10 @@ const dialogState = ref(false);
 const name = ref('');
 const input = ref();
 const loadData = ref();
+
+onMounted(() => {
+    invoke('print_app_info');
+})
 
 function createProject() {
     const project = Project.new(name.value);
@@ -46,6 +50,7 @@ async function openFile() {
         router.replace('/main');
     }
 }
+
 </script>
 
 <template>
