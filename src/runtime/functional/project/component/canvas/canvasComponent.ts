@@ -8,6 +8,10 @@ export interface ICanvasComponentOptions {
     },
     name: string;
     style?: ComponentStyle;
+    script?: {
+        type: string;
+        path: string;
+    }
 }
 
 export class CanvasComponent extends Component {

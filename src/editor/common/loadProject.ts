@@ -2,6 +2,7 @@ import { Project } from "runtime/functional/project";
 import { componentfactory } from "runtime/functional/project/component";
 import { componentTag, componentType } from "runtime/functional/project/component/common";
 import { Page } from "runtime/functional/project/page";
+import { getParseScript } from "runtime/functional/script";
 
 export interface ProjectJson {
     [key: string]: any;
@@ -11,28 +12,36 @@ export interface ProjectJson {
         [key: string]: any;
         id: string;
         name: string;
+        script: {
+            type: string;
+            path: string;
+        };
         components: {
             [key: string]: any;
             id: string;
             name: string;
             type: componentType;
             tag: componentTag;
+            script: {
+                type: string;
+                path: string;
+            }
         }[]
     }[]
 }
 
 export async function loadPorject(data: ProjectJson, rootPath: string) {
+    getParseScript('ts').setRootPath(rootPath);
 
     const project = Project.new(data.name);
 
     const loadScript = function*(list: any[]) {
         for (let i = 0; i < list.length; i++) {
-            const path = rootPath + '/' + list[i].scriptPath;
-            if (list[i].scriptPath) {
-                yield import(/* @vite-ignore */ path);
-            } else {
-                yield new Promise((resolve, reject) => resolve(null));
-            }
+            // if (list[i].scriptPath) {
+            //     yield import(/* @vite-ignore */ `${rootPath}/${list[i].scriptPath}`);
+            // } else {
+                yield new Promise<{default: Function}>((resolve, reject) => resolve({default: () => {}}));
+            // }
         }
     }
 

@@ -2,14 +2,15 @@ import { componentTag, componentType, createComponent } from "../common"
 import { CanvasComponent, ICanvasComponentOptions } from "./canvasComponent";
 
 export class Rect extends CanvasComponent {
-    constructor({ name, style = { width: 0,  height: 0 }, position = { x: 0, y: 0 } }: ICanvasComponentOptions) {
+    constructor(options: ICanvasComponentOptions) {
         super({
-            name,
+            ...options,
             type: componentType.Rect,
             tag: componentTag.CANVAS,
         });
-        this.position = position;
-        this.style = style
+
+        this.position = (options.position ? options.position : { x: 0, y: 0 });
+        this.style = (options.style ? options.style : { width: 0,  height: 0 })
     }
 
     public static new = createComponent<ICanvasComponentOptions, Rect>(Rect);

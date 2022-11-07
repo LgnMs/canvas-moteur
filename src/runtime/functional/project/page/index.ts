@@ -31,7 +31,7 @@ export class Page {
             },
             set(target, prop, value, receiver) {
                 if (prop === 'setup') {
-                    target.injectScript(value);
+                    // target.injectScript(value);
                 }
                 return Reflect.set(target, prop, value, receiver)
             }

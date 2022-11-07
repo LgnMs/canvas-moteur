@@ -2,15 +2,15 @@ import { Component, componentTag, componentType, createComponent, IComponent, IC
 import { HTMLComponent, IHTMLComponentOptions } from "./htmlComponent";
 
 export class Input extends HTMLComponent {
-    constructor({name, style}: IHTMLComponentOptions) {
+    constructor(options: IHTMLComponentOptions) {
         super({
-            name,
+            ...options,
             type: componentType.Input,
             tag: componentTag.HTML
         });
 
         
-        this.style = { position: 'relative', ...style};
+        this.style = { position: 'relative', ...options.style};
     }
 
     public static new = createComponent<IHTMLComponentOptions, Input>(Input);

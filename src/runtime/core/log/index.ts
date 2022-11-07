@@ -35,7 +35,6 @@ export function error(message: string) {
     
     if (process.env.NODE_ENV === 'test') return;
     throw new Error(message);
-    
 }
 
 export function warn(message: string) {

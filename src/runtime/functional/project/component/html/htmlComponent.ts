@@ -7,6 +7,10 @@ export interface IHTMLComponentOptions {
     },
     name: string;
     style?: Partial<CSSStyleDeclaration>;
+    script?: {
+        type: string;
+        path: string;
+    }
 }
 
 export class HTMLComponent extends Component {
@@ -26,7 +30,6 @@ export class HTMLComponent extends Component {
             Object.keys(style).forEach(key => {
                 Reflect.set(this.el!.style, key, Reflect.get(style, key))
             })
-            console.dir(this.el!)
         }
     }
 }

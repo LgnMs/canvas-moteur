@@ -1,4 +1,5 @@
 import { generateId } from "runtime/core/common/utils";
+import { getParseScript } from "runtime/functional/script";
 import { ComponentStyle } from "./style";
 
 export enum componentTag {
@@ -37,6 +38,10 @@ export interface IComponent {
         x: number;
         y: number;
     };
+    script?: {
+        type: string;
+        path: string;
+    };
     eventStore: Map<ComponentEventType, ComponentEvent[]>;
     shouldRender: boolean;
     style?: object;
@@ -62,10 +67,15 @@ export interface COptions {
     name: string;
     type: componentType;
     tag: componentTag;
+    script?: {
+        type: string;
+        path: string;
+    }
 } 
 
 export type ComponentEventType = 'click';
 export type ComponentEvent = (taget: Component) => void;
+
 export abstract class Component implements IComponent {
     [key: string]: any;
 
@@ -78,6 +88,11 @@ export abstract class Component implements IComponent {
         x: number;
         y: number;
     };
+    script?: {
+        type: string,
+        path: string,
+    }
+
     onCreated = () => {};
     onMounted = () => {};
     onUnMounted = () => {};
@@ -89,18 +104,31 @@ export abstract class Component implements IComponent {
      * 2.该组件的属性发生过变动
      * 3.该组件需要被重新渲染
      * 第一次初始化的组件都是需要被渲染的
-     */
+     */ 
     shouldRender: boolean = true;
     /**
      * 该组件还没有在layer中渲染过
      */ 
     notRendered: boolean = true;
     
-    constructor({ name, type, tag }: COptions) {
+    constructor(options: COptions) {
+        const { name, type, tag, script } = options;
         this.id = generateId({ suffix: '_component' });
         this.name = name;
         this.type = type;
         this.tag = tag;
+        this.script = script;
+        this.parseScript();
+    }
+
+    public async parseScript() {
+        
+        if (this.script) {
+            const parse = getParseScript(this.script.type);
+
+            const out = await parse.run(this.script.path);
+            console.log(out)
+        }
     }
 
     public addComponent(component: Component) {
@@ -148,10 +176,6 @@ export abstract class Component implements IComponent {
             })
         }
     }
-
-    public createScript(fn: () => void) {
-        fn();
-    }
     // TODO 组件管理相关功能
 }
 
@@ -164,7 +188,7 @@ export function createComponent<T, C extends Component>(Component: new (options:
             },
             set(target, prop, value, receiver) {
                 if (prop === 'setup') {
-                    target.injectScript(value);
+                    // target.injectScript(value);
                 }
                 return Reflect.set(target, prop, value, receiver)
             }

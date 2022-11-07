@@ -11,12 +11,15 @@
                     "style": {
                         "position": "relative"
                     },
-                    "scriptPath": "source/component1.ts" 
+                    "script": {
+                        "type": "ts",
+                        "path": "source/component1.ts"
+                    }
                 },
                 {
                     "components": [],
                     "id": "16659732138763_component",
-                    "name": "测试组件1",
+                    "name": "测试组件2",
                     "type": "Input",
                     "tag": 1,
                     "style": {
@@ -26,7 +29,7 @@
                 {
                     "components": [],
                     "id": "16659732138764_component",
-                    "name": "测试组件1",
+                    "name": "测试组件3",
                     "type": "Input",
                     "tag": 1,
                     "style": {
