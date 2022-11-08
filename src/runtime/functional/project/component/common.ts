@@ -122,7 +122,7 @@ export abstract class Component implements IComponent {
     }
 
     public async parseScript() {
-        
+        console.log(this.script)
         if (this.script) {
             const parse = getParseScript(this.script.type);
 

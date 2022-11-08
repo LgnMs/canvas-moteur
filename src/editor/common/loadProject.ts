@@ -31,7 +31,7 @@ export interface ProjectJson {
 }
 
 export async function loadPorject(data: ProjectJson, rootPath: string) {
-    getParseScript('ts').setRootPath(rootPath);
+    getParseScript('ts').setRootPath('../../../../demo/project1');
 
     const project = Project.new(data.name);
 

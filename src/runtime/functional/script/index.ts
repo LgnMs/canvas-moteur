@@ -30,7 +30,8 @@ class ParseScriptForTs implements ParseScript {
 
     async run(path: string) {
         this.path = path;
-        const out = await import(/* @vite-ignore */ `${this.rootPath}/${this.path}`);
+        console.log(this.rootPath + '/' + this.path)
+        const out = await import(/* @vite-ignore */ this.rootPath + this.path);
         // const out = await import(/* @vite-ignore */ '../../../../demo/project1/source/component1');
         return out;
     }

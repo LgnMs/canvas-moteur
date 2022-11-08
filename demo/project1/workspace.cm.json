@@ -13,7 +13,7 @@
                     },
                     "script": {
                         "type": "ts",
-                        "path": "source/component1.ts"
+                        "path": "source/component1.js"
                     }
                 },
                 {

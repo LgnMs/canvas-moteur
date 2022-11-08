@@ -44,6 +44,7 @@
     "@vitejs/plugin-vue-jsx": "^2.0.1",
     "babel-jest": "^29.0.3",
     "jest": "^29.0.3",
+    "rollup": "^3.2.5",
     "sass": "^1.55.0",
     "ts-jest": "^29.0.2",
     "ts-node": "^10.9.1",
