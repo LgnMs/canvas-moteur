@@ -1,4 +1,3 @@
-import { defineScript } from '../../../src/runtime/functional/script/defineScript'
 
 const fn = () => {
     return {
@@ -11,4 +10,4 @@ const fn = () => {
     }
 }
 
-defineScript(fn, '16659732138762_component')
+export default fn

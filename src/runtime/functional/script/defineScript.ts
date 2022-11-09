@@ -12,10 +12,9 @@ export type ScriptFn = () => Script;
 export interface IScriptStore {
     [key: string]: ScriptFn;
 }
-
-window.__CV__ = {
+window.__GLOBAL_VAR__ = {
     scriptStore: {}
 }
 export function defineScript(fn: ScriptFn, componentId: string) {
-    window.__CV__.scriptStore[componentId] = fn;
+    window.__GLOBAL_VAR__.scriptStore[componentId] = fn;
 }

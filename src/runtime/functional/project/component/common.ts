@@ -1,5 +1,4 @@
 import { generateId } from "runtime/core/common/utils";
-import { getParseScript } from "runtime/functional/script";
 import { ComponentStyle } from "./style";
 
 export enum componentTag {
