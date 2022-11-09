@@ -4,7 +4,7 @@ import { Project } from "..";
 import { createRect } from "../component/canvas/rect";
 
 describe("项目新增过程", () => {
-    const project = Project.new("测试项目1");
+    const project = Project.new({ name: "测试项目1"});
     let pages: Page[] = [];
     let components: Component[] = [];
     let componentChilds: Component[] = [];

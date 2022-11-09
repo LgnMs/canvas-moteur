@@ -1,3 +1,5 @@
+import { defineScript } from '../../../src/runtime/functional/script/defineScript'
+
 export default function page1Script() {
     const a = 1;
     const del = () => {
@@ -23,3 +25,5 @@ export default function page1Script() {
         onUnMounted,
     }
 }
+
+defineScript(page1Script, '16659732138761_page')

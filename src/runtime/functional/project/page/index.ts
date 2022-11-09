@@ -2,6 +2,7 @@ import { generateId } from "runtime/core/common/utils";
 import { Component } from "../component/common";
 
 export interface pageOptions {
+    id?: string;
     name: string;
 }
 
@@ -18,7 +19,11 @@ export class Page {
     onUnMounted = () => {};
     
     constructor(options: pageOptions) {
-        this.id = generateId({ suffix: '_page' });
+        if (options.id) {
+            this.id = options.id;
+        } else {
+            this.id = generateId({ suffix: '_page' });
+        }
         this.name = options.name;
     }
 
@@ -30,18 +35,11 @@ export class Page {
                 return Reflect.get(target, prop, receiver);
             },
             set(target, prop, value, receiver) {
-                if (prop === 'setup') {
-                    // target.injectScript(value);
-                }
                 return Reflect.set(target, prop, value, receiver)
             }
         });
     }
 
-    public injectScript(setup: () => object) {
-        const obj = setup();
-        Object.keys(obj).forEach(key => Reflect.set(this, key, Reflect.get(obj, key)));
-    }
     // TODO 页面管理相关功能
 
     public addComponent(component: Component) {

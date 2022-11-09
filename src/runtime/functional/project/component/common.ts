@@ -38,10 +38,6 @@ export interface IComponent {
         x: number;
         y: number;
     };
-    script?: {
-        type: string;
-        path: string;
-    };
     eventStore: Map<ComponentEventType, ComponentEvent[]>;
     shouldRender: boolean;
     style?: object;
@@ -64,6 +60,7 @@ export interface IComponentOptions {
 }
 
 export interface COptions {
+    id?: string;
     name: string;
     type: componentType;
     tag: componentTag;
@@ -88,10 +85,6 @@ export abstract class Component implements IComponent {
         x: number;
         y: number;
     };
-    script?: {
-        type: string,
-        path: string,
-    }
 
     onCreated = () => {};
     onMounted = () => {};
@@ -113,22 +106,15 @@ export abstract class Component implements IComponent {
     
     constructor(options: COptions) {
         const { name, type, tag, script } = options;
-        this.id = generateId({ suffix: '_component' });
+        if (options.id) {
+            this.id = options.id;
+        } else {
+            this.id = generateId({ suffix: '_component' });
+        }
         this.name = name;
         this.type = type;
         this.tag = tag;
         this.script = script;
-        this.parseScript();
-    }
-
-    public async parseScript() {
-        console.log(this.script)
-        if (this.script) {
-            const parse = getParseScript(this.script.type);
-
-            const out = await parse.run(this.script.path);
-            console.log(out)
-        }
     }
 
     public addComponent(component: Component) {
@@ -187,9 +173,6 @@ export function createComponent<T, C extends Component>(Component: new (options:
                 return Reflect.get(target, prop, receiver);
             },
             set(target, prop, value, receiver) {
-                if (prop === 'setup') {
-                    // target.injectScript(value);
-                }
                 return Reflect.set(target, prop, value, receiver)
             }
         });

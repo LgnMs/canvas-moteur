@@ -1,6 +1,7 @@
 import { Component, COptions } from "../common";
 
 export interface IHTMLComponentOptions {
+    id?: string;
     position?: {
         x: number;
         y: number;

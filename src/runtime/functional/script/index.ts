@@ -1,21 +1,14 @@
 import { error } from "runtime/core/log";
+import { Project } from "runtime/functional/project";
+import { Component } from "runtime/functional/project/component/common";
+import { Page } from "runtime/functional/project/page";
 
 export interface ParseScript {
-    setRootPath(path: string): void;
-    run: (path: string) => Promise<object>;
+    run: (id: string) => Promise<object>;
 }
 
-/**
- * TODO: 解析脚本流程设想
- * 1. 读通过import动态读取脚本
- * 2. 如果是已经发布了的项目可以直接import
- * 3. 但是在编辑器中源文件目录与编辑器不处于同一目录所以要么起一个文件资源服务器
- */
 class ParseScriptForTs implements ParseScript {
     static self?: ParseScriptForTs;
-
-    private path?: string;
-    private rootPath?: string;
 
     public static new() {
         if (!this.self) {
@@ -24,16 +17,11 @@ class ParseScriptForTs implements ParseScript {
         return this.self;
     }
 
-    setRootPath(path: string) {
-        this.rootPath = path;
-    }
-
-    async run(path: string) {
-        this.path = path;
-        console.log(this.rootPath + '/' + this.path)
-        const out = await import(/* @vite-ignore */ this.rootPath + this.path);
-        // const out = await import(/* @vite-ignore */ '../../../../demo/project1/source/component1');
-        return out;
+    async run(id: string) {
+        if (window.__CV__.scriptStore[id]) {
+            const fn = window.__CV__.scriptStore[id];
+            return fn();
+        }
     }
 }
 
@@ -42,4 +30,34 @@ export const getParseScript = (type: string): ParseScript => {
         return ParseScriptForTs.new();
     }
     throw error(`没有找到${type}的脚本解析器`);
+}
+
+export async function attatchScript(project: Project) {
+    const scriptStore = window.__CV__.scriptStore
+
+    console.log(scriptStore)
+    const attch = (p: Project | Page | Component) => {
+        if (scriptStore[p.id]) {
+            const fn = scriptStore[p.id];
+            const obj = fn();
+            Object.keys(obj).forEach(key => Reflect.set(p, key, Reflect.get(obj, key)));
+        }
+    }
+    attch(project);
+
+    const fn2 = (list: Component[]) => {
+        if (list.length > 0) {
+            list.forEach(item => {
+                attch(item);
+                
+                fn2(item.components);
+            })
+        }
+    }
+
+    project.pages.forEach(page => {
+        attch(page);
+
+        fn2(page.components);
+    })
 }

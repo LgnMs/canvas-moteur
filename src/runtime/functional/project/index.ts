@@ -7,6 +7,7 @@ import { Page } from "runtime/functional/project/page";
  */
 
 export interface ProjectOptions {
+    id?: string;
     name: string;
     version?: string;
 }
@@ -28,14 +29,18 @@ export class Project {
      */
     pages: Page[] = [];
 
-    constructor(name: string) {
-        this.id = generateId({ suffix: '_project' });
-        this.name = name;
+    constructor(options: ProjectOptions) {
+        if (options.id) {
+            this.id = options.id;
+        } else {
+            this.id = generateId({ suffix: '_project' });
+        }
+        this.name = options.name;
         this.version = '0.0.1';
     }
 
-    static new(name: string) {
-        const target = new Project(name);
+    static new(options: ProjectOptions) {
+        const target = new Project(options);
 
         return new Proxy(target, {
             get(target, prop, receiver) {
@@ -49,7 +54,7 @@ export class Project {
 
     static openProjectFile(filePath: string): Project {
         // TODO：打开项目文件获取信息，并进行实例化
-        const project = new Project('');
+        const project = new Project({name: ''});
         // project.id = '';
         // project.name = '';
         // project.version = '';
@@ -98,3 +103,4 @@ export class Project {
         return this.pages
     }
 }
+

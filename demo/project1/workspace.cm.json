@@ -13,7 +13,7 @@
                     },
                     "script": {
                         "type": "ts",
-                        "path": "source/component1.js"
+                        "path": "src/component1.ts"
                     }
                 },
                 {
@@ -88,7 +88,10 @@
             "id": "16659732138761_page",
             "name": "测试页面1",
             "a": 1,
-            "scriptPath": "source/page1Script.ts" 
+            "script": {
+                "type": "ts",
+                "path": "page1Script.ts"
+            }
         }
     ],
     "id": "16659732138760_project",

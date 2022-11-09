@@ -5,7 +5,7 @@ import Dialog from 'editor/ui/src/components/Dialog.vue'
 import { Project } from 'runtime/functional/project';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../../stores/project';
-import { loadPorject } from 'editor/common/loadProject';
+import { loadPorject } from 'runtime/functional/project/loadPorject';
 import { BaseDirectory, readTextFile } from '@tauri-apps/api/fs';
 import { dirname } from '@tauri-apps/api/path';
 import { isDesktop } from 'editor/common/env';
@@ -20,7 +20,7 @@ const loadData = ref();
 const desktop = isDesktop();
 
 function createProject() {
-    const project = Project.new(name.value);
+    const project = Project.new({name: name.value});
     projectStore.setProjectInfo(project);
     dialogState.value = false;
     router.replace('/main');
@@ -42,8 +42,7 @@ async function openFile() {
     if (path && !Array.isArray(path)) {
         const content = await readTextFile(path, { dir: BaseDirectory.Home })
         loadData.value = JSON.parse(content);
-        const rootPath = await dirname(path);
-        const project = await loadPorject(loadData.value, rootPath);
+        const project = await loadPorject(loadData.value);
         projectStore.setProjectInfo(project);
         projectStore.setActivePage(project.getAllPages()[0]);
         router.replace('/main');

@@ -2,6 +2,7 @@ import { Component, COptions } from "../common";
 import { ComponentStyle } from "../style";
 
 export interface ICanvasComponentOptions {
+    id?: string;
     position?: {
         x: number;
         y: number;
