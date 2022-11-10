@@ -5,7 +5,6 @@ import { Page } from "runtime/functional/project/page";
 export async function attatchScript(project: Project) {
     const scriptStore = window.__GLOBAL_VAR__.scriptStore
 
-    console.log(scriptStore)
     const attch = (p: Project | Page | Component) => {
         if (scriptStore[p.id]) {
             const fn = scriptStore[p.id];
