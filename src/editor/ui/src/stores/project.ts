@@ -126,7 +126,6 @@ export const useProjectStore = defineStore('project', () => {
                 pageRenderer.update(activePage.value);
             } else {
                 if (container) {
-                    console.log(activePage.value)
                     pageRenderer = initPageRenderer(activePage.value, container)
                     pageRenderer.render();
     

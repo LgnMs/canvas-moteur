@@ -24,12 +24,19 @@
         "all": true,
         "execute": true,
         "sidecar": true,
-        "open": true,
-        "scope": [{
-          "name": "node",
-          "cmd": "node",
-          "args": true
-        }]
+        "open": "(^//.|^/|^[a-zA-Z])?:?/.+(/$)?",
+        "scope": [
+          {
+            "name": "kill",
+            "cmd": "kill",
+            "args": true
+          },
+          {
+            "name": "node",
+            "cmd": "node",
+            "args": true
+          }
+        ]
       }
     },
     "bundle": {

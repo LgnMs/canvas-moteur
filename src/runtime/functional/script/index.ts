@@ -3,6 +3,7 @@ import { Component } from "runtime/functional/project/component/common";
 import { Page } from "runtime/functional/project/page";
 
 export async function attatchScript(project: Project) {
+    console.log(window.__GLOBAL_VAR__);
     const scriptStore = window.__GLOBAL_VAR__.scriptStore
 
     const attch = (p: Project | Page | Component) => {

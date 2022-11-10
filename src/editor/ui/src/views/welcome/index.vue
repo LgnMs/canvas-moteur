@@ -9,6 +9,7 @@ import { loadPorject } from 'runtime/functional/project/loadPorject';
 import { BaseDirectory, readTextFile } from '@tauri-apps/api/fs';
 import { dirname } from '@tauri-apps/api/path';
 import { isDesktop } from 'editor/common/env';
+import { ScriptServer } from 'runtime/functional/script/server'
 
 const router = useRouter()
 const projectStore = useProjectStore();
@@ -42,7 +43,12 @@ async function openFile() {
     if (path && !Array.isArray(path)) {
         const content = await readTextFile(path, { dir: BaseDirectory.Home })
         loadData.value = JSON.parse(content);
+        const workPath = await dirname(path);
+
+        await ScriptServer.start(workPath);
+        
         const project = await loadPorject(loadData.value);
+
         projectStore.setProjectInfo(project);
         projectStore.setActivePage(project.getAllPages()[0]);
         router.replace('/main');
