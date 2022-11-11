@@ -36,7 +36,6 @@ onMounted(() => {
 })
 
 watch(() => projectStore.activePage, (page) => {
-    console.log(page)
     if (page) {
         setViewCanvasSize(page);
         changePage();

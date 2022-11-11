@@ -1,5 +1,5 @@
 // import { createServer } from 'vite'
-
+ 
 const { createServer } = require('vite')
 
 async function startDevScriptServer() {
@@ -7,7 +7,7 @@ async function startDevScriptServer() {
     const devPath = arg[2];
     const port = arg[3];
 
-    const options = {
+    const options = { 
         // 任何合法的用户配置选项，加上 `mode` 和 `configFile`
         configFile: devPath + '/vite.config.js',
     }
