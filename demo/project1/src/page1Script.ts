@@ -1,5 +1,11 @@
-export default function page1Script() {
+import { definePageScript } from "canvas-moteur//src/runtime/functional/script/defineScript";
+
+definePageScript((page) => {
     const a = 1;
+
+    page.addEventListener('click', () => {
+        console.log('page.click1')
+    })
     const del = () => {
         console.log('del')
     }
@@ -22,4 +28,4 @@ export default function page1Script() {
         onMounted,
         onUnMounted,
     }
-}
+}, '16659732138761_page')

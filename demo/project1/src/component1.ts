@@ -1,5 +1,9 @@
+import { defineComponentScript } from 'canvas-moteur/src/runtime/functional/script/defineScript'
 
-const fn = () => {
+export default defineComponentScript((component) => {
+    component.addEventListener('click', () => {
+        console.log('com1 clicked')
+    })
     return {
         onCreated: () => {
             console.log('com1 created')
@@ -8,6 +12,4 @@ const fn = () => {
             console.log('com1 onMounted')
         },
     }
-}
-
-export default fn
+}, '16659732138762_component')

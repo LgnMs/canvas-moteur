@@ -29,6 +29,11 @@ export class PageRenderer {
 
         this.container.appendChild(htmlLayer.container);
         this.htmlLayer.container.appendChild(canvasLayer.container);
+
+
+        this.container.addEventListener('click', (e) => {
+            page.dispatchEvent('click');
+        })
     }
 
     private getLayers() {

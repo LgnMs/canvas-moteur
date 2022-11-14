@@ -3,13 +3,12 @@ import { Component } from "runtime/functional/project/component/common";
 import { Page } from "runtime/functional/project/page";
 
 export async function attatchScript(project: Project) {
-    console.log(window.__GLOBAL_VAR__);
     const scriptStore = window.__GLOBAL_VAR__.scriptStore
 
     const attch = (p: Project | Page | Component) => {
         if (scriptStore[p.id]) {
             const fn = scriptStore[p.id];
-            const obj = fn();
+            const obj = fn(p as any);
             Object.keys(obj).forEach(key => Reflect.set(p, key, Reflect.get(obj, key)));
         }
     }

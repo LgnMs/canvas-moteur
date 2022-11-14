@@ -12,6 +12,9 @@ export interface ProjectOptions {
     version?: string;
 }
 
+export type ProjectEventType = ''; // TODO 添加项目的可注册事件
+export type ProjectEvent = (taget: Project) => void;
+
 /**
  * 项目管理
  */
@@ -28,6 +31,8 @@ export class Project {
      * 页面列表
      */
     pages: Page[] = [];
+
+    eventStore: Map<ProjectEventType, ProjectEvent[]> = new Map();
 
     constructor(options: ProjectOptions) {
         if (options.id) {
@@ -101,6 +106,26 @@ export class Project {
 
     public getAllPages() {
         return this.pages
+    }
+
+    public addEventListener(type: ProjectEventType, callback: (target: Project) => void) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+            events.push(callback);
+            this.eventStore.set(type, events);
+        } else {
+            this.eventStore.set(type, [callback]);
+        }
+    }
+    
+    public dispatchEvent(type: ProjectEventType) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+    
+            events.forEach(event => {
+                event(this);
+            })
+        }
     }
 }
 

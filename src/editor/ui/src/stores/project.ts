@@ -23,6 +23,7 @@ export const useProjectStore = defineStore('project', () => {
     function setProjectInfo(data: Project) {
         projectInfo.value = data;
         changeTime.value += 1;
+        // console.log(projectInfo)
     }
 
     function addPage() {

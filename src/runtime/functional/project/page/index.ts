@@ -6,6 +6,9 @@ export interface pageOptions {
     name: string;
 }
 
+export type PageEventType = 'click';
+export type PageEvent = (taget: Page) => void;
+
 export class Page {
     [key: string]: any;
     id: string;
@@ -17,6 +20,8 @@ export class Page {
     onCreated = () => {};
     onMounted = () => {};
     onUnMounted = () => {};
+
+    eventStore: Map<PageEventType, PageEvent[]> = new Map();
     
     constructor(options: pageOptions) {
         if (options.id) {
@@ -51,6 +56,26 @@ export class Page {
         return this.components;
     }
     
+    public addEventListener(type: PageEventType, callback: (target: Page) => void) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+            events.push(callback);
+            this.eventStore.set(type, events);
+        } else {
+            this.eventStore.set(type, [callback]);
+        }
+    }
+
+    public dispatchEvent(type: PageEventType) {
+        if (this.eventStore.has(type)) {
+            const events = this.eventStore.get(type)!;
+    
+            events.forEach(event => {
+                event(this);
+            })
+        }
+    }
+
     /**
      *  重置该页面的渲染状态，用于页面切换后使用
      */
