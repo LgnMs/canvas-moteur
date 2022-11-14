@@ -3,6 +3,7 @@ import { ComponentStyle } from "../style";
 
 export interface ICanvasComponentOptions {
     id?: string;
+    layerId: string;
     position?: {
         x: number;
         y: number;

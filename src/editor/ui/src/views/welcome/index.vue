@@ -45,6 +45,7 @@ async function openFile() {
         loadData.value = JSON.parse(content);
         const workPath = await dirname(path);
 
+        projectStore.setWorkSpaceData(loadData.value);
         await ScriptServer.start(workPath);
         
         const project = await loadPorject(loadData.value);

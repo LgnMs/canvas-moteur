@@ -1,5 +1,6 @@
 import { Project } from ".";
 import { attatchScript } from "../script";
+import { LayerOption } from "../view";
 import { componentfactory } from "./component";
 import { Component, componentTag, componentType } from "./component/common";
 import { Page } from "./page";
@@ -7,6 +8,7 @@ import { Page } from "./page";
 export interface ComponentJson {
     [key: string]: any;
     id: string;
+    layerId: string;
     name: string;
     type: componentType;
     tag: componentTag;
@@ -18,6 +20,7 @@ export interface PageJson {
     id: string;
     name: string;
     components: ComponentJson[];
+    layerOptions: LayerOption[];
 }
 
 export interface ProjectJson {

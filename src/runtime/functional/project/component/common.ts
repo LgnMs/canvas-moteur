@@ -29,6 +29,7 @@ export interface IComponent {
     [key: string]: any;
 
     id: string;
+    layerId: string;
     name: string;
     type: componentType;
     tag: componentTag;
@@ -60,6 +61,7 @@ export interface IComponentOptions {
 
 export interface COptions {
     id?: string;
+    layerId: string;
     name: string;
     type: componentType;
     tag: componentTag;
@@ -76,6 +78,7 @@ export abstract class Component implements IComponent {
     [key: string]: any;
 
     id: string;
+    layerId: string;
     name: string;
     type: componentType;
     tag: componentTag;
@@ -110,6 +113,7 @@ export abstract class Component implements IComponent {
         } else {
             this.id = generateId({ suffix: '_component' });
         }
+        this.layerId = options.layerId;
         this.name = name;
         this.type = type;
         this.tag = tag;

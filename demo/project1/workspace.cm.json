@@ -7,6 +7,7 @@
                     "id": "16659732138762_component",
                     "name": "测试组件1",
                     "type": "Input",
+                    "layerId": "16684156862150_layer",
                     "tag": 1,
                     "style": {
                         "position": "relative"
@@ -19,6 +20,7 @@
                 {
                     "components": [],
                     "id": "16659732138763_component",
+                    "layerId": "16684156862150_layer",
                     "name": "测试组件2",
                     "type": "Input",
                     "tag": 1,
@@ -29,6 +31,7 @@
                 {
                     "components": [],
                     "id": "16659732138764_component",
+                    "layerId": "16684156862150_layer",
                     "name": "测试组件3",
                     "type": "Input",
                     "tag": 1,
@@ -87,11 +90,21 @@
             ],
             "id": "16659732138761_page",
             "name": "测试页面1",
-            "a": 1,
+            "style": "",
             "script": {
                 "type": "ts",
                 "path": "page1Script.ts"
-            }
+            },
+            "layerOptions": [
+                {
+                    "id": "16684156862150_layer",
+                    "style": {"backgroundColor": "#fff"},
+                    "type": 1,
+                    "width": 1110,
+                    "height": 963,
+                    "zIndex": "1"
+                }
+            ]
         }
     ],
     "id": "16659732138760_project",

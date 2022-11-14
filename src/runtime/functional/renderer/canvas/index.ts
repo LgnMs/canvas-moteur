@@ -55,7 +55,7 @@ export class CanvasRenderer {
         container.style.position = 'absolute';
         container.style.zIndex = layer.zIndex;
         container.style.left = '0px';
-        container.style.right = '0px';
+        container.style.top = '0px';
         container.style.width = layer.width + 'px';
         container.style.height = layer.height + 'px';
         this.container = container;
