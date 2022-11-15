@@ -1,5 +1,4 @@
 import { generateId } from "runtime/core/common/utils";
-import { View } from "runtime/functional/view";
 import { Component } from "../component/common";
 
 export interface pageOptions {
@@ -44,10 +43,6 @@ export class Page {
                 return Reflect.set(target, prop, value, receiver)
             }
         });
-    }
-
-    public setView(view: View) {
-        this.view = view;
     }
 
     public addComponent(component: Component) {

@@ -14,10 +14,10 @@ describe("项目新增过程", () => {
         project.addPage(page);
         pages = project.getAllPages();
         expect(pages[0]).toEqual(page);
-        const component = pages[0].addComponent(createRect({name: "测试组件", layerId: ''}));
+        const component = pages[0].addComponent(createRect({name: "测试组件"}));
         components = pages[0].getAllComponents();  
         expect(components[0]).toEqual(component);
-        const componentChild = components[0].addComponent(createRect({name: "测试组件的子组件", layerId: ''}));
+        const componentChild = components[0].addComponent(createRect({name: "测试组件的子组件"}));
         componentChilds = components[0].getAllComponents();  
         expect(componentChilds[0]).toEqual(componentChild);
     })

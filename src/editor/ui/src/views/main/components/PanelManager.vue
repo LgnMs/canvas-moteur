@@ -55,9 +55,10 @@ onMounted(() => {
     }
 })
 
-watch(() => projectStore.shouldUpdateTree, () => {
-    if (!projectStore.isEmpty()) {
+watch(() => projectStore.shouldUpdateTree, (value) => {
+    if (!projectStore.isEmpty() && value) {
         treeData.value = getTreeData(projectStore.projectInfo!.pages)
+        projectStore.setShouldUpdateTree(false);
     }
 })
 
@@ -71,14 +72,13 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
-    // projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试1', style: {
-    //     backgroundColor: 'yellowgreen',
-    //     height: 100,
-    //     width: 100,
-    // } })
+    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试1', style: {
+        backgroundColor: 'yellowgreen',
+        height: 100,
+        width: 100,
+    } })
     projectStore.addComponent(componentType.Input, componentTag.HTML, {
         name: '测试2',
-        layerId: projectStore.view!.activeLayerId,
         style: {
             width: '120px',
             height: '40px',
@@ -106,7 +106,7 @@ const onNodeClick = (node: ITreeNode) => {
         }
 
         const page = getPage(node);
-        if (page) {
+        if (page && page.id) {
             projectStore.setActivePage(page)
         } else {
             error('未找到组件所在的页面')

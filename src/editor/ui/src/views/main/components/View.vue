@@ -20,30 +20,31 @@ const setViewCanvasSize = (page: Page) => {
     container.value!.style.transform = `scale(${scale.value})`;
 }
 
-
 const changePage = () => {
     projectStore.clear();
-    projectStore.render()
+    container.value!.innerHTML = '';
+    projectStore.render(container.value!)
 }
 
 onMounted(() => {
-    projectStore.setContainer(container.value!);
-    console.log(container.value?.offsetWidth)
+    console.log(projectStore)
     if (projectStore.activePage) {
         setViewCanvasSize(projectStore.activePage);
         changePage();
     }
 })
 
-watch(() => projectStore.activePage, () => {
-    if (projectStore.activePage) {
-        setViewCanvasSize(projectStore.activePage);
+watch(() => projectStore.activePage, (page) => {
+    if (page) {
+        setViewCanvasSize(page);
         changePage();
     }
 })
 
-watch(() => projectStore.shouldRender, () => {
-    projectStore.render()
+watch(() => projectStore.shouldRender, (value) => {
+    if (value) {
+        projectStore.render(container.value!)
+    }
 })
 
 </script>

@@ -31,6 +31,7 @@ export class CanvasLayer implements Layer<HTMLCanvasElement> {
             this.id = generateId({ suffix: '_layer'});
         }
         this.type = LayerType.Canvas;
+        console.log(options.zIndex)
         this.zIndex = options.zIndex;
         this.width = options.size.width;
         this.height = options.size.height;

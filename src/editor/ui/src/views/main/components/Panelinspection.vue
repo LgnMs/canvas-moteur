@@ -7,7 +7,7 @@ const projectStore = useProjectStore()
 const onBlur = () => {
     // TODO 修复改变positon后图形位置未正确变化的问题
     projectStore.activeComponent?.setShouldRender(true);
-    projectStore.render();
+    projectStore.setShouldRender(true);
 }
 
 const onPageBlur =() => {

@@ -2,7 +2,6 @@ import { Component, COptions } from "../common";
 
 export interface IHTMLComponentOptions {
     id?: string;
-    layerId: string;
     position?: {
         x: number;
         y: number;

@@ -6,10 +6,9 @@ import { componentType, componentTag, Component } from 'runtime/functional/proje
 import { Page } from 'runtime/functional/project/page';
 import { ICanvasComponentOptions } from 'runtime/functional/project/component/canvas/canvasComponent';
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
-// import { PageRenderer } from 'runtime/functional/renderer/pageRenderer';
-// import { initPageRenderer } from 'runtime/functional/renderer';
+import { PageRenderer } from 'runtime/functional/renderer/pageRenderer';
+import { initPageRenderer } from 'runtime/functional/renderer';
 import { error } from 'runtime/core/log';
-import { View } from 'runtime/functional/view';
 import { ProjectJson } from 'runtime/functional/project/loadPorject';
 
 export const useProjectStore = defineStore('project', () => {
@@ -21,8 +20,7 @@ export const useProjectStore = defineStore('project', () => {
     const shouldUpdateTree = ref(false);
     // 0 表示当前选中的是页面 1表示当前选中的是组件
     const selectType = ref(0);
-    // let pageRenderer: PageRenderer | null = null;
-    const view = ref<View>();
+    let pageRenderer: PageRenderer | null = null;
     const container = ref<HTMLElement>();
 
     function setProjectInfo(data: Project) {
@@ -31,9 +29,6 @@ export const useProjectStore = defineStore('project', () => {
 
     function addPage() {
         const pageIndex = projectInfo.value?.getAllPages().length;
-
-        console.log(container.value?.offsetWidth)
-        view.value = new View({ container: container.value! });
         const page = Page.new({ name: `new_${pageIndex}`});
         projectInfo.value?.addPage(page);
         setActivePage(page)
@@ -85,8 +80,6 @@ export const useProjectStore = defineStore('project', () => {
     function setActivePage(data: Page) {
         activePage.value = data;
         activePage.value.pageShouldRender();
-        shouldRender.value = true;
-        shouldUpdateTree.value = true;
     }
 
     function setActiveComponent(data: Component) {
@@ -116,12 +109,20 @@ export const useProjectStore = defineStore('project', () => {
         workSpaceData.value = data
     }
 
+    function setShouldUpdateTree(data: boolean) {
+        shouldUpdateTree.value = data
+    }
+
+    function setShouldRender(data: boolean) {
+        shouldRender.value = data
+    }
+
     function clear() {
         // 清空当前页面的渲染器，但并不包括元素节点中的内容
-        // if (pageRenderer) {
-        //     pageRenderer.clear();
-        //     pageRenderer = null;
-        // }
+        if (pageRenderer) {
+            pageRenderer.clear();
+            pageRenderer = null;
+        }
     }
 
 
@@ -136,21 +137,19 @@ export const useProjectStore = defineStore('project', () => {
         }
     }
 
-    function render() {
-        if (activePage.value && container.value) {
-            if (!view.value) {
-                // TODO 先将导出完善，再来完成导入的功能
-                const getLayerOptions = (pageid: string) => {
-                    // po
-                }
-
-                view.value = new View({ container: container.value });
-                activePage.value.components.forEach(component => {
-                    attachEventForComponent(component);
-                })
-                view.value.render(activePage.value.getAllComponents());
+    function render(container?: HTMLElement) {
+        if (activePage.value) {
+            if (pageRenderer) {
+                pageRenderer.update(activePage.value);
             } else {
-                view.value.update(activePage.value.getAllComponents());
+                if (container) {
+                    pageRenderer = initPageRenderer(activePage.value, container)
+                    pageRenderer.render();
+    
+                    activePage.value.components.forEach(component => {
+                        attachEventForComponent(component);
+                    })
+                }
             }
 
             
@@ -166,7 +165,6 @@ export const useProjectStore = defineStore('project', () => {
         activeComponent,
         shouldRender,
         selectType,
-        view,
         shouldUpdateTree,
         setProjectInfo,
         addPage,
@@ -179,6 +177,8 @@ export const useProjectStore = defineStore('project', () => {
         setSelectType,
         setContainer,
         setWorkSpaceData,
+        setShouldUpdateTree,
+        setShouldRender,
         render,
         clear,
         refresh,

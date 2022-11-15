@@ -41,7 +41,7 @@ export class PageRenderer {
             width: this.parentContainer.clientWidth,
             height: this.parentContainer.clientHeight
         }
-        const canvasLayer = new CanvasLayer({ size, zIndex: '1' });
+        const canvasLayer = new CanvasLayer({ size, zIndex: '0' });
         const htmlLayer = new HTMLLayer({ size, zIndex: '1' });
 
         const components = this.page.getAllComponents();
@@ -75,9 +75,11 @@ export class PageRenderer {
     }
 
     public update(page: Page) {
+        // TODO 复现组件重复渲染的BUG并解决
         this.page = page;
         const components = this.page.getAllComponents();
 
+        console.log(components)
         components.forEach((component) => {
             if (component.notRendered && component.shouldRender) {
                 if (component.tag === componentTag.CANVAS) {
