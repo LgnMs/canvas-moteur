@@ -27,8 +27,8 @@ export class PageRenderer {
         this.canvasLayer = canvasLayer;
         this.htmlLayer = htmlLayer;
 
-        this.container.appendChild(htmlLayer.container);
-        this.htmlLayer.container.appendChild(canvasLayer.container);
+        this.container.appendChild(htmlLayer.el);
+        this.htmlLayer.el.appendChild(canvasLayer.el);
 
 
         this.container.addEventListener('click', (e) => {
@@ -41,8 +41,8 @@ export class PageRenderer {
             width: this.parentContainer.clientWidth,
             height: this.parentContainer.clientHeight
         }
-        const canvasLayer = new CanvasLayer(size);
-        const htmlLayer = new HTMLLayer(size);
+        const canvasLayer = new CanvasLayer({ size, zIndex: '1' });
+        const htmlLayer = new HTMLLayer({ size, zIndex: '1' });
 
         const components = this.page.getAllComponents();
 

@@ -11,7 +11,6 @@ const scale = ref(1);
 const setViewCanvasSize = (page: Page) => {
     container.value!.style.width = page.width;
     container.value!.style.height = page.height;
-    container.value!.style.minHeight = '100vh';
 
     scale.value = wrapper.value!.clientWidth / container.value!.clientWidth;
     
@@ -24,12 +23,12 @@ const setViewCanvasSize = (page: Page) => {
 
 const changePage = () => {
     projectStore.clear();
-    container.value!.innerHTML = '';
     projectStore.render()
 }
 
 onMounted(() => {
     projectStore.setContainer(container.value!);
+    console.log(container.value?.offsetWidth)
     if (projectStore.activePage) {
         setViewCanvasSize(projectStore.activePage);
         changePage();
@@ -66,6 +65,7 @@ watch(() => projectStore.shouldRender, () => {
             margin: 0 auto;
             overflow: auto;
             transform-origin: left top;
+            min-height: 100vh;
         }
     }
 </style>

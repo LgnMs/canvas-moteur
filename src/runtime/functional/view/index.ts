@@ -44,13 +44,14 @@ export class View {
         if (options.layerList) {
             this.generateLayer(options.layerList);
         } else {
+            console.log(this.container.offsetWidth)
             this.addHtmlLayer({
                 style: {
                     backgroundColor: '#fff'
                 },
                 size: {
-                    width: options.container.offsetWidth,
-                    height: options.container.offsetHeight
+                    width: this.container.offsetWidth,
+                    height: this.container.offsetHeight
                 },
                 zIndex: '1'
             })
@@ -62,7 +63,7 @@ export class View {
         this.layers.set(layer.id, layer);
 
         this.activeLayerId = layer.id;
-        this.container!.appendChild(layer.el);
+        this.container.appendChild(layer.el);
         return this;
     }
 
@@ -71,7 +72,7 @@ export class View {
         this.layers.set(layer.id, layer);
 
         this.activeLayerId = layer.id;
-        this.container!.appendChild(layer.el);
+        this.container.appendChild(layer.el);
         return this;
     }
 
