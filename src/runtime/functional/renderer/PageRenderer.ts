@@ -28,7 +28,8 @@ export class PageRenderer {
         this.htmlLayer = htmlLayer;
 
         this.container.appendChild(htmlLayer.el);
-        this.htmlLayer.el.appendChild(canvasLayer.el);
+        // TODO 修改渲染逻辑，页面不在默认添加canvas，canvas变为一个单独的组件，页面由组件树构成
+        // this.htmlLayer.el.appendChild(canvasLayer.el);
 
 
         this.container.addEventListener('click', (e) => {
