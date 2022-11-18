@@ -60,7 +60,7 @@ async function openFile() {
 
 <template>
     <div class="welcome">
-        <div v-if="!desktop" @click="dialogState = true">
+        <div  @click="dialogState = true">
             <button>新建项目</button>
         </div>
         <div>

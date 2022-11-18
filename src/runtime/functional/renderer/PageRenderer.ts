@@ -22,6 +22,7 @@ export class PageRenderer {
         this.container.style.position = 'relative';
         this.container.style.width = page.width;
         this.container.style.height = page.height;
+        this.container.style.backgroundColor = '#fff';
 
         const { canvasLayer, htmlLayer } = this.getLayers();
         this.canvasLayer = canvasLayer;
@@ -80,7 +81,6 @@ export class PageRenderer {
         this.page = page;
         const components = this.page.getAllComponents();
 
-        console.log(components)
         components.forEach((component) => {
             if (component.notRendered && component.shouldRender) {
                 if (component.tag === componentTag.CANVAS) {
