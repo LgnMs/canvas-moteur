@@ -3,6 +3,7 @@ import { CanvasComponent } from 'runtime/functional/project/component/canvas/can
 import { componentTag } from 'runtime/functional/project/component/common';
 import { HTMLComponent } from 'runtime/functional/project//component/html/htmlComponent';
 import { CanvasLayer, HTMLLayer } from './layer';
+import { log } from 'runtime/core/log';
 
 export class PageRenderer {
     /**
@@ -77,6 +78,8 @@ export class PageRenderer {
     }
 
     public update(page: Page) {
+        
+        log('开始执行更新操作')
         // TODO 复现组件重复渲染的BUG并解决
         this.page = page;
         const components = this.page.getAllComponents();

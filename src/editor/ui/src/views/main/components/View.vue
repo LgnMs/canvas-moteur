@@ -2,56 +2,26 @@
 import { onMounted, ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
 import { Page } from 'runtime/functional/project/page';
+import { createRenderer } from 'runtime/functional/renderer';
 
 const projectStore = useProjectStore()
 const container = ref<HTMLElement>();
-const wrapper = ref<HTMLElement>();
-const scale = ref(1);
-
-const setViewCanvasSize = (page: Page) => {
-    container.value!.style.width = page.width;
-    container.value!.style.height = page.height;
-
-    scale.value = wrapper.value!.clientWidth / container.value!.clientWidth;
-    
-    if (scale.value > 1) {
-        scale.value = 1;
-    }
-    container.value!.style.transform = `scale(${scale.value})`;
+const view = ref<HTMLElement>();
+const renderer = createRenderer().installPlugins();
+        
+const renderPage = () => {
+    renderer
+        .parse()
+        .mount(view.value!);
 }
 
-const changePage = () => {
-    projectStore.clear();
-    container.value!.innerHTML = '';
-    projectStore.render(container.value!)
-}
-
-onMounted(() => {
-    console.log(projectStore)
-    if (projectStore.activePage) {
-        setViewCanvasSize(projectStore.activePage);
-        changePage();
-    }
-})
-
-watch(() => projectStore.activePage, (page) => {
-    if (page) {
-        setViewCanvasSize(page);
-        changePage();
-    }
-})
-
-watch(() => projectStore.shouldRender, (value) => {
-    if (value) {
-        projectStore.render(container.value!)
-    }
-})
+watch(() =>  projectStore.activePage, (page) => {}, { immediate: true, flush: 'post' })
 
 </script>
 
 <template>
-    <div class="view" ref="wrapper">
-        <div class="view-canvas" ref="container"></div>
+    <div class="view" ref="container">
+        <div class="view-canvas" ref="view"></div>
     </div>
 </template>
 

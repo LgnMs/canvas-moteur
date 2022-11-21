@@ -8,7 +8,7 @@ import { ICanvasComponentOptions } from 'runtime/functional/project/component/ca
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
 import { PageRenderer } from 'runtime/functional/renderer/pageRenderer';
 import { initPageRenderer } from 'runtime/functional/renderer';
-import { error } from 'runtime/core/log';
+import { error, log } from 'runtime/core/log';
 import { ProjectJson } from 'runtime/functional/project/loadPorject';
 
 export const useProjectStore = defineStore('project', () => {
