@@ -21,6 +21,7 @@ const onPageBlur =() => {
             <div class="header">属性检查器</div>
 
             <div class="body" v-if="projectStore.activePage && projectStore.selectType === 0" >
+                <Input label="id" v-model="projectStore.activePage.id"></Input>
                 <Input label="宽度" v-model="projectStore.activePage.width" @blur="onPageBlur"></Input>
             </div>
             <div class="body" v-if="projectStore.activeComponent && projectStore.selectType === 1" >
