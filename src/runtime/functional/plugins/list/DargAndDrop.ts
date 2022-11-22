@@ -19,26 +19,26 @@ export class DargAndDrop extends Plugin {
     }
 
     public run(prop: PluginSystemProp) {
-        if (!prop.pageRenderer) return error('插件系统未初始化');
-        // 实现canvas的拖拽
-        const canvasLayer = prop.pageRenderer.getCanvasLayer();
+        // if (!prop.pageRenderer) return error('插件系统未初始化');
+        // // 实现canvas的拖拽
+        // const canvasLayer = prop.pageRenderer.getCanvasLayer();
 
-        const controls = new DragControls(canvasLayer.renderer.objects, canvasLayer.renderer.camera, canvasLayer.renderer.renderer.domElement);
-        // add event listener to highlight dragged objects
+        // const controls = new DragControls(canvasLayer.renderer.objects, canvasLayer.renderer.camera, canvasLayer.renderer.renderer.domElement);
+        // // add event listener to highlight dragged objects
 
-        controls.addEventListener('dragstart', e => {
-            // console.log(e)
-        });
+        // controls.addEventListener('dragstart', e => {
+        //     // console.log(e)
+        // });
 
-        controls.addEventListener('drag', e => {
-            canvasLayer.renderer.render();
-        });
+        // controls.addEventListener('drag', e => {
+        //     canvasLayer.renderer.render();
+        // });
 
-        controls.addEventListener('dragend', e => {
-            const object = e.object as THREE.Mesh;
-            const component = canvasLayer.renderer.getComponentByObject(object);
+        // controls.addEventListener('dragend', e => {
+        //     const object = e.object as THREE.Mesh;
+        //     const component = canvasLayer.renderer.getComponentByObject(object);
 
-            component?.setPosition(object.position.x, object.position.y);
-        });
+        //     component?.setPosition(object.position.x, object.position.y);
+        // });
     }
 }

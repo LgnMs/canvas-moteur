@@ -1,8 +1,6 @@
-import { PageRenderer } from "../renderer/pageRenderer";
 import { Plugin } from "./list/common";
 
 export interface PluginSystemProp {
-    pageRenderer?: PageRenderer;
 }
 
 export class PluginSystem {
