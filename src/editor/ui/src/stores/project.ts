@@ -6,21 +6,17 @@ import { componentType, componentTag, Component } from 'runtime/functional/proje
 import { Page } from 'runtime/functional/project/page';
 import { ICanvasComponentOptions } from 'runtime/functional/project/component/canvas/canvasComponent';
 import { IHTMLComponentOptions } from 'runtime/functional/project/component/html/htmlComponent';
-import { PageRenderer } from 'runtime/functional/renderer/pageRenderer';
-import { initPageRenderer } from 'runtime/functional/renderer';
-import { error, log } from 'runtime/core/log';
 import { ProjectJson } from 'runtime/functional/project/loadPorject';
 
 export const useProjectStore = defineStore('project', () => {
     const projectInfo = ref<Project>();
     const workSpaceData = ref<ProjectJson>();
-    const activePage = ref<Page | null>();
+    const activePage = ref<Page | null>(null);
     const activeComponent = ref<Component>();
     const shouldRender = ref(false);
     const shouldUpdateTree = ref(false);
     // 0 表示当前选中的是页面 1表示当前选中的是组件
     const selectType = ref(0);
-    let pageRenderer: PageRenderer | null = null;
     const container = ref<HTMLElement>();
 
     function setProjectInfo(data: Project) {
@@ -31,6 +27,7 @@ export const useProjectStore = defineStore('project', () => {
         const pageIndex = projectInfo.value?.getAllPages().length;
         const page = Page.new({ name: `new_${pageIndex}`});
         projectInfo.value?.addPage(page);
+        shouldUpdateTree.value = true;
         setActivePage(page)
     }
 
@@ -81,6 +78,7 @@ export const useProjectStore = defineStore('project', () => {
         activePage.value = data;
         activePage.value.pageShouldRender();
     }
+    
 
     function setActiveComponent(data: Component) {
         activeComponent.value = data;
@@ -117,15 +115,6 @@ export const useProjectStore = defineStore('project', () => {
         shouldRender.value = data
     }
 
-    function clear() {
-        // 清空当前页面的渲染器，但并不包括元素节点中的内容
-        if (pageRenderer) {
-            pageRenderer.clear();
-            pageRenderer = null;
-        }
-    }
-
-
     function refresh() {
         // 重置之后窗口界面会监听到然后重新渲染页面
         const page = activePage.value;
@@ -134,28 +123,6 @@ export const useProjectStore = defineStore('project', () => {
             setTimeout(() => {
                 setActivePage(page);
             }, 0)
-        }
-    }
-
-    function render(container?: HTMLElement) {
-        if (activePage.value) {
-            if (pageRenderer) {
-                pageRenderer.update(activePage.value);
-            } else {
-                if (container) {
-                    pageRenderer = initPageRenderer(activePage.value, container)
-                    pageRenderer.render();
-    
-                    activePage.value.components.forEach(component => {
-                        attachEventForComponent(component);
-                    })
-                }
-            }
-
-            
-            shouldRender.value = false;
-        } else {
-            error('没有激活的页面')
         }
     }
 
@@ -179,8 +146,6 @@ export const useProjectStore = defineStore('project', () => {
         setWorkSpaceData,
         setShouldUpdateTree,
         setShouldRender,
-        render,
-        clear,
         refresh,
         
     }

@@ -161,7 +161,6 @@ export abstract class Component implements IComponent {
             })
         }
     }
-    // TODO 组件管理相关功能
 }
 
 export function createComponent<T, C extends Component>(Component: new (options: T) => C) {

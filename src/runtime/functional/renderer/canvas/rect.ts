@@ -12,8 +12,10 @@ export class RectRender extends ComponentRender<Rect> {
         this.startY = this.component.position.y;
     }
 
+    /**
+     * TODO 已废弃的方法
+     */
     toWebAxis(layerWidth: number, layerHeight: number) {
-        // TODO webGL坐标转换为web坐标
         
         return this;
     }

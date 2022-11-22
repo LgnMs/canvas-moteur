@@ -1,21 +1,30 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useProjectStore } from 'editor/ui/src/stores/project';
-import { Page } from 'runtime/functional/project/page';
 import { createRenderer } from 'runtime/functional/renderer';
 
 const projectStore = useProjectStore()
 const container = ref<HTMLElement>();
 const view = ref<HTMLElement>();
 const renderer = createRenderer().installPlugins();
-        
-const renderPage = () => {
-    renderer
-        .parse()
-        .mount(view.value!);
-}
 
-watch(() =>  projectStore.activePage, (page) => {}, { immediate: true, flush: 'post' })
+watch(() =>  projectStore.activePage, (page, oldPage) => {
+    if (oldPage != null) {
+        renderer.clear();
+    }
+    if (page) {
+        renderer
+            .parse(page)
+            .mount(view.value!);
+    }
+}, { immediate: true, flush: 'post' })
+
+watch(() => projectStore.shouldRender, () => {
+    if (projectStore.activePage) {
+        renderer.update(projectStore.activePage);
+        projectStore.setShouldRender(false);
+    }
+})
 
 </script>
 

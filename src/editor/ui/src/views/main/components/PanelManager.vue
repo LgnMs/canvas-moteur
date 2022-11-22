@@ -83,7 +83,9 @@ const addComponent = () => {
 const onNodeClick = (node: ITreeNode) => {
     const data: Page | Component = node.data;
     if (data.id.indexOf('page') !== -1) {
-        projectStore.setActivePage(data as Page);
+        if (data.id !== projectStore.activePage?.id) {
+            projectStore.setActivePage(data as Page);
+        }
         projectStore.setSelectType(0);
     } else if (data.id.indexOf('component') !== -1) {
         // 点击到组件时应当渲染组件所在的页面
@@ -102,7 +104,9 @@ const onNodeClick = (node: ITreeNode) => {
 
         const page = getPage(node);
         if (page && page.id) {
-            projectStore.setActivePage(page)
+            if (page.id !== projectStore.activePage?.id) {
+                projectStore.setActivePage(page)
+            }
         } else {
             error('未找到组件所在的页面')
         }

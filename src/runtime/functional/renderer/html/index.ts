@@ -18,3 +18,22 @@ export function parseHTML(component: HTMLComponent) {
     })
     return node;
 }
+
+export class HTMLRenderer {
+    public parse(component: HTMLComponent) {
+        const node = document.createElement(component.type);
+        
+        Object.keys(component.style).forEach(key => {
+            Reflect.set(node.style, key, Reflect.get(component.style, key))
+        })
+
+        component.setShouldRender(false);
+        component.setNotRendered(false);
+        component.setEl(node);
+        node.addEventListener('click', () => {
+            component.dispatchEvent('click');
+        })
+        
+        return node;
+    }
+}

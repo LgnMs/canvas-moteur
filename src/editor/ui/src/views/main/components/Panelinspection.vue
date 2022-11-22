@@ -25,6 +25,8 @@ const onPageBlur =() => {
             </div>
             <div class="body" v-if="projectStore.activeComponent && projectStore.selectType === 1" >
 
+                <Input label="id" v-model="projectStore.activeComponent.id"></Input>
+
                 <div class="body-position" v-if="projectStore.activeComponent.position">
                     <Input label="x" v-model="projectStore.activeComponent.position.x" @blur="onBlur"></Input>
                     <Input label="y" v-model="projectStore.activeComponent.position.y" @blur="onBlur"></Input>
