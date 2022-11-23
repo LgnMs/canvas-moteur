@@ -16,7 +16,7 @@ export const useProjectStore = defineStore('project', () => {
     const shouldRender = ref(false);
     const shouldUpdateTree = ref(false);
     // 0 表示当前选中的是页面 1表示当前选中的是组件
-    const selectType = ref(0);
+    const selectType = ref<0 | 1>(0);
     const container = ref<HTMLElement>();
 
     function setProjectInfo(data: Project) {
@@ -28,14 +28,15 @@ export const useProjectStore = defineStore('project', () => {
         const page = Page.new({ name: `new_${pageIndex}`});
         projectInfo.value?.addPage(page);
         shouldUpdateTree.value = true;
-        setActivePage(page)
+        setActivePage(page);
+        attachEventForPage(page);
     }
 
     function addComponent(type: componentType, tag: componentTag, options: ICanvasComponentOptions | IHTMLComponentOptions) {
-        const page = activePage.value;
-        if (page) {
-            let com: Component | null = null;
 
+        const generateComponent = () => {
+            let com: Component | null = null;
+    
             if (tag === componentTag.HTML) {
                 const fn = htmlfactory(type);
                 if (fn) {
@@ -48,13 +49,27 @@ export const useProjectStore = defineStore('project', () => {
                     com = fn(options as ICanvasComponentOptions);
                 }
             }
-            
-            if (com) {
+            return com;
+        }
+
+        const com: Component | null = generateComponent();
+
+        if (selectType.value === 0) {
+            const page = activePage.value;
+            if (page && com) {
                 page.addComponent(com)
-                shouldRender.value = true;
-                shouldUpdateTree.value = true;
-                attachEventForComponent(com);
             }
+        } else if (selectType.value === 1) {
+            const component = activeComponent.value;
+            if (component && com) {
+                component.addComponent(com)
+            }
+        }
+        shouldRender.value = true;
+        shouldUpdateTree.value = true;
+
+        if (com) {
+            attachEventForComponent(com);
         }
     }
 
@@ -85,9 +100,18 @@ export const useProjectStore = defineStore('project', () => {
     }
 
     function attachEventForComponent(component: Component) {
-        component.addEventListener('click', target => {
+        component.addEventListener('click', (e, target) => {
             activeComponent.value = target;
+            e.stopPropagation();
             setSelectType(1);
+        })
+    }
+
+    function attachEventForPage(page: Page) {
+        page.addEventListener('click', (e, target) => {
+            activePage.value = target;
+            e.stopPropagation();
+            setSelectType(0);
         })
     }
 

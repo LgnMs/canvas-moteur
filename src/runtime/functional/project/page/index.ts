@@ -7,7 +7,7 @@ export interface pageOptions {
 }
 
 export type PageEventType = 'click';
-export type PageEvent = (taget: Page) => void;
+export type PageEvent = (e: Event, taget: Page) => void;
 
 export class Page {
     [key: string]: any;
@@ -54,7 +54,7 @@ export class Page {
         return this.components;
     }
     
-    public addEventListener(type: PageEventType, callback: (target: Page) => void) {
+    public addEventListener(type: PageEventType, callback: (e: Event, target: Page) => void) {
         if (this.eventStore.has(type)) {
             const events = this.eventStore.get(type)!;
             events.push(callback);
@@ -64,12 +64,12 @@ export class Page {
         }
     }
 
-    public dispatchEvent(type: PageEventType) {
+    public dispatchEvent(type: PageEventType, e: Event) {
         if (this.eventStore.has(type)) {
             const events = this.eventStore.get(type)!;
     
             events.forEach(event => {
-                event(this);
+                event(e, this);
             })
         }
     }

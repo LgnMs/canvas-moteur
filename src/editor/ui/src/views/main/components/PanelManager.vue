@@ -72,12 +72,20 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
-    projectStore.addComponent(componentType.Input, componentTag.HTML, {
-        name: '测试2',
+    // projectStore.addComponent(componentType.Input, componentTag.HTML, {
+    //     name: '测试2',
+    //     style: {
+    //         width: '120px',
+    //         height: '40px',
+    //         gridArea: ''
+    // } })
+    projectStore.addComponent(componentType.Grid, componentTag.HTML, {
+        name: '测试1',
         style: {
-            width: '120px',
-            height: '40px',
-    } })
+            width: '600px',
+            height: '400px',
+            border: '1px solid red',
+    }})
 }
 
 const onNodeClick = (node: ITreeNode) => {
@@ -97,7 +105,7 @@ const onNodeClick = (node: ITreeNode) => {
                 return parent.data;
             } else if (parent.data.id.indexOf('component') !== -1) {
                 if (!parent.parent) return null;
-                return getPage(parent.parent)
+                return getPage(parent)
             }
             return null;
         }

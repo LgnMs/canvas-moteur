@@ -1,4 +1,4 @@
-import { Component, componentTag, componentType, createComponent, IComponent, IComponentOptions } from "../common"
+import { componentTag, componentType, createComponent } from "../common"
 import { HTMLComponent, IHTMLComponentOptions } from "./htmlComponent";
 
 export class Input extends HTMLComponent {

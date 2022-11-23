@@ -22,7 +22,8 @@ export enum componentTag {
 
 export enum componentType {
     Rect = 'Rect',
-    Input = 'Input'
+    Input = 'Input',
+    Grid = 'Grid'
 }
 
 export interface IComponent {
@@ -70,7 +71,7 @@ export interface COptions {
 } 
 
 export type ComponentEventType = 'click';
-export type ComponentEvent = (taget: Component) => void;
+export type ComponentEvent = (e: Event, taget: Component) => void;
 
 export abstract class Component implements IComponent {
     [key: string]: any;
@@ -117,6 +118,7 @@ export abstract class Component implements IComponent {
     }
 
     public addComponent(component: Component) {
+        this.setShouldRender(true);
         this.components.push(component);
         return component;
     }
@@ -142,7 +144,7 @@ export abstract class Component implements IComponent {
         Object.keys(obj).forEach(key => Reflect.set(this, key, Reflect.get(obj, key)));
     }
 
-    public addEventListener(type: ComponentEventType, callback: (target: Component) => void) {
+    public addEventListener(type: ComponentEventType, callback: (e: Event, target: Component) => void) {
         if (this.eventStore.has(type)) {
             const events = this.eventStore.get(type)!;
             events.push(callback);
@@ -152,12 +154,12 @@ export abstract class Component implements IComponent {
         }
     }
 
-    public dispatchEvent(type: ComponentEventType) {
+    public dispatchEvent(type: ComponentEventType, e: Event) {
         if (this.eventStore.has(type)) {
             const events = this.eventStore.get(type)!;
     
             events.forEach(event => {
-                event(this);
+                event(e, this);
             })
         }
     }

@@ -20,7 +20,7 @@ watch(() =>  projectStore.activePage, (page, oldPage) => {
 }, { immediate: true, flush: 'post' })
 
 watch(() => projectStore.shouldRender, () => {
-    if (projectStore.activePage) {
+    if (projectStore.shouldRender && projectStore.activePage) {
         renderer.update(projectStore.activePage);
         projectStore.setShouldRender(false);
     }
