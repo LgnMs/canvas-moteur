@@ -1,5 +1,7 @@
 import { componentType } from "runtime/functional/project/component/common";
+import { Canvas } from "runtime/functional/project/component/html/canvs";
 import { HTMLComponent } from "runtime/functional/project/component/html/htmlComponent";
+import { CanvasRenderer } from "runtime/functional/renderer/canvas";
 
 export function parseHTML(component: HTMLComponent) {
     const node = document.createElement(component.type);
@@ -21,18 +23,26 @@ export function parseHTML(component: HTMLComponent) {
 }
 
 export class HTMLRenderer {
-    private createElement(type: componentType) {
-        let elType = '';
-        if (type === componentType.Grid) {
-            elType = 'div';
-        } else {
-            elType = type;
+    private createElement(component: HTMLComponent) {
+        if (component.type === componentType.Grid) {
+            return document.createElement('div');
+        } else if (component.type === componentType.Canvas) {
+            const canvas = component as Canvas;
+            const canvasRenderer = new CanvasRenderer({
+                width: canvas.width,
+                height: canvas.height,
+                style: canvas.style
+            })
+            canvas.setRenderer(canvasRenderer);
+            
+            return canvasRenderer.container;
         }
-        return document.createElement(elType);
+        return document.createElement(component.type);
+        
     }
 
     public parse(component: HTMLComponent) {
-        const node = this.createElement(component.type);
+        const node = this.createElement(component);
         
         Object.keys(component.style).forEach(key => {
             Reflect.set(node.style, key, Reflect.get(component.style, key))

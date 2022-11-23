@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { InteractionManager } from 'three.interactive';
-import { CanvasLayer } from "runtime/functional/renderer/layer";
 import { RectRender } from './rect'
 import { componentType } from "runtime/functional/project/component/common";
 import { error } from 'runtime/core/log';
@@ -19,11 +18,15 @@ export function loadComponentRender() {
     }
 }
 
+export interface CanvasRendererOptions {
+    width?: number;
+    height?: number;
+    style?: Partial<CSSStyleDeclaration>;
+}
 /**
  * 二维图形渲染器
  */
 export class CanvasRenderer {
-    private layer: CanvasLayer;
     /**
      * 基于Raycaster实现的事件管理器
      * https://threejs.org/docs/index.html#api/en/core/Raycaster
@@ -39,29 +42,35 @@ export class CanvasRenderer {
 
     private getComponentRenderer: ReturnType<typeof loadComponentRender>;
 
-    constructor(layer: CanvasLayer) {
-        this.layer = layer;
+    constructor(options: CanvasRendererOptions) {
         const renderer = new THREE.WebGLRenderer({
             // /* 开启抗锯齿 */ antialias: true
         });
 
+        if (!options.width) {
+            options.width = 300;
+        }
+        if (!options.height) {
+            options.height = 150;
+        }
 
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(layer.width, layer.height);
+        renderer.setSize(options.width, options.height);
 
         renderer.setClearColor(new THREE.Color('#FFFFFF'), 1);
 
         const container = renderer.domElement;
-        container.style.position = 'absolute';
-        container.style.zIndex = layer.zIndex;
-        container.style.left = '0px';
-        container.style.top = '0px';
-        container.style.width = layer.width + 'px';
-        container.style.height = layer.height + 'px';
+
+        if (options.style) {
+            Object.keys(options.style).forEach(key => {
+                Reflect.set(container.style, key, Reflect.get(container.style, key))
+            })
+        }
+
         this.container = container;
 
         // const camera = new THREE.PerspectiveCamera(45, layer.width / layer.height, 1, 1000);
-        const camera = new THREE.OrthographicCamera(layer.width / - 2, layer.width / 2, layer.height / 2, layer.height / - 2, 1, 1000);
+        const camera = new THREE.OrthographicCamera(options.width / - 2, options.width / 2, options.height / 2, options.height / - 2, 1, 1000);
         camera.position.set( 0, 0, 1000 );
         camera.lookAt( 0, 0, 0 );
 
@@ -106,41 +115,67 @@ export class CanvasRenderer {
         this.renderer.forceContextLoss();
     }
 
-    /**
-     * 解析组件数据
-     */
-    public parse() {
-        this.layer.components.forEach((component, index) => {
-            if (!component.shouldRender) return;
+    // /**
+    //  * 解析组件数据
+    //  */
+    // public parse_old() {
+    //     this.layer.components.forEach((component, index) => {
+    //         if (!component.shouldRender) return;
 
-            if (component.notRendered) {
-                component.onCreated();
+    //         if (component.notRendered) {
+    //             component.onCreated();
     
-                const componentRenderer = this.getComponentRenderer(component.type);
-                const object = new componentRenderer(component)
-                    .toWebAxis(this.layer.width, this.layer.height)
-                    .parse(index);
+    //             const componentRenderer = this.getComponentRenderer(component.type);
+    //             const object = new componentRenderer(component)
+    //                 .parse(index);
     
-                component.mesh = object;
+    //             component.mesh = object;
                     
-                this.objects.push(object);
-                this.scene.add(object);
-                this.componentOfObjectMap.set(object, component)
+    //             this.objects.push(object);
+    //             this.scene.add(object);
+    //             this.componentOfObjectMap.set(object, component)
     
-                component.onMounted();
+    //             component.onMounted();
     
-                this.attachEvent(object, component);
+    //             this.attachEvent(object, component);
 
-                component.setNotRendered(false);
-            } else {
-                const componentRenderer = this.getComponentRenderer(component.type);
-                new componentRenderer(component)
-                    .update();
+    //             component.setNotRendered(false);
+    //         } else {
+    //             const componentRenderer = this.getComponentRenderer(component.type);
+    //             new componentRenderer(component)
+    //                 .update();
                 
-            }
-            component.setShouldRender(false);
-        })
-        return this;
+    //         }
+    //         component.setShouldRender(false);
+    //     })
+    //     return this;
+    // }
+
+    public parse(component: CanvasComponent) {
+        const componentRenderer = this.getComponentRenderer(component.type);
+        const object = new componentRenderer(component).parse(this.objects.length);
+
+        component.mesh = object;
+
+        this.objects.push(object);
+        this.componentOfObjectMap.set(object, component)
+        this.attachEvent(object, component);
+
+        component.setNotRendered(false);
+        component.setShouldRender(false);
+
+        return object;
+    }
+
+    public add(object: THREE.Mesh) {
+        this.scene.add(object);
+    }
+
+    public update(component: CanvasComponent) {
+        const componentRenderer = this.getComponentRenderer(component.type);
+        new componentRenderer(component)
+            .update();
+        component.setShouldRender(false);
     }
     /**
      * 渲染组件

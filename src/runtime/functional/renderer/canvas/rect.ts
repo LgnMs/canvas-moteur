@@ -11,21 +11,13 @@ export class RectRender extends ComponentRender<Rect> {
         this.startX = this.component.position.x;
         this.startY = this.component.position.y;
     }
-
-    /**
-     * TODO 已废弃的方法
-     */
-    toWebAxis(layerWidth: number, layerHeight: number) {
-        
-        return this;
-    }
-
     getGeometry(): THREE.BufferGeometry {
         return new THREE.PlaneGeometry( this.component.style.width, this.component.style.height)
     }
 
     getMaterial(): THREE.Material {
         const color = new THREE.Color(this.component.style.backgroundColor);
+        console.log(color, this.component.style.backgroundColor)
         return  new THREE.MeshBasicMaterial({ color })
     }
 

@@ -7,7 +7,6 @@ export abstract class ComponentRender<T extends CanvasComponent> {
     constructor(component: T) {
         this.component = component;
     }
-    abstract toWebAxis(layerWidth: number, layerHeight: number): this;
     abstract getGeometry(): THREE.BufferGeometry;
     abstract getMaterial(): THREE.Material;
     abstract parse(zIndex: number): THREE.Mesh;

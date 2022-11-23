@@ -23,7 +23,8 @@ export enum componentTag {
 export enum componentType {
     Rect = 'Rect',
     Input = 'Input',
-    Grid = 'Grid'
+    Grid = 'Grid',
+    Canvas = 'Canvas'
 }
 
 export interface IComponent {

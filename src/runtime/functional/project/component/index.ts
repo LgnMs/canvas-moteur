@@ -3,6 +3,7 @@ import { createRect } from './canvas/rect';
 import { componentTag, componentType } from './common';
 import { createInput } from './html/input';
 import { createGrid } from './html/grid';
+import { createCanvas } from './html/canvs';
 
 export const htmlfactory = (type: componentType) => {
     switch (type) {
@@ -10,6 +11,8 @@ export const htmlfactory = (type: componentType) => {
             return createInput;
         case componentType.Grid:
             return createGrid;
+        case componentType.Canvas:
+            return createCanvas;
         default:
             error('未找到相关的方法')
     }

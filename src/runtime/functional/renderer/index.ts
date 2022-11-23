@@ -1,13 +1,10 @@
-export * from './layer';
-
 import { Page } from 'runtime/functional/project/page';
-import { DargAndDrop } from 'runtime/functional/plugins/list/DargAndDrop';
-import { PluginSystem } from '../plugins';
 import { HTMLRenderer } from './html';
-import { CanvasRenderer } from './canvas';
-import { Component, componentTag } from '../project/component/common';
-import { HTMLComponent } from '../project/component/html/htmlComponent';
+import { Component, componentTag } from 'runtime/functional/project/component/common';
+import { HTMLComponent } from 'runtime/functional/project/component/html/htmlComponent';
 import { error } from 'runtime/core/log';
+import { Canvas } from 'runtime/functional/project/component/html/canvs';
+import { CanvasComponent } from 'runtime/functional/project/component/canvas/canvasComponent';
 
 export interface RendererOptions {
 
@@ -23,11 +20,9 @@ export class Renderer {
     root: HTMLDivElement | null = null;
     mountEl: HTMLElement | null = null;
     htmlRenderer: HTMLRenderer;
-    // canvaRenderer: CanvasRenderer;
 
     constructor(options: RendererOptions) {
         this.htmlRenderer = new HTMLRenderer();
-        // this.canvaRenderer = new CanvasRenderer();
     }
 
     private createRootEl(page: Page) {
@@ -118,13 +113,17 @@ export class Renderer {
     public update(page: Page) {
         const components = page.getAllComponents();
 
-        const fn = (components: Component[], parent: HTMLElement | null) => {
+        const fn = (components: Component[], parent: HTMLElement | null, parentComponent?: Component) => {
             components.forEach(component => {
                 let node: HTMLElement | null = null;
                 if (component.notRendered) {
                     if (component.tag === componentTag.HTML) {
                         node = this.htmlRenderer.parse(component as HTMLComponent);
                         parent?.appendChild(node);
+                    } else if (component.tag === componentTag.CANVAS) {
+                        const canvas = parentComponent as Canvas;
+                        const object = canvas.renderer!.parse(component as CanvasComponent);
+                        canvas.renderer!.add(object);
                     }
                 }
                 if (component.shouldRender) {
@@ -133,12 +132,15 @@ export class Renderer {
                         component.setStyle(component.style);
 
                         node = (component as HTMLComponent).el!;
+                    } else if (component.tag === componentTag.CANVAS) {
+                        const canvas = parentComponent as Canvas;
+                        canvas.renderer?.update(component as CanvasComponent);
                     }
                     component.setShouldRender(false);
                 }
 
                 if (component.components.length > 0) {
-                    fn(component.components, node);
+                    fn(component.components, node, component);
                 }
             })
         }
