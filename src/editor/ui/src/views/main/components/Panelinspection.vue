@@ -23,6 +23,12 @@ const onPageBlur =() => {
             <div class="body" v-if="projectStore.activePage && projectStore.selectType === 0" >
                 <Input label="id" v-model="projectStore.activePage.id"></Input>
                 <Input label="宽度" v-model="projectStore.activePage.width" @blur="onPageBlur"></Input>
+                <!-- 以可视化的方式调整grid布局 -->
+                <!-- <div class="body-style" v-if="projectStore.activePage.style">
+                    <template v-for="(value, key) in (projectStore.activePage.style as object)">
+                        <Input :label="key" v-model="projectStore.activePage.style[key]" @blur="onPageBlur"></Input>
+                    </template>
+                </div> -->
             </div>
             <div class="body" v-if="projectStore.activeComponent && projectStore.selectType === 1" >
 

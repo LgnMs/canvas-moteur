@@ -16,6 +16,7 @@ export class Grid extends HTMLComponent {
             gridTemplateColumns: '',
             gridAutoRows: '',
             gridTemplateAreas: '',
+            gridArea: '',
             ...options.style
         };
     }

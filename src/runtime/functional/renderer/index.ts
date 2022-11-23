@@ -34,7 +34,6 @@ export class Renderer {
         const el = document.createElement('div');
         el.style.width = page.width;
         el.style.height = page.height;
-        el.style.backgroundColor = '#fff';
 
         // 布局系统实现 基于grid
         // el.style.display = 'grid';
@@ -49,6 +48,10 @@ export class Renderer {
         // only-edtior
         el.style.minHeight = '100vh';
         el.style.margin = '0 auto';
+
+        Object.keys(page.style).forEach(key => {
+            Reflect.set(el.style, key, Reflect.get(page.style, key))
+        })
 
         el.addEventListener('click', (e) => {
             page.dispatchEvent('click', e);

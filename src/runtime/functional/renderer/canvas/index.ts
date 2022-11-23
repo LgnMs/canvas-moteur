@@ -88,8 +88,8 @@ export class CanvasRenderer {
 
     public attachEvent(object: THREE.Mesh, component: CanvasComponent) {
 
-        object.addEventListener('click', () => {
-            component.dispatchEvent('click');
+        object.addEventListener('click', (e) => {
+            component.dispatchEvent('click', e);
         })
 
 

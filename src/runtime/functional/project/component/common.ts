@@ -154,7 +154,7 @@ export abstract class Component implements IComponent {
         }
     }
 
-    public dispatchEvent(type: ComponentEventType, e: Event) {
+    public dispatchEvent(type: ComponentEventType, e: Event | any) {
         if (this.eventStore.has(type)) {
             const events = this.eventStore.get(type)!;
     

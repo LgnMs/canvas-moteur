@@ -4,6 +4,7 @@ import { Component } from "../component/common";
 export interface pageOptions {
     id?: string;
     name: string;
+    style?: Partial<CSSStyleDeclaration>;
 }
 
 export type PageEventType = 'click';
@@ -16,6 +17,7 @@ export class Page {
     width: string = '1110px';
     height: string = 'auto';
     components: Component[] = [];
+    style: Partial<CSSStyleDeclaration>;
 
     onCreated = () => {};
     onMounted = () => {};
@@ -30,6 +32,14 @@ export class Page {
             this.id = generateId({ suffix: '_page' });
         }
         this.name = options.name;
+        this.style = {
+            backgroundColor: '#fff',
+            display: 'grid',
+            gridTemplateColumns: '',
+            gridAutoRows: '',
+            gridTemplateAreas: '',
+            ...options.style
+        };
     }
 
     static new(options: pageOptions) {
