@@ -17,7 +17,6 @@ export class RectRender extends ComponentRender<Rect> {
 
     getMaterial(): THREE.Material {
         const color = new THREE.Color(this.component.style.backgroundColor);
-        console.log(color, this.component.style.backgroundColor)
         return  new THREE.MeshBasicMaterial({ color })
     }
 

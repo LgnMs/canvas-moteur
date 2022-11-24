@@ -182,7 +182,9 @@ export class CanvasRenderer {
      */
     public render() {
         this.interactionManager.update();
+        console.log(this.scene, this.camera)
         this.renderer.render(this.scene, this.camera);
+
         return this;
     }
 }

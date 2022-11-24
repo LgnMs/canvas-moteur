@@ -5,6 +5,7 @@ import { HTMLComponent } from 'runtime/functional/project/component/html/htmlCom
 import { error } from 'runtime/core/log';
 import { Canvas } from 'runtime/functional/project/component/html/canvs';
 import { CanvasComponent } from 'runtime/functional/project/component/canvas/canvasComponent';
+import { toRaw } from 'vue';
 
 export interface RendererOptions {
 
@@ -121,9 +122,12 @@ export class Renderer {
                         node = this.htmlRenderer.parse(component as HTMLComponent);
                         parent?.appendChild(node);
                     } else if (component.tag === componentTag.CANVAS) {
+                        // const canvas = toRaw(parentComponent) as Canvas;
                         const canvas = parentComponent as Canvas;
                         const object = canvas.renderer!.parse(component as CanvasComponent);
+                        console.log(canvas)
                         canvas.renderer!.add(object);
+                        canvas.renderer!.render();
                     }
                 }
                 if (component.shouldRender) {
@@ -134,7 +138,8 @@ export class Renderer {
                         node = (component as HTMLComponent).el!;
                     } else if (component.tag === componentTag.CANVAS) {
                         const canvas = parentComponent as Canvas;
-                        canvas.renderer?.update(component as CanvasComponent);
+                        canvas.renderer!.update(component as CanvasComponent);
+                        canvas.renderer!.render();
                     }
                     component.setShouldRender(false);
                 }

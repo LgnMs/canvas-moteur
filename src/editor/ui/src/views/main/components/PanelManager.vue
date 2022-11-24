@@ -98,11 +98,6 @@ const addComponent = () => {
 }
 const addComponent2 = () => {
     // FIX ME - 在canvas中添加组件后未显示
-    projectStore.addComponent(componentType.Rect, componentTag.CANVAS, { name: '测试1', style: {
-        backgroundColor: 'yellowgreen',
-        height: 100,
-        width: 100,
-    } })
     projectStore.addComponent(componentType.Rect, componentTag.CANVAS, {
         name: '测试1',
         position: {
