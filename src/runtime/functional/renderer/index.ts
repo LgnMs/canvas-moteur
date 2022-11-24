@@ -5,7 +5,6 @@ import { HTMLComponent } from 'runtime/functional/project/component/html/htmlCom
 import { error } from 'runtime/core/log';
 import { Canvas } from 'runtime/functional/project/component/html/canvs';
 import { CanvasComponent } from 'runtime/functional/project/component/canvas/canvasComponent';
-import { toRaw } from 'vue';
 
 export interface RendererOptions {
 
