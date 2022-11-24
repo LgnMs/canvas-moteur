@@ -99,18 +99,50 @@ export const useProjectStore = defineStore('project', () => {
         activeComponent.value = data;
     }
 
+    let selectComponentId = '';
     function attachEventForComponent(component: Component) {
         component.addEventListener('click', (e, target) => {
-            activeComponent.value = target;
             e.stopPropagation();
+
+            if (target.type === componentType.Canvas) {
+                let hasComponent = false;
+
+                // 遍历Canvas中的子组件，如果已经有子组件被选中过了就不再执行事件
+                const fn = (components: Component[]) => {
+                    components.forEach(component => {
+                        if (component.id === selectComponentId) {
+                            hasComponent = true;
+                        }
+
+                        if (component.components.length > 0) {
+                            fn(component.components);
+                        }
+                    })
+                }
+                fn(component.components);
+
+                if (hasComponent) {
+                    selectComponentId = '';
+                    return;
+                };
+            }
+
+            activeComponent.value = target;
             setSelectType(1);
+
+            if (target.tag === componentTag.CANVAS) {
+                selectComponentId = target.id;
+            } else {
+                selectComponentId = '';
+            }
         })
     }
 
     function attachEventForPage(page: Page) {
         page.addEventListener('click', (e, target) => {
-            activePage.value = target;
             e.stopPropagation();
+            
+            activePage.value = target;
             setSelectType(0);
         })
     }

@@ -60,15 +60,23 @@ export class Renderer {
         this.root = this.createRootEl(page);
         const components = page.getAllComponents();
 
-        const fn = (components: Component[], parent: HTMLElement) => {
+        const fn = (components: Component[], parent: HTMLElement | null, parentComponent?: Component) => {
             components.forEach(component => {
+                let node: HTMLElement | null = null;
+                
                 if (component.tag === componentTag.HTML) {
-                    const node = this.htmlRenderer.parse(component as HTMLComponent);
-                    parent.appendChild(node);
+                    node = this.htmlRenderer.parse(component as HTMLComponent);
+                    parent?.appendChild(node);
 
-                    if (component.components.length > 0) {
-                        fn (component.components, node);
-                    }
+                } else if (component.tag === componentTag.CANVAS) {
+                    // const canvas = toRaw(parentComponent) as Canvas;
+                    const canvas = parentComponent as Canvas;
+                    const object = canvas.renderer!.parse(component as CanvasComponent);
+                    canvas.renderer!.add(object);
+                    canvas.renderer!.render();
+                }
+                if (component.components.length > 0) {
+                    fn(component.components, node, component);
                 }
             })
         }
@@ -125,7 +133,6 @@ export class Renderer {
                         // const canvas = toRaw(parentComponent) as Canvas;
                         const canvas = parentComponent as Canvas;
                         const object = canvas.renderer!.parse(component as CanvasComponent);
-                        console.log(canvas)
                         canvas.renderer!.add(object);
                         canvas.renderer!.render();
                     }
