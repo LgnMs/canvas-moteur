@@ -72,20 +72,6 @@ const onTreeDataChange = (data: ITreeNode) => {
 }
 
 const addComponent = () => {
-    // projectStore.addComponent(componentType.Input, componentTag.HTML, {
-    //     name: '测试2',
-    //     style: {
-    //         width: '120px',
-    //         height: '40px',
-    //         gridArea: ''
-    // } })
-    // projectStore.addComponent(componentType.Grid, componentTag.HTML, {
-    //     name: '测试1',
-    //     style: {
-    //         width: '600px',
-    //         height: '400px',
-    //         border: '1px solid red',
-    // }})
     projectStore.addComponent(componentType.Canvas, componentTag.HTML, {
         name: '测试1',
         width: 600,
@@ -97,7 +83,6 @@ const addComponent = () => {
     }})
 }
 const addComponent2 = () => {
-    // FIX ME - 在canvas中添加组件后未显示
     projectStore.addComponent(componentType.Rect, componentTag.CANVAS, {
         name: '测试1',
         position: {
@@ -109,6 +94,10 @@ const addComponent2 = () => {
             height: 40,
             backgroundColor: 'red'
     }})
+}
+
+const addComponent3 = () => {
+    // TODO: 实现添加现有的组件，例如ant、echarts等
 }
 
 const onNodeClick = (node: ITreeNode) => {
