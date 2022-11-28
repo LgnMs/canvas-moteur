@@ -24,7 +24,8 @@ export enum componentType {
     Rect = 'Rect',
     Input = 'Input',
     Grid = 'Grid',
-    Canvas = 'Canvas'
+    Canvas = 'Canvas',
+    Vue = 'Vue',
 }
 
 export interface IComponent {

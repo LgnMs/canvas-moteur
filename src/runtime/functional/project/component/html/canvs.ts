@@ -6,6 +6,7 @@ export interface ICanvasComponentOptions extends IHTMLComponentOptions {
     width?: number;
     height?: number;
 }
+
 export class Canvas extends HTMLComponent {
     width?: number;
     height?: number;

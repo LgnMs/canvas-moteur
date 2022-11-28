@@ -4,6 +4,7 @@ import { componentTag, componentType } from './common';
 import { createInput } from './html/input';
 import { createGrid } from './html/grid';
 import { createCanvas } from './html/canvs';
+import { createVue } from './html/vue';
 
 export const htmlfactory = (type: componentType) => {
     switch (type) {
@@ -13,6 +14,10 @@ export const htmlfactory = (type: componentType) => {
             return createGrid;
         case componentType.Canvas:
             return createCanvas;
+        case componentType.Canvas:
+            return createCanvas;
+        case componentType.Vue:
+            return createVue;
         default:
             error('未找到相关的方法')
     }

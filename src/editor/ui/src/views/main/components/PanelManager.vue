@@ -98,6 +98,16 @@ const addComponent2 = () => {
 
 const addComponent3 = () => {
     // TODO: 实现添加现有的组件，例如ant、echarts等
+    projectStore.addComponent(componentType.Vue, componentTag.HTML, {
+        name: '测试1',
+        width: 600,
+        height: 400,
+        style: {
+            width: '600px',
+            height: '400px',
+            border: '1px solid red',
+        }
+    })
 }
 
 const onNodeClick = (node: ITreeNode) => {
