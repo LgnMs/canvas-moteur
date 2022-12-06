@@ -10,5 +10,5 @@ export function generateId({prefix = '', suffix = ''}: {prefix?: string, suffix?
     }
     oldtime = id;
 
-    return `${prefix}${id}${time}${suffix}`
+    return `${prefix}cv${id}${time}${suffix}`
 }

@@ -24,8 +24,9 @@ export function parseHTML(component: HTMLComponent) {
 
 export class HTMLRenderer {
     private createElement(component: HTMLComponent) {
+        let el: HTMLElement | null = null;
         if (component.type === componentType.Grid) {
-            return document.createElement('div');
+            el = document.createElement('div');
         } else if (component.type === componentType.Canvas) {
             const canvas = component as Canvas;
             const canvasRenderer = new CanvasRenderer({
@@ -35,9 +36,16 @@ export class HTMLRenderer {
             })
             canvas.setRenderer(canvasRenderer);
             
-            return canvasRenderer.container;
+            el = canvasRenderer.container;
+        } else if (component.type === componentType.Vue) {
+            el = document.createElement('div');
         }
-        return document.createElement(component.type);
+        if (!el) {
+            el = document.createElement(component.type);
+        }
+        el.setAttribute('id', component.id);
+
+        return el;
         
     }
 

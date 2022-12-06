@@ -155,6 +155,7 @@ const onNodeClick = (node: ITreeNode) => {
                     <ButtonIcon icon="note_add"  @click="addPage" />
                     <ButtonIcon icon="add_circle"  @click="addComponent" />
                     <ButtonIcon icon="add_circle"  @click="addComponent2" />
+                    <ButtonIcon icon="add_circle"  @click="addComponent3" />
                 </span>
             </div>
             <div class="body">

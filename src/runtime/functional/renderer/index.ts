@@ -1,6 +1,6 @@
 import { Page } from 'runtime/functional/project/page';
 import { HTMLRenderer } from './html';
-import { Component, componentTag } from 'runtime/functional/project/component/common';
+import { Component, componentTag, componentType } from 'runtime/functional/project/component/common';
 import { HTMLComponent } from 'runtime/functional/project/component/html/htmlComponent';
 import { error } from 'runtime/core/log';
 import { Canvas } from 'runtime/functional/project/component/html/canvs';
@@ -127,9 +127,12 @@ export class Renderer {
                 if (component.notRendered) {
                     if (component.tag === componentTag.HTML) {
                         node = this.htmlRenderer.parse(component as HTMLComponent);
+
                         parent?.appendChild(node);
+                        if (component.type === componentType.Vue) {
+                            (window as any).renderProject2('#' + component.id);
+                        }
                     } else if (component.tag === componentTag.CANVAS) {
-                        // const canvas = toRaw(parentComponent) as Canvas;
                         const canvas = parentComponent as Canvas;
                         const object = canvas.renderer!.parse(component as CanvasComponent);
                         canvas.renderer!.add(object);
